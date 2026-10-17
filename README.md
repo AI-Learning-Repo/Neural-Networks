@@ -16,14 +16,14 @@
 
 ### Sessions
 
-- [Week 1: Lecture notes and activities]
-- [Week 2: Lecture notes and activities]
-- [Week 3: Lecture notes and activities]
-- [Week 4: Lecture notes and activities]
-- [Week 5: Lecture notes and activities]
-- [Week 6: Lecture notes and activities]
-- [Week 7: Lecture notes and activities]
-- [Week 8: Lecture notes and activities]
+- [Week 1: Lecture notes and activities] - Multilayer Perceptrons (MLPs)
+- [Week 2: Lecture notes and activities] - MLPs, Deep Neural Networks
+- [Week 3: Lecture notes and activities] - Deep Neural Networks ...
+- [Week 4: Lecture notes and activities] - Convolutional Neural Networks (CNNs)
+- [Week 5: Lecture notes and activities] - Transformers
+- [Week 6: Lecture notes and activities] - Transformers ...
+- [Week 7: Lecture notes and activities] - Large Language Models (LLMs)
+- [Week 8: Lecture notes and activities] - Examination
 
 
 
