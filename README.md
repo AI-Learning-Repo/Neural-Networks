@@ -13,7 +13,9 @@
 
 - [Use of AI in the course](./material/AI.md)
 - [Zoom Recordings](https://metropoliafi-my.sharepoint.com/:f:/g/personal/samiben_metropolia_fi/IgBa_dyuxYAISaLK3j9jXNBNAbMwTiSJEvT0Mv1aXgWBvuo?e=JM8kA8)
+- [Resources](./material/resources.md)
 - [Grading](./material/grading.md)
+
 
 ### Sessions
 
