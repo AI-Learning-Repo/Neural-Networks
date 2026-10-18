@@ -29,7 +29,7 @@ $$z=\mathbf{w}\cdot\mathbf{x}+b$$
 
 and then applies the step function:
 
-$$\operatorname{step}(z)=\begin{cases}1,&z\ge0\\0,&z<0.\end{cases}$$
+$$\mathrm{step}(z)=\begin{cases}1,&z\ge0\\0,&z<0.\end{cases}$$
 
 ### Before you code
 

@@ -43,7 +43,7 @@ flowchart LR
 *Figure 1. Simplified signal flow in a biological neuron.*
 
 
-<img src="./img/b-neuron.jpg" width="50%" alt="Diagram of a biological neuron showing dendrites, nucleus, and axon">
+<img src="../img/b-neuron.jpg" width="50%" alt="Diagram of a biological neuron showing dendrites, nucleus, and axon">
 
 *(Figure 1b. Diagram of a biological neuron detailing the dendrites, nucleus, and axon)*
 
@@ -80,7 +80,7 @@ z = w_1x_1 + w_2x_2 + b
 $$
 
 $$
-\operatorname{step}(z)=
+\mathrm{step}(z)=
 \begin{cases}
 1, & z\ge 0\\
 0, & z<0
