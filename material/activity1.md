@@ -1,248 +1,452 @@
 # Activity 1: Perceptrons, Logic Gates, and the XOR Limitation
 
-In this activity, you will build a **single perceptron**, explore how its weights and bias affect its output, and discover why a single perceptron cannot solve every classification problem. This prepares us for **Multi-Layer Perceptrons (MLPs)** in Activity 2.
+In the theory lesson, we learned how a perceptron calculates a weighted sum, adds a bias, and applies a step activation. We also saw why a single perceptron can model AND and OR but cannot solve XOR.
 
-**Learning objectives**
+In this activity, you will **implement a single perceptron**, choose its weights and bias manually, and use plots to explain its limitations. This prepares you to build a **Multi-Layer Perceptron (MLP)** in Activity 2.
+
+**Learning objectives.** By the end of this activity, you should be able to:
 
 1. Implement a perceptron with a step activation function in Python.
-2. Experiment with weights and biases to model OR, AND, and NOT logic gates.
-3. Visualize the difference between linearly separable and non-linearly separable data.
-4. Explain, in your own words, why a single perceptron cannot solve XOR.
+2. Configure OR, AND, and NOT gates using weights and biases.
+3. Explain how changes in the bias affect the outputs.
+4. Visualize linearly separable and nonlinearly separable binary data.
+5. Explain why a single perceptron cannot solve XOR.
 
-**How to work:** Complete the tasks before opening the sample solutions. Predict the outcome first, run the code, then explain any difference.
+**Requirements:** Python 3, NumPy, and Matplotlib (for example, in a Jupyter notebook or Google Colab).
+
+**How to work:** **Predict → Code → Run → Explain.** Complete each task before opening the corresponding sample solution. Run the sections **in order** because later sections reuse earlier variables and functions. Some starter values are intentionally incomplete: fill them in before running that cell.
+
+> [!NOTE]
+> You will **choose** weights and biases yourself in this lab. The perceptron is **not trained automatically**. Training an MLP using Keras begins in Activity 2, and the mathematics of training comes later in the course.
 
 ---
 
-## The Perceptron - Computational Capacity and Limits
+## 1. Implement the Perceptron
 
-The Perceptron acts as a linear classifier. It computes the dot product of input vectors and weight vectors, adds a bias scalar, and applies a Heaviside step function to yield a binary output.
+A perceptron computes:
 
-### 1 Implementing the Perceptron
+$$z=\mathbf{w}\cdot\mathbf{x}+b$$
 
-The following Python function models the Perceptron utilizing NumPy for optimized vector operations.
+and then applies the step function:
+
+$$\mathrm{step}(z)=\begin{cases}1,&z\ge0\\0,&z<0.\end{cases}$$
+
+### Before you code
+
+For `inputs = [1, 0]`, `weights = [0.5, 0.5]`, and `bias = -0.7`:
+
+1. Calculate the weighted sum $z$ by hand.
+2. Predict the output (0 or 1).
+3. Predict what will happen if **only** the bias changes to `-0.3`.
+
+### Task 1A: Complete the function
 
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def perceptron(inputs, weights, bias):
-    """Calculates the output of a single perceptron utilizing a step activation function."""
-    assert len(inputs) == len(weights), "Dimensionality mismatch between inputs and weights."
-    
-    # Calculate the weighted sum using the dot product
+    """Return 0 or 1 for a single step-activation perceptron."""
+    assert len(inputs) == len(weights), "Inputs and weights must have equal length."
     weighted_sum = np.dot(inputs, weights) + bias
 
-    # --- YOUR CODE HERE --- #
-    # Apply the step activation function:
-    # If weighted_sum is greater than or equal to 0, output 1
-    # Otherwise, output 0
-    # --- END YOUR CODE --- #
-
-# Test functionality
-test_inputs = [1, 0]
-test_weights = [0.5, 0.5]
-test_bias = -0.7
-print(f"Test Output: {perceptron(test_inputs, test_weights, test_bias)}") 
+    # YOUR CODE HERE:
+    # Return 1 when weighted_sum >= 0; otherwise return 0.
+    raise NotImplementedError("Complete the step activation before running the tests.")
 ```
 
-<details>
-<summary><b>Sample Solution & Code Explanation: Perceptron Function</b></summary>
+> [!TIP]
+> Replace the `raise NotImplementedError(...)` line with your own `if/else` statement or a one-line conditional expression.
 
-**Solution:**
+### Task 1B: Test your implementation
+
+After completing the function, run:
+
+```python
+print("First output:", perceptron([1, 0], [0.5, 0.5], -0.7))
+print("Changed bias:", perceptron([1, 0], [0.5, 0.5], -0.3))
+
+assert perceptron([1, 0], [0.5, 0.5], -0.7) == 0
+assert perceptron([1, 0], [0.5, 0.5], -0.3) == 1
+print("Both tests passed!")
+```
+
+**Question:** The inputs and weights did not change. Why did changing only the bias change the output?
+
+<details>
+<summary><strong>Sample solution and explanation: Section 1</strong></summary>
+
 ```python
 def perceptron(inputs, weights, bias):
+    """Return 0 or 1 for a single step-activation perceptron."""
+    assert len(inputs) == len(weights), "Inputs and weights must have equal length."
     weighted_sum = np.dot(inputs, weights) + bias
+
     if weighted_sum >= 0:
         return 1
     else:
         return 0
 ```
 
-**Code explanation:**
-*   `import numpy as np`: Imports the NumPy library, which handles numerical arrays and matrices efficiently.
-*   `assert len(inputs) == len(weights)`: A safety check. It ensures we have exactly one weight for every input. If they don't match, the program throws an error.
-*   `np.dot(inputs, weights)`: This performs the "dot product". Instead of writing a `for` loop to multiply `input[0] * weight[0] + input[1] * weight[1]...`, NumPy calculates this entire sum mathematically at the hardware level.
-*   `if weighted_sum >= 0:`: This is the Heaviside step function. It acts as the activation threshold, converting the continuous numerical sum into a discrete binary output (1 or 0).
-</details>
+With bias `-0.7`, $z=(1)(0.5)+(0)(0.5)-0.7=-0.2$ and the output is **0**. With bias `-0.3`, $z=0.2$ and the output is **1**. Changing the bias moves the activation threshold relative to the input's weighted sum.
 
-**Try it:** Before running the test, calculate the weighted sum by hand. What output do you expect? Then change only `test_bias` to `-0.3`. Predict the new output and explain what changed.
-
-### 2 Modeling Logic Gates
-
-By modifying the weights and bias, the perceptron can model linearly separable Boolean logic.
-
-**Task:** Choose weights and biases for each gate. First predict all outputs from its truth table, then test your choices. There is more than one correct set of weights and biases.
-
-**(a) OR Gate:** Outputs 1 if at least one input is 1.
-```python
-gate_inputs = [[0, 0], [0, 1],[1, 0], [1, 1]]
-
-# --- YOUR TASK: Define weights and bias for OR --- #
-weights_or = [None, None]
-bias_or = None
-# --- END YOUR TASK --- #
-
-print("--- OR Gate Output ---")
-for input_pair in gate_inputs:
-    output = perceptron(input_pair, weights_or, bias_or)
-    print(f"Input: {input_pair}, Output: {output}")
-```
-
-<details>
-<summary><b>Sample Solution & Explanation: OR Gate</b></summary>
-
-**Solution:**
-```python
-weights_or = [1.0, 1.0]
-bias_or = -0.5
-```
-**Explanation:** If either input is `1`, the sum is at least `1.0`. Subtracting the bias of `0.5` yields `0.5`, which is $\ge 0$ (fires). If both are `0`, the result is `-0.5` (does not fire).
-</details>
-
-**Quick experiment:** Keep the OR weights unchanged and change only its bias. Can you make the same perceptron behave like an AND gate? Why?
-
-**(b) AND Gate:** Outputs 1 strictly when both inputs are 1.
-```python
-# --- YOUR TASK: Define weights and bias for AND --- #
-weights_and = [None, None]
-bias_and = None
-# --- END YOUR TASK --- #
-
-print("--- AND Gate Output ---")
-for input_pair in gate_inputs:
-    output = perceptron(input_pair, weights_and, bias_and)
-    print(f"Input: {input_pair}, Output: {output}")
-```
-
-<details>
-<summary><b>Sample Solution & Explanation: AND Gate</b></summary>
-
-**Solution:**
-```python
-weights_and = [1.0, 1.0]
-bias_and = -1.5
-```
-**Explanation:** By lowering the bias to `-1.5`, a single `1` input yields `1.0 - 1.5 = -0.5` (does not fire). Both inputs must be `1` to yield `2.0 - 1.5 = 0.5` (fires).
-</details>
-
-
-**(c) NOT Gate:** Outputs the inverse of a single input.
-```python
-not_inputs = [[0], [1]] 
-
-# --- YOUR TASK: Define weight and bias for NOT --- #
-weights_not = [None]
-bias_not = None
-# --- END YOUR TASK --- #
-
-print("\n--- NOT Gate ---")
-for input_val in not_inputs:
-    # Make sure weights_not matches the input structure (single element)
-    output = perceptron(input_val, weights_not, bias_not)
-    print(f"Input: {input_val}, Output: {output}")
-```
-<details>
-<summary><b>Sample Solution: NOT Gate</b></summary>
-
-```python
-weights_not = [-1.0]
-bias_not = 0.5
-```
-</details>
-
-**Discussion:** What role does the bias play? What happens if you change the sign of the weight in the NOT gate?
-
-### 3 Visualizing Linear Separability and the XOR Limitation
-
-As established theoretically, a single Perceptron is restricted to defining linear decision boundaries. To understand why the single Perceptron fails, we can visualize the mathematical space. The code below plots the coordinates of the AND gate and the XOR gate on a 2D plane. **Before running it**, sketch both sets of points and try to draw one straight line separating outputs 0 and 1.
-
-```python
-# Define the input points as a NumPy array for easier slicing
-inputs = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-x_coords = inputs[:, 0]
-y_coords = inputs[:, 1]
-
-# Define the expected outputs
-outputs_and = np.array([0, 0, 0, 1])
-outputs_xor = np.array([0, 1, 1, 0])
-
-# Colors map: Index 0 is blue, Index 1 is red
-colors = ['blue', 'red']
-
-def plot_gate(gate_outputs, title):
-    plt.figure(figsize=(5, 5)) 
-    plt.title(title)
-    plt.xlabel('Input 1')
-    plt.ylabel('Input 2')
-    
-    # Plot each coordinate with the corresponding color based on its output
-    for i in range(len(inputs)):
-        plt.scatter(x_coords[i], y_coords[i], color=colors[gate_outputs[i]], s=150, zorder=3)
-        
-    plt.xticks([0, 1])
-    plt.yticks([0, 1])
-    plt.xlim(-0.5, 1.5)
-    plt.ylim(-0.5, 1.5)
-    plt.grid(True, zorder=0)
-    plt.axhline(0, color='black', linewidth=0.5)
-    plt.axvline(0, color='black', linewidth=0.5)
-    
-    # Create legend manually
-    import matplotlib.lines as mlines
-    blue_marker = mlines.Line2D([],[], color='blue', marker='o', linestyle='None', markersize=10, label='Output 0')
-    red_marker = mlines.Line2D([],[], color='red', marker='o', linestyle='None', markersize=10, label='Output 1')
-    plt.legend(handles=[blue_marker, red_marker], loc='best')
-    
-    plt.show()
-
-# Execute plotting
-plot_gate(outputs_and, 'AND Gate Outputs (Linearly Separable)')
-plot_gate(outputs_xor, 'XOR Gate Outputs (Non-Linearly Separable)')
-```
-
-<details>
-<summary><b>Code Explanation: Matplotlib Plotting Logic</b></summary>
-
-*   `inputs = np.array(...)`: Converts the nested Python lists into a multi-dimensional NumPy array.
-*   `inputs[:, 0]`: This is NumPy slicing syntax. It means "take all rows (`:`), but only the element at index `0` (the first column)". This extracts all the X coordinates into a single list.
-*   `plt.figure(figsize=(5, 5))`: Initializes a plotting canvas of 5x5 inches.
-*   `color=colors[gate_outputs[i]]`: A clever trick. If the expected output is `0`, it accesses `colors[0]` (blue). If output is `1`, it accesses `colors[1]` (red).
-*   `plt.scatter(...)`: Places a dot on the graph at the specified X and Y coordinate. `s=150` controls the size of the dot.
-*   `plt.axhline` / `plt.axvline`: Draws the distinct black horizontal and vertical lines representing the X=0 and Y=0 axes.
-</details>
-
-> [!IMPORTANT]  
-> **The XOR challenge:** Compare the plots. Can you draw one straight line that separates output 0 from output 1 for AND? Can you do the same for XOR? Try changing the perceptron weights and bias to make XOR work. Record what you discover.
-
-
-**Discuss (required):** Why can a single perceptron solve AND but not XOR? Explain using the plots and the idea of a straight-line decision boundary. You do **not** need to know how networks are trained yet.
-
-**Optional mathematical challenge:** Show why no weights $w_1$, $w_2$ and bias $b$ can reproduce the XOR truth table when the perceptron returns 1 for $w_1x_1+w_2x_2+b \ge 0$.
-
-<details>
-<summary><b>Optional solution: Why XOR is impossible for one perceptron</b></summary>
-
-For XOR, all four conditions must hold:
-
-1. Input `(0, 0)` gives 0: $b < 0$.
-2. Input `(1, 0)` gives 1: $w_1 + b \ge 0$.
-3. Input `(0, 1)` gives 1: $w_2 + b \ge 0$.
-4. Input `(1, 1)` gives 0: $w_1 + w_2 + b < 0$.
-
-Adding conditions 2 and 3 gives $w_1 + w_2 + 2b \ge 0$.
-
-Because $b < 0$, we have $w_1 + w_2 + b > w_1 + w_2 + 2b \ge 0$. This contradicts condition 4, which requires $w_1 + w_2 + b < 0$.
-
-Therefore, **no single perceptron can implement XOR**.
+- `np.dot(inputs, weights)` calculates the weighted sum without the bias.
+- The `assert` checks that there is one weight per input.
+- `weighted_sum >= 0` determines the output class.
 
 </details>
 
 ---
 
-## Takeaway: Why Do We Need More Than One Perceptron?
+## 2. Model Logic Gates
 
-A single perceptron can separate points with **one straight decision boundary**. XOR requires something more flexible.
+A logic gate accepts binary inputs and produces a binary output. Your job is to choose parameters that reproduce the target truth table.
 
-**Exit question:** What might happen if we connect several artificial neurons in layers instead of using just one?
+**Important:** There are **many** correct choices of weights and bias. The goal is to explain **why** your choice works, not memorize one answer.
 
-We will explore that idea in **Activity 2**, where we build an MLP using Keras. For now, focus on the architecture and its behavior; we will study how training works internally later in the course.
+### Task 2A: OR gate
+
+OR outputs 1 when at least one of its two inputs is 1.
+
+| Input 1 | Input 2 | Expected OR |
+|:---:|:---:|:---:|
+| 0 | 0 | 0 |
+| 0 | 1 | 1 |
+| 1 | 0 | 1 |
+| 1 | 1 | 1 |
+
+1. Choose two weights and one bias.
+2. Predict all four outputs before running the code.
+3. Run the cell and check that your solution reproduces the truth table.
+
+```python
+gate_inputs = [[0, 0], [0, 1], [1, 0], [1, 1]]
+expected_or = [0, 1, 1, 1]
+
+# REPLACE ALL None VALUES BEFORE RUNNING
+weights_or = [None, None]
+bias_or = None
+
+actual_or = [perceptron(pair, weights_or, bias_or) for pair in gate_inputs]
+
+for pair, actual, expected in zip(gate_inputs, actual_or, expected_or):
+    print(f"Input: {pair} | Predicted: {actual} | Expected: {expected}")
+
+assert actual_or == expected_or, "Your OR gate does not yet match its truth table."
+print("OR gate works!")
+```
+
+<details>
+<summary><strong>Sample solution: OR</strong></summary>
+
+```python
+weights_or = [1.0, 1.0]
+bias_or = -0.5
+```
+
+This gives $z=x_1+x_2-0.5$. For $(0,0)$, $z=-0.5$ and the output is 0. If either input is 1, $z\ge0.5$ and the output is 1.
+
+Other correct configurations are possible. For example, multiplying both the weights **and** bias by the same positive constant preserves the decisions.
+
+</details>
+
+### Task 2B: AND gate — change the bias
+
+AND outputs 1 **only when both** inputs are 1.
+
+| Input 1 | Input 2 | Expected AND |
+|:---:|:---:|:---:|
+| 0 | 0 | 0 |
+| 0 | 1 | 0 |
+| 1 | 0 | 0 |
+| 1 | 1 | 1 |
+
+**First try:** Keep the OR weights unchanged. Change **only the bias** so the perceptron behaves like AND.
+
+```python
+expected_and = [0, 0, 0, 1]
+
+# Try copying your OR weights and changing the bias.
+weights_and = [None, None]  # REPLACE
+bias_and = None             # REPLACE
+
+actual_and = [perceptron(pair, weights_and, bias_and) for pair in gate_inputs]
+
+for pair, actual, expected in zip(gate_inputs, actual_and, expected_and):
+    print(f"Input: {pair} | Predicted: {actual} | Expected: {expected}")
+
+assert actual_and == expected_and, "Your AND gate does not yet match its truth table."
+print("AND gate works!")
+```
+
+**Questions:** Why does one input equal to 1 produce output 0, but two inputs equal to 1 produce output 1? What did changing the bias accomplish?
+
+<details>
+<summary><strong>Sample solution: AND</strong></summary>
+
+```python
+weights_and = [1.0, 1.0]
+bias_and = -1.5
+```
+
+Now $z=x_1+x_2-1.5$. When only one input is 1, $z=-0.5$, so the output is 0. Only $(1,1)$ gives $z=0.5$ and output 1.
+
+This shows how adjusting the bias changes where the decision boundary lies.
+
+</details>
+
+### Task 2C: NOT gate
+
+NOT takes **one** input, rather than two, and returns the opposite binary value.
+
+| Input | Expected NOT |
+|:---:|:---:|
+| 0 | 1 |
+| 1 | 0 |
+
+**Hint:** Use one negative weight and a suitable positive bias.
+
+```python
+not_inputs = [[0], [1]]
+expected_not = [1, 0]
+
+# REPLACE ALL None VALUES BEFORE RUNNING
+weights_not = [None]
+bias_not = None
+
+actual_not = [perceptron(value, weights_not, bias_not) for value in not_inputs]
+
+for value, actual, expected in zip(not_inputs, actual_not, expected_not):
+    print(f"Input: {value} | Predicted: {actual} | Expected: {expected}")
+
+assert actual_not == expected_not, "Your NOT gate does not yet match its truth table."
+print("NOT gate works!")
+```
+
+**Question:** Why does a negative weight help invert the output? What happens if you change that weight to positive without changing the bias?
+
+<details>
+<summary><strong>Sample solution: NOT</strong></summary>
+
+```python
+weights_not = [-1.0]
+bias_not = 0.5
+```
+
+The weighted sum is $z=-x+0.5$. For input 0, $z=0.5$ and output 1. For input 1, $z=-0.5$ and output 0. If the weight becomes positive while the bias remains $0.5$, both inputs produce output 1, so it is no longer NOT.
+
+</details>
+
+### Task 2D: Find another valid solution
+
+Choose **OR or AND** and find a **different** pair of weights and bias that gives the same truth table. Test all four input pairs.
+
+```python
+# YOUR CODE HERE: new weights, new bias, and four test outputs.
+```
+
+**Explain:** Why can different parameter values give exactly the same classifications?
+
+<details>
+<summary><strong>Example answer</strong></summary>
+
+For OR, `weights = [2.0, 2.0]` and `bias = -1.0` work. For AND, `weights = [2.0, 2.0]` and `bias = -3.0` work. These multiply all original weights and the bias by 2, so the sign of every weighted sum stays the same, preserving each output.
+
+</details>
+
+---
+
+## 3. Visualize Linear Separability and XOR
+
+One perceptron can create only **one straight decision boundary** in a two-feature space. Let's compare **AND**, which is linearly separable, with **XOR**, which is not.
+
+### Task 3A: Predict before plotting
+
+The inputs are the four corners of the unit square:
+
+`(0,0)`, `(0,1)`, `(1,0)`, `(1,1)`.
+
+1. Sketch these four points on paper.
+2. For AND, mark the output-0 points and output-1 points. Can you draw one straight separator?
+3. Do the same for XOR. Can you draw **one** straight separator?
+4. Predict which gate a single perceptron can represent perfectly.
+
+### Task 3B: Plot AND and XOR
+
+The plotting function below uses **blue for output 0** and **red for output 1**. Start by viewing the data **without** any decision boundary drawn for you.
+
+```python
+inputs = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+outputs_and = np.array([0, 0, 0, 1])
+outputs_xor = np.array([0, 1, 1, 0])
+
+
+def plot_gate(labels, title, show_and_boundary=False):
+    fig, ax = plt.subplots(figsize=(5, 5))
+    colors = ["tab:blue" if label == 0 else "tab:red" for label in labels]
+    ax.scatter(inputs[:, 0], inputs[:, 1], c=colors, s=180, zorder=3)
+
+    for (x1, x2), label in zip(inputs, labels):
+        ax.annotate(f"({x1},{x2}) → {label}", (x1, x2),
+                    xytext=(5, 7), textcoords="offset points", fontsize=9)
+
+    if show_and_boundary:
+        x_line = np.linspace(-0.5, 1.5, 100)
+        ax.plot(x_line, 1.5 - x_line, "k--", label="AND boundary: x₁ + x₂ = 1.5")
+        ax.legend(loc="upper right")
+
+    ax.set(title=title, xlabel="Input 1 (x₁)", ylabel="Input 2 (x₂)")
+    ax.set_xlim(-0.5, 1.5)
+    ax.set_ylim(-0.5, 1.5)
+    ax.set_xticks([0, 1])
+    ax.set_yticks([0, 1])
+    ax.grid(alpha=0.25)
+    ax.set_aspect("equal", adjustable="box")
+    plt.show()
+
+
+plot_gate(outputs_and, "AND: Linearly separable")
+plot_gate(outputs_xor, "XOR: Not linearly separable")
+```
+
+**Check your sketch:** Is the pattern what you expected? Where could you draw the line for AND? Why does no single line separate XOR perfectly?
+
+<details>
+<summary><strong>Code explanation: Plotting the points</strong></summary>
+
+- `inputs[:, 0]` means all rows, first column (the first input feature).
+- `inputs[:, 1]` means all rows, second column.
+- `ax.scatter()` plots the four points and colors them by class.
+- `ax.annotate()` labels each point with its coordinates and expected output.
+- `ax.set_aspect("equal")` keeps equal distances along the two axes.
+
+</details>
+
+### Task 3C: Reveal an AND decision boundary
+
+**After** you have drawn your own line, run:
+
+```python
+plot_gate(outputs_and, "AND with a decision boundary", show_and_boundary=True)
+```
+
+**Questions:**
+
+1. Which points lie on the class-1 side of the line $x_1+x_2=1.5$?
+2. How is this line related to the weights $[1,1]$ and bias $-1.5$ from Section 2?
+3. Could moving or rotating a single line separate the XOR points? Explain.
+
+<details>
+<summary><strong>Sample explanation: The AND boundary</strong></summary>
+
+The line $x_1+x_2=1.5$ comes directly from $z=x_1+x_2-1.5=0$. Only the point $(1,1)$ has $z\ge0$; the other three points have $z<0$. For XOR, the two class-1 points occupy diagonally opposite corners, so no single straight line can place both of them on one side while keeping both class-0 points on the other side.
+
+</details>
+
+---
+
+## 4. The XOR Challenge
+
+XOR produces output 1 if its inputs are different and output 0 when they are equal.
+
+| Input 1 | Input 2 | Expected XOR |
+|:---:|:---:|:---:|
+| 0 | 0 | 0 |
+| 0 | 1 | 1 |
+| 1 | 0 | 1 |
+| 1 | 1 | 0 |
+
+### Task 4A: Try and explain
+
+Try **at least two different** sets of weights and bias in a single perceptron. For each attempt:
+
+1. Record the weights and bias.
+2. Compare all four predicted outputs with the XOR truth table.
+3. Count how many of the four predictions are correct.
+4. Explain why changing the single boundary cannot produce a perfect solution.
+
+**You do not need to keep trying until it works: a single perceptron cannot represent XOR perfectly.** The goal is to discover and explain why.
+
+```python
+expected_xor = [0, 1, 1, 0]
+
+# TRY TWO OR MORE PARAMETER SETS (examples below are only starting points)
+trials = [
+    ([1.0, 1.0], -0.5),
+    ([1.0, 1.0], -1.5),
+]
+
+for trial_number, (weights, bias) in enumerate(trials, start=1):
+    predicted = [perceptron(pair, weights, bias) for pair in gate_inputs]
+    correct = sum(int(p == y) for p, y in zip(predicted, expected_xor))
+    print(f"Trial {trial_number}: weights={weights}, bias={bias}")
+    print(f"  Predictions: {predicted} | Expected: {expected_xor}")
+    print(f"  Correct: {correct}/4")
+
+# OPTIONAL: Replace the examples or add more trials of your own.
+```
+
+**Required reflection (write 3–5 sentences):**
+
+- Why can one perceptron solve AND but not XOR?
+- Use the **plot** and the idea of a **straight-line decision boundary** in your explanation.
+- What might change if we connect several neurons in layers?
+
+<details>
+<summary><strong>Sample discussion answer</strong></summary>
+
+A single perceptron predicts using the sign of one weighted sum, so its decision boundary is one straight line. AND is linearly separable: one line can isolate the point $(1,1)$ from the other three. XOR is not linearly separable: its two class-1 points lie at opposite corners, so no one line separates both classes correctly. Combining neurons into layers lets us combine multiple computations and build a nonlinear decision boundary.
+
+</details>
+
+### Optional mathematical challenge: Prove XOR is impossible
+
+Suppose a perceptron returns 1 exactly when $w_1x_1+w_2x_2+b\ge0$. Write an inequality for each of the four XOR inputs, then show that the inequalities contradict each other.
+
+<details>
+<summary><strong>Optional proof</strong></summary>
+
+To reproduce XOR, we would need:
+
+1. $(0,0)\rightarrow0$: $b<0$.
+2. $(1,0)\rightarrow1$: $w_1+b\ge0$.
+3. $(0,1)\rightarrow1$: $w_2+b\ge0$.
+4. $(1,1)\rightarrow0$: $w_1+w_2+b<0$.
+
+Adding (2) and (3) gives $w_1+w_2+2b\ge0$. Since $b<0$, subtracting $b$ gives
+
+$$w_1+w_2+b=(w_1+w_2+2b)-b>0.$$
+
+That contradicts requirement (4), which says the same expression must be negative. Therefore, **no single perceptron can reproduce XOR**.
+
+</details>
+
+---
+
+## 5. Takeaway: Why Do We Need More Than One Perceptron?
+
+A single perceptron combines inputs into **one straight decision boundary**. This is enough for AND, OR, and NOT, but not for XOR. An MLP can use **hidden neurons and nonlinear activation functions** to combine computations in ways one perceptron cannot.
+
+### Exit ticket
+
+Before leaving, answer these questions **without looking at the sample solutions**:
+
+1. What computation does a perceptron perform before applying its activation function?
+2. What is the effect of changing a perceptron's bias while keeping the weights fixed?
+3. Which point must an AND gate classify as 1?
+4. Why does one straight decision boundary fail for XOR?
+5. How might a hidden layer help?
+
+<details>
+<summary><strong>Exit-ticket answer guide</strong></summary>
+
+1. A weighted sum (dot product) of the inputs, plus a bias.
+2. It moves the decision boundary and can change which inputs reach the threshold.
+3. Only $(1,1)$ for two binary inputs.
+4. XOR's positive and negative classes occupy alternating corners of the square and cannot be separated by one straight line.
+5. Hidden neurons can compute intermediate patterns that are combined to produce a more complex decision boundary.
+
+</details>
+
+**Next activity:** In **Activity 2**, you will build an MLP in Keras and attempt to solve XOR with a hidden layer. For now, focus on understanding the architecture and its behavior. We will study how training works internally later in the course.

@@ -1,310 +1,486 @@
-# Activity 2: Building an MLP with Keras: Solving XOR
+# Activity 2: Building an MLP with Keras — Solving XOR
 
-In Activity 1, we saw that a single perceptron can represent AND and OR, but cannot solve XOR. Can a network with a **hidden layer** do better?
+In **Activity 1**, you manually selected the weights and bias of a single perceptron. You found that a perceptron can represent AND and OR but **cannot represent XOR**, because XOR is not linearly separable.
 
-In this activity, you will build a small Multi-Layer Perceptron (MLP) using Keras, train it on the four XOR examples, and inspect its predictions. We will use training commands today, but study **how training works internally** in a later session.
+In this activity, you will build a **multi-layer perceptron (MLP)** with a hidden layer. Instead of choosing its weights yourself, you will use **Keras to learn them from examples**. We will explore what training does, but leave the mathematics of loss minimization, gradients, and backpropagation for a later lesson.
 
-**Learning objectives**
+## Learning objectives
 
-- Explain why an MLP with nonlinear activations can represent XOR.
-- Identify the input, hidden, and output layers in a Keras model.
-- Build an MLP using `Sequential`, `Input`, and `Dense`.
-- Use `compile()`, `fit()`, and `predict()` at a high level.
-- Compare predictions with the XOR truth table and experiment with the architecture.
+By the end of this activity, you should be able to:
 
-<!-- ![](./img/keras.png) -->
-<img src="./img/keras.png" width="50%">
+1. Explain why hidden neurons with nonlinear activation functions make XOR representable.
+2. Build a Keras MLP using `Sequential`, `Input`, and `Dense`.
+3. Count weights and biases in a simple MLP.
+4. Describe, at a high level, the roles of `compile()`, `fit()`, `evaluate()`, and `predict()`.
+5. Interpret output scores, predicted classes, and training accuracy.
+6. Change one model setting, compare results, and explain why a single run proves little.
 
-> Keras provides a high-level API for building neural networks. TensorFlow, PyTorch and JAX provide the underlying computational frameworks. CPU, GPU and TPU are hardware on which the computations can run.
+**How to work:** Make a prediction before running each section. Complete the questions first, then open the **Solution / explanation** sections to check your understanding. Run the code in order in a Python notebook or script.
 
-----
+**Software:** NumPy and **Keras 3** with the **TensorFlow backend**, consistent with the Keras approach used in Activities 3 and 4. If needed, install them in your Python environment:
+
+```bash
+python -m pip install numpy keras tensorflow
+```
+
+Keras is a high-level API for defining and training networks. TensorFlow is the backend we will use to perform the computations. Keras 3 can also use other supported backends, but switching backends is **not required** for this lab.
+
+> **Important:** Our dataset has only **four examples**, and we will train and inspect the model on those *same four examples*. The resulting accuracy is **training accuracy**, not evidence that the network generalizes to unseen data. We will introduce train/validation/test splits in a later activity.
+
+---
 
 ## 1. Prepare the XOR data
 
-**Before running the code:** How many input features does each example have? How many examples are there?
+**Before running:** How many examples does the XOR truth table contain? How many input features does each example have?
 
 ```python
 import numpy as np
-from tensorflow import keras
-from tensorflow.keras import layers
+import keras
+from keras import layers
 
-# XOR truth table: inputs (X) and expected outputs (y)
-X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]], dtype=np.float32)
-y = np.array([[0], [1], [1], [0]], dtype=np.float32)
+print("Keras version:", keras.__version__)
+print("Keras backend:", keras.config.backend())
+
+# Four rows of the XOR truth table.
+X = np.array([
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
+], dtype=np.float32)
+
+y = np.array([
+    [0],
+    [1],
+    [1],
+    [0]
+], dtype=np.float32)
 
 print("X shape:", X.shape)
 print("y shape:", y.shape)
-print(X)
-print(y)
+print("Inputs:\n", X)
+print("Labels:\n", y)
 ```
 
-**Your task:** Explain what `(4, 2)` and `(4, 1)` mean.
+**Your tasks**
+
+1. Explain what `X.shape == (4, 2)` means.
+2. Explain what `y.shape == (4, 1)` means.
+3. Why is XOR a **binary classification** problem?
 
 <details>
-<summary><b>Explanation</b></summary>
+<summary><strong>Solution / explanation: XOR data</strong></summary>
 
-- `X` has 4 examples and 2 features per example.
-- `y` has 4 expected outputs, one for each example.
+1. `X` contains **4 examples**, each with **2 input features** (`x1`, `x2`).
+2. `y` contains **4 labels**, one binary label per example.
+3. We want to predict one of two classes: `0` (inputs are equal) or `1` (inputs differ). We are not predicting an unrestricted numerical quantity.
+
+The correct input/output pairs are `(0,0) → 0`, `(0,1) → 1`, `(1,0) → 1`, and `(1,1) → 0`.
 
 </details>
 
-----
+---
 
 ## 2. Build the MLP
 
-A single perceptron draws one straight decision boundary. An MLP combines computations from several neurons. **Nonlinear activation functions** are what allow the network to represent more complex boundaries.
+A single perceptron can draw only one straight decision boundary. An MLP combines several neurons, and **nonlinear hidden-layer activations** allow it to represent relationships that one straight boundary cannot capture.
 
-Our model has **2 inputs → 4 hidden neurons → 1 output**.
+We will use the architecture:
 
-**Before running the code:** Which line creates the hidden layer? Why does the final layer have just one neuron?
+```text
+2 input features  →  4 hidden neurons (ReLU)  →  1 output neuron (sigmoid)
+```
+
+The hidden layer uses **ReLU**, which returns `0` for a negative input and otherwise returns the input. The output neuron uses **sigmoid**, which produces a score between `0` and `1`.
+
+**Before running:** Which line creates the hidden layer? Why is there only one output neuron?
 
 ```python
+# Use a fixed seed so repeated runs in a similar environment
+# are easier to compare. A seed does NOT guarantee 100% accuracy.
+seed = 32
+keras.utils.set_random_seed(seed)
+
 model = keras.Sequential(name="MLP_XOR_Solver")
 model.add(keras.Input(shape=(2,)))
-model.add(layers.Dense(units=4, activation="relu"))
-model.add(layers.Dense(units=1, activation="sigmoid"))
+model.add(layers.Dense(units=4, activation="relu", name="hidden_layer"))
+model.add(layers.Dense(units=1, activation="sigmoid", name="output_layer"))
 
 model.summary()
 ```
 
-<details>
-<summary><b>Code explanation</b></summary>
+**Your tasks**
 
-- `Sequential`: stacks layers in order.
-- `Input(shape=(2,))`: each example contains two input values.
-- `Dense(units=4, activation="relu")`: a fully connected hidden layer with four neurons; ReLU introduces nonlinearity.
-- `Dense(units=1, activation="sigmoid")`: produces one value between 0 and 1, suitable for a binary prediction.
-- `summary()`: shows the architecture and number of trainable parameters.
+1. Identify the input, hidden, and output parts of the model.
+2. Use `model.summary()` to calculate **weights**, **biases**, and **total trainable parameters** for each `Dense` layer.
+3. Why is the hidden-layer activation important for XOR?
+
+**Hint:** A `Dense` layer with `n` incoming values and `m` neurons has `n × m` weights and `m` biases.
+
+<details>
+<summary><strong>Solution / explanation: architecture and parameters</strong></summary>
+
+- `keras.Input(shape=(2,))` describes two input features; it does **not** add trainable parameters.
+- `Dense(units=4, activation="relu")` is the hidden layer.
+- `Dense(units=1, activation="sigmoid")` is the output layer. One output score is sufficient for a binary classification task.
+- A nonlinear activation is essential here: without nonlinear hidden activations, a stack of `Dense` layers would still be equivalent to a single linear transformation, which cannot represent XOR.
+
+| Layer | Weights | Biases | Parameters |
+|---|---:|---:|---:|
+| Hidden: 2 inputs → 4 neurons | `2 × 4 = 8` | `4` | **12** |
+| Output: 4 inputs → 1 neuron | `4 × 1 = 4` | `1` | **5** |
+| **Total** | **12** | **5** | **17** |
+
+In symbols, the network first calculates hidden activations and then an output score:
+
+$$
+h = \mathrm{ReLU}(xW_1 + b_1), \qquad \hat{y} = \sigma(hW_2 + b_2)
+$$
+
+Here, $\sigma$ is sigmoid. You **do not** need to calculate the matrix multiplications by hand in this activity.
 
 </details>
 
-**Your task:** Use `model.summary()` to calculate the number of weights and biases. What is the total number of trainable parameters?
+---
 
-<details>
-<summary><b>Sample solution: parameter counts</b></summary>
+## 3. Compile the model
 
-**Hidden layer**
+Before training, Keras needs to know:
 
-- Weights: $2 \times 4 = 8$
-- Biases: $4$
-- Total: **12**
-
-**Output layer**
-
-- Weights: $4 \times 1 = 4$
-- Biases: $1$
-- Total: **5**
-
-**Network total: 17 trainable parameters.**
-
-</details>
-
-----
-
-## 3. Prepare the model for training
-
-We tell Keras how to measure mistakes, how to update the model, and which performance measure to report. **We will explain the mathematics behind these choices in a future session.**
+- **Optimizer:** the method used to adjust weights (here, Adam).
+- **Loss:** the quantity the optimizer tries to reduce (here, binary cross-entropy).
+- **Metric:** the score we report to understand performance (here, binary accuracy).
 
 ```python
 model.compile(
     optimizer="adam",
     loss="binary_crossentropy",
-    metrics=["accuracy"]
+    metrics=[keras.metrics.BinaryAccuracy(name="accuracy", threshold=0.5)]
 )
 ```
 
+**Your tasks**
+
+1. Which setting tells Keras what to minimize during training?
+2. Which setting tells Keras to report the fraction of correctly classified examples?
+3. Why is **binary** accuracy suitable here?
+
 <details>
-<summary><b>At a glance: what does compile() specify?</b></summary>
+<summary><strong>Solution / explanation: compile()</strong></summary>
 
-- **Optimizer (`adam`)**: the method Keras uses to adjust the model's parameters.
-- **Loss (`binary_crossentropy`)**: measures how far predictions are from the correct binary labels.
-- **Metric (`accuracy`)**: reports how often the model predicts the correct class.
+1. `loss="binary_crossentropy"` specifies the loss that training aims to reduce.
+2. `keras.metrics.BinaryAccuracy(name="accuracy", threshold=0.5)` specifies the reported accuracy. Using an explicit metric also makes the classification threshold clear.
+3. Each target is one of two classes, `0` and `1`. The metric converts sigmoid scores into binary predictions and checks them against the labels.
 
-For now, focus on the role of each setting, not its internal mathematics.
+The **optimizer** updates parameters using information from the loss. The **accuracy metric** helps us interpret results; it is **not** the quantity Adam directly minimizes here.
+
+We will study the mathematics of optimization later.
 
 </details>
 
-**Check your understanding:** Which setting determines the score printed as *accuracy*?
+---
 
-----
+## 4. Train the MLP
 
-## 4. Train the model
-
-Initially, the model's weights are not tuned for XOR. `fit()` uses the examples and labels to adjust those weights.
+Initially, the model's weights are not chosen for XOR. During training, `fit()` repeatedly uses the examples and their labels to adjust the weights.
 
 ```python
-# Try changing this number and rebuilding the model to compare results.
 num_epochs = 1000
 
 history = model.fit(
-    X, y,
+    X,
+    y,
     epochs=num_epochs,
     batch_size=4,
+    shuffle=False,
     verbose=0
 )
 
-print(f"Final training accuracy: {history.history['accuracy'][-1]:.0%}")
+# Evaluate the final trained model on the four training examples.
+train_loss, train_accuracy = model.evaluate(X, y, verbose=0)
+
+print(f"Final training loss: {train_loss:.4f}")
+print(f"Final training accuracy: {train_accuracy:.0%}")
 ```
 
+**Your tasks**
+
+1. What is an **epoch**? What does `batch_size=4` mean for this dataset?
+2. Record your training accuracy. If it is 75%, how many examples were classified correctly?
+3. Is 100% accuracy guaranteed every time? Does a lower score prove that MLPs cannot solve XOR?
+4. Why should we **not** call this result *test accuracy*?
+
+> **Note:** A model with this architecture **can** represent XOR, but a particular training run may not learn suitable weights. Do not change the recorded outcome just to make it equal 100%.
+
 <details>
-<summary><b>At a glance: what does fit() do?</b></summary>
+<summary><strong>Solution / explanation: training</strong></summary>
 
-- `fit(X, y, ...)`: trains the model using inputs and expected outputs.
-- An **epoch** is one pass through all four examples.
-- `batch_size=4`: all four XOR examples are handled together per training step.
-- `verbose=0`: hides the progress display.
+1. One **epoch** is one pass through the four training examples. Because `batch_size=4`, the entire XOR dataset is used together in each training update (**full-batch training**).
+2. **75%** means **3 of the 4** XOR examples were correctly classified. **50%** means 2 out of 4.
+3. **No.** Weights start from an initialization, and training may fail to reach a correct solution within the selected number of epochs. A disappointing result does **not necessarily** mean the code is wrong, and it does not mean the architecture is incapable of representing XOR.
+4. We used the **same four examples for fitting and evaluation**. Nothing has been reserved as unseen test data.
 
-The internal learning process, including backpropagation and optimization, comes later in the course.
+**Key distinction:**
+
+- **Representation:** Does there exist a set of weights that makes the network solve XOR? **Yes.**
+- **Training/optimization:** Does this particular training run find such weights? **Not always.**
+
+The seed helps make classroom results more repeatable in similar environments, but hardware and software differences can still affect training.
 
 </details>
 
-**Your task:** Record the reported accuracy. Is it always 100% when you rebuild and retrain the model?
+---
 
-> [!NOTE]
-> This tiny example does **not** guarantee a perfect result. Different random initial weights can lead to different outcomes, and some runs may fail to learn XOR. That is an interesting observation, not an indication that your code is necessarily incorrect.
+## 5. Inspect each prediction
 
-----
-
-## 5. Inspect the predictions
-
-Accuracy gives a summary. Looking at each input and its predicted output tells us more.
+A single accuracy number does not show which input combinations were classified correctly. Let's inspect all four scores and predicted classes.
 
 ```python
-probabilities = model.predict(X, verbose=0).flatten()
-predictions = (probabilities >= 0.5).astype(int)
+scores = model.predict(X, verbose=0).reshape(-1)
 
-for inputs, probability, predicted, expected in zip(
-    X, probabilities, predictions, y.flatten()
+# Use the same decision rule as BinaryAccuracy with threshold=0.5.
+predictions = (scores > 0.5).astype(int)
+
+for inputs, score, predicted, expected in zip(
+    X, scores, predictions, y.reshape(-1)
 ):
     print(
         f"Input: {inputs.astype(int)} | "
-        f"Score: {probability:.3f} | "
+        f"Score: {score:.3f} | "
         f"Predicted: {predicted} | Expected: {int(expected)}"
     )
+
+calculated_accuracy = np.mean(predictions == y.reshape(-1))
+print(f"Accuracy calculated from predictions: {calculated_accuracy:.0%}")
 ```
 
-**Your tasks:**
+**Your tasks**
 
-1. Which XOR inputs were classified correctly?
-2. Why do we convert the sigmoid score to 0 or 1 using a threshold of 0.5?
-3. How is this MLP different from the single perceptron in Activity 1?
+1. Which XOR inputs were classified correctly? Which, if any, were wrong?
+2. What is the difference between a **sigmoid score** and a **predicted class**?
+3. Why do we use a threshold of `0.5`?
+4. Does the manually calculated accuracy match `model.evaluate()`?
+5. How is this MLP different from the single perceptron in Activity 1?
 
 <details>
-<summary><b>Discussion prompts / sample answers</b></summary>
+<summary><strong>Solution / explanation: predictions</strong></summary>
 
-- The output layer produces a score between 0 and 1; the 0.5 threshold converts it into one of two classes.
-- A single perceptron can only create a linear decision boundary.
-- An MLP with a hidden layer and nonlinear activations can represent XOR, although a particular training run may not find a successful set of weights.
+1. **It depends on your run.** Compare each printed prediction with its expected value. If training succeeded perfectly, all four pairs match: `0, 1, 1, 0`.
+2. Sigmoid produces a continuous score between 0 and 1. We then apply a threshold to choose class `0` or `1`. Such a score is often interpreted as a model-estimated probability, but it is not automatically guaranteed to be well calibrated.
+3. A score **greater than 0.5** becomes class `1`; a score at or below 0.5 becomes class `0`. This is the convention used by the explicit `BinaryAccuracy` metric in Section 3.
+4. **Yes**, allowing for rounding of displayed percentages. Both use the same four examples and the same threshold.
+5. One step-function perceptron has one linear decision boundary and cannot represent XOR. An MLP has a hidden layer with nonlinear activations and **can** represent XOR, although one training run may still fail.
+
+A possible **successful** run might show low scores for `[0,0]` and `[1,1]`, and high scores for `[0,1]` and `[1,0]`. **The exact decimal scores are not fixed expected output.**
 
 </details>
 
-----
+---
 
-## 6. Experiment: change the architecture
+## 6. Experiment: change one setting
 
-**Choose one experiment.** Before rerunning the model, predict what might change.
+**Choose one change**, then predict its possible effect before running it:
 
-- Change the hidden layer from `units=4` to `units=2` or `units=8`.
-- Replace `relu` with `tanh` in the hidden layer.
-- Change `num_epochs` from `1000` to `2000`.
+- **Capacity:** change `units=4` to `units=2` or `units=8`.
+- **Activation:** replace hidden-layer `relu` with `tanh`.
+- **Training time:** increase `num_epochs` from `1000` to `2000`.
 
-**Important:** Rebuild the model from Section 2 and rerun Sections 3–5 for each experiment. Otherwise you would continue training the existing model, which makes the comparison harder to interpret.
+**Important for a fair comparison:** Go back to Section 2 and **build a fresh model**, then re-run Sections 3–5. Do not just call `fit()` again on the already-trained model: that would continue training from its previous weights. For the first comparison, keep `seed = 32` unchanged and modify only **one** setting.
 
-| Experiment | Prediction before running | Final accuracy | What did you observe? |
-|---|---|---|---|
-| Original model | | | |
-| Changed model | | | |
+| Configuration | Prediction before running | Final training accuracy | Final training loss | What happened? |
+|---|---|---|---|---|
+| Original: 4 ReLU units, 1000 epochs | | | | |
+| Your modified configuration | | | | |
 
-**Discussion:** Did the change improve results? Can one run establish that an architecture is always better?
+**Your tasks**
+
+1. Did the modification help on **your** run? Use the actual accuracy and loss values.
+2. If both models have 100% accuracy, can their losses still differ?
+3. Can a single run establish that one architecture is **always** better?
+4. *(Optional)* Try multiple seeds, rebuilding a fresh model for each seed. Are the outcomes identical?
 
 <details>
-<summary><b>Instructor note: interpreting variable results</b></summary>
+<summary><strong>Solution / explanation: architecture experiments</strong></summary>
 
-A single result is not enough to compare architectures reliably because model initialization is random. Students need only notice that architecture and training choices affect the result. We will study these effects more rigorously later.
+There is **no single correct results table**: model outcomes can vary with initialization and environment. Report actual measurements, not a prescribed 100% score.
+
+Possible interpretations:
+
+- **2 hidden units:** the network still has enough representational capacity for XOR, but training can be sensitive to the starting weights.
+- **8 hidden units:** the model has more trainable parameters and might learn XOR more reliably in some trials; **it is not guaranteed** to be faster or better in every run.
+- **`tanh` instead of `relu`:** both are nonlinear and can represent XOR. Results may differ because the activations behave differently; neither is universally superior.
+- **2000 instead of 1000 epochs:** extra training steps sometimes reduce loss or change predictions, but they do not guarantee success and cannot necessarily fix ineffective optimization.
+
+Parameter counts if you choose the capacity experiment:
+
+| Architecture | Trainable parameters |
+|---|---:|
+| 2 inputs → **2** hidden → 1 output | `(2 × 2 + 2) + (2 × 1 + 1) = 9` |
+| 2 inputs → **4** hidden → 1 output | **17** |
+| 2 inputs → **8** hidden → 1 output | `(2 × 8 + 8) + (8 × 1 + 1) = 33` |
+
+**Answers to the discussion questions:**
+
+1. Judge improvement from the measurements you actually obtained. A change in one run is an **observation**, not a universal rule.
+2. **Yes.** Accuracy measures whether each class is on the correct side of the threshold. Binary cross-entropy also responds to *how strongly* scores support the labels.
+3. **No.** Repeating experiments with multiple initial seeds is more informative than relying on one result.
+4. Results may change between seeds. Identical results are possible too; they are not guaranteed.
+
+**Optional code to run fresh, repeatable trials** (run *after* the original Sections 1–5):
+
+```python
+def run_trial(hidden_units=4, activation="relu", epochs=1000, seed=32):
+    keras.backend.clear_session()
+    keras.utils.set_random_seed(seed)
+
+    candidate = keras.Sequential([
+        keras.Input(shape=(2,)),
+        layers.Dense(hidden_units, activation=activation),
+        layers.Dense(1, activation="sigmoid")
+    ])
+    candidate.compile(
+        optimizer="adam",
+        loss="binary_crossentropy",
+        metrics=[keras.metrics.BinaryAccuracy(name="accuracy", threshold=0.5)]
+    )
+    candidate.fit(X, y, epochs=epochs, batch_size=4,
+                  shuffle=False, verbose=0)
+    loss, accuracy = candidate.evaluate(X, y, verbose=0)
+    return accuracy, loss
+
+for trial_seed in [7, 21, 32]:
+    accuracy, loss = run_trial(hidden_units=4, seed=trial_seed)
+    print(f"Seed {trial_seed}: accuracy={accuracy:.0%}, loss={loss:.4f}")
+```
+
+Rebuilding and reseeding makes each trial a fresh training run. Keep other settings fixed when comparing a single change.
 
 </details>
 
-----
+---
 
-## 7. Troubleshooting & Concept Check: When Accuracy is Under 100%
+## 7. Troubleshooting and concept check
 
-**Question 1: Does an accuracy of 75% mean my code is wrong or that an MLP cannot solve XOR?**
+**Question 1.** Your model achieves 75% accuracy. Is its code necessarily wrong?
 
-**Hints to consider:**
-- How many examples are in the XOR dataset, and how many are correct if your score is 75%?
-- What is the difference between whether a network *can* represent a function vs. whether gradient descent successfully *found* the right weights?
+**Question 2.** Why does the fact that an MLP *can* represent XOR not guarantee that `fit()` will reach 100%?
+
+**Question 3.** What would you try if your model stays at 50% or 75%?
 
 <details>
-<summary><b>Answer: Representation vs. Optimization</b></summary>
+<summary><strong>Solution / explanation: troubleshooting</strong></summary>
 
-**No, your code is not broken!**
+**1. Not necessarily.** A score of 75% means 3 out of 4 labels were correctly predicted. First check the data, model structure, compilation, and classification threshold. If these are correct, the run may simply have learned an imperfect solution.
 
-1. **A score of 75% means 3 out of 4 examples were classified correctly.** In a 4-sample dataset, missing just one sample drops your accuracy from 100% down to 75%.
-2. **Representation $\neq$ Optimization:**
-   - **Representation (Theory):** A single perceptron can *never* represent XOR because it can only draw one straight line. An MLP with hidden neurons and nonlinear activations *can* represent XOR.
-   - **Optimization (Practice):** Training starts from random initial weights. Just because a valid solution exists somewhere in the weight space doesn't guarantee gradient descent will reach it every single run.
-3. **The "Lazy" Line:** Drawing a single straight line can easily classify 3 out of 4 points correctly (like an OR gate). Sometimes the network settles into this "good enough" local minimum early on and gets stuck there.
+**2.** A suitable combination of weights **exists**, but the training process begins from particular initial weights and has a limited number of updates. Being able to represent a function is different from successfully learning its weights.
+
+**3. Try one change at a time:**
+
+- Rebuild the model and try a different random seed.
+- Try `tanh` in the hidden layer.
+- Try more hidden units.
+- Try more epochs, especially if loss is still decreasing.
+
+**Do not automatically conclude** that any one of these changes will solve the problem. Compare the actual predictions and loss.
+
+**Optional instructor background (not required for this lesson):** With ReLU, a hidden unit whose pre-activation is nonpositive on every training example may receive no useful gradient signal from those examples. This is one possible reason that some initializations learn poorly. It does **not** follow that every run below 100% is caused by a “dead ReLU,” nor that adding epochs can always resolve the problem. The details belong in a later lesson about optimization and backpropagation.
 
 </details>
 
-**Question 2: Why do small networks get trapped on XOR?**
+---
 
-**Hints to consider:**
-- What happens to the gradient of a `ReLU` neuron when its input is negative?
-- What happens if 1 or 2 neurons in a 4-neuron layer stop firing altogether?
+## 8. Wrap-up
+
+A single perceptron cannot represent XOR with one linear decision boundary. An MLP with hidden neurons and nonlinear activations **can** represent XOR. In this activity, you defined such a network with Keras, trained it, inspected its four predictions, and experimented with one setting.
+
+**Exit question:** What is the single most important architectural difference between the perceptron in Activity 1 and the MLP in this activity?
 
 <details>
-<summary><b>Answer: Dying ReLUs and Local Minima</b></summary>
+<summary><strong>Sample answer: exit question</strong></summary>
 
-Two primary factors cause training to stall on XOR:
-
-1. **The "Dying ReLU" Problem:**
-   - The ReLU function outputs `0` for any negative input, and its gradient becomes `0`.
-   - If a hidden neuron happens to receive negative values across all 4 XOR samples, it stops updating and effectively "dies."
-   - In a network with only 4 hidden neurons, losing even 1 or 2 neurons leaves too few active features to draw the two boundaries needed for XOR.
-
-2. **Flat Loss Landscapes:**
-   - With full-batch training (all 4 samples processed together in one step), the optimizer can land in a flat plateau or saddle point where gradients become too small to nudge the weights out before epochs run out.
+The MLP contains a **hidden layer with nonlinear activation functions**, allowing it to represent nonlinear relationships such as XOR. A single perceptron cannot.
 
 </details>
 
+---
 
-**Question 3: If your accuracy is less than 100%, what can you do?**
+## Complete runnable solution (Sections 1–5)
 
-**Hints to consider:**
-- How could you change the starting point?
-- What activation function avoids the "dying neuron" issue?
-- How could you give the network more capacity or more training time?
+The following script repeats all **required** code in one place. Use it to check your work **after** attempting the activity. The experiment in Section 6 is open-ended; a reproducible experiment helper is included in that section's solution above.
 
 <details>
-<summary><b>Answer: 4 Practical Fixes to Try</b></summary>
+<summary><strong>Show complete Python solution</strong></summary>
 
-If your model is stuck at 50% or 75%, try any of the following adjustments (remember to rebuild and recompile the model first):
+```python
+import numpy as np
+import keras
+from keras import layers
 
-1. **Change the random seed (or retrain without one):**
-   - Different initial weights put your model in a completely different starting position on the loss surface. A new starting point will often descend straight to 100%.
-2. **Switch activation from `relu` to `tanh`:**
-   ```python
-   model.add(layers.Dense(units=4, activation="tanh"))
-   ```
-   - `tanh` outputs values between $-1$ and $+1$ (zero-centered) and does not completely shut off like ReLU. It is much more reliable for small logic problems like XOR.
-3. **Increase hidden units (e.g., from `units=4` to `units=8`):**
-   ```python
-   model.add(layers.Dense(units=8, activation="relu"))
-   ```
-   - Adding more neurons creates *redundancy*. Even if 1 or 2 neurons die or get stuck, the remaining neurons can still separate the inputs.
-4. **Train for more epochs (e.g., `num_epochs = 2000`):**
-   - If the learning rate is small or the loss surface is flat, the optimizer may simply need more training steps to escape a plateau.
+print("Keras version:", keras.__version__)
+print("Keras backend:", keras.config.backend())
+
+# XOR data
+X = np.array([
+    [0, 0], [0, 1], [1, 0], [1, 1]
+], dtype=np.float32)
+y = np.array([[0], [1], [1], [0]], dtype=np.float32)
+print("X shape:", X.shape)
+print("y shape:", y.shape)
+
+# Fresh model
+seed = 32
+keras.utils.set_random_seed(seed)
+model = keras.Sequential(name="MLP_XOR_Solver")
+model.add(keras.Input(shape=(2,)))
+model.add(layers.Dense(4, activation="relu", name="hidden_layer"))
+model.add(layers.Dense(1, activation="sigmoid", name="output_layer"))
+model.summary()  # 12 + 5 = 17 trainable parameters
+
+# Compile
+model.compile(
+    optimizer="adam",
+    loss="binary_crossentropy",
+    metrics=[keras.metrics.BinaryAccuracy(name="accuracy", threshold=0.5)]
+)
+
+# Train
+history = model.fit(
+    X, y,
+    epochs=1000,
+    batch_size=4,
+    shuffle=False,
+    verbose=0
+)
+
+# Evaluate training performance
+train_loss, train_accuracy = model.evaluate(X, y, verbose=0)
+print(f"Final training loss: {train_loss:.4f}")
+print(f"Final training accuracy: {train_accuracy:.0%}")
+
+# Inspect every example
+scores = model.predict(X, verbose=0).reshape(-1)
+predictions = (scores > 0.5).astype(int)
+print("\nXOR predictions:")
+for inputs, score, predicted, expected in zip(
+    X, scores, predictions, y.reshape(-1)
+):
+    print(
+        f"Input: {inputs.astype(int)} | "
+        f"Score: {score:.3f} | "
+        f"Predicted: {predicted} | Expected: {int(expected)}"
+    )
+
+calculated_accuracy = np.mean(predictions == y.reshape(-1))
+print(f"Accuracy calculated from predictions: {calculated_accuracy:.0%}")
+```
+
+**Expected stable facts:** `X.shape` is `(4, 2)`, `y.shape` is `(4, 1)`, and the model has **17 trainable parameters**. **Accuracy, loss, and individual sigmoid scores are measured outcomes, not guaranteed fixed values.**
 
 </details>
 
-----
+### Optional references
 
+- [Keras 3: NumPy/Python utilities (`set_random_seed`)](https://keras.io/api/utils/python_utils/)
+- [Keras 3: Accuracy metrics (`BinaryAccuracy`)](https://keras.io/api/metrics/accuracy_metrics/)
 
-## Conclusion
-
-A single perceptron cannot solve XOR because XOR is not linearly separable. Adding hidden neurons and **nonlinear activation functions** gives an MLP the ability to represent the XOR relationship.
-
-Today we used Keras to create, train, and test that MLP. **Next week, we will look more closely at how its weights are learned.**
-
-**Exit question:** What is the most important difference between a single perceptron and the MLP you built?
+**Next activity:** Move from four synthetic examples to a real dataset and learn how to prepare features, train an MLP for regression, and evaluate predictions on data not used for training.

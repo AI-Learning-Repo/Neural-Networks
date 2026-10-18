@@ -1,12 +1,12 @@
 # Introduction to Neural Networks: From Perceptrons to MLPs
 
-**Learning objectives:** By the end of this introduction, you should be able to:
+**Learning objectives.** By the end of this introduction, you should be able to:
 
-- Identify the main components of an artificial neuron: inputs, weights, bias, and activation function.
-- Explain how a perceptron implements simple logic gates.
-- Recognize why a single perceptron cannot solve XOR.
-- Describe how an MLP combines neurons in layers to model non-linear relationships.
-- Trace how an input moves through an MLP to produce an output (a **forward pass**).
+1. Identify the inputs, weights, bias, and activation function of an artificial neuron.
+2. Explain how a perceptron can implement a simple logic gate.
+3. Recognize why one perceptron cannot solve XOR.
+4. Describe the input, hidden, and output layers of a Multi-Layer Perceptron (MLP).
+5. Trace a **forward pass** through a small network, using given weights and biases.
 
 **Contents**
 
@@ -20,570 +20,358 @@
 8. Further Exploration
 
 > [!NOTE]
-> **Today:** what a perceptron and an MLP are, why hidden layers matter, and how they calculate an output. **Next week:** how networks learn by adjusting their weights (training, loss functions, backpropagation, and optimization).
+> **Today:** Understand what neurons and MLPs compute, why hidden layers matter, and how a forward pass works. **In a later session:** Learn how neural networks adjust their weights through training, loss functions, backpropagation, and optimization. In Activity 2, we will use Keras training commands before examining those algorithms internally.
 
 ---
 
 ## 1. Inspiration: The Biological Neuron
 
-Artificial Neural Networks (ANNs) are conceptually derived from the biological structure of the brain. The human brain operates using a vast, interconnected network of specialized cells known as **neurons**. 
+Artificial neural networks (ANNs) were inspired in part by networks of neurons in the brain. Biological neurons receive signals, integrate them, and may transmit signals to other neurons.
 
-In a biological neural network, information processing occurs through the following mechanisms:
-*   **Signal Reception:** A neuron receives chemical and electrical signals from surrounding neurons through branch-like structures called **dendrites**.
-*   **Processing:** These signals travel to the cell body (soma), which contains the **nucleus**. The cell body aggregates these incoming signals.
-*   **Activation:** If the cumulative strength of the incoming signals exceeds a specific biological threshold, the neuron generates an electrical impulse. This is commonly referred to as the neuron "firing."
-*   **Signal Transmission:** The electrical impulse travels down a long fiber called the **axon** and is transmitted to the dendrites of subsequent neurons across gaps known as synapses.
+- **Dendrites** receive signals from other cells.
+- The **cell body** integrates many incoming signals.
+- The **axon** carries an electrical signal away from the cell body.
+- **Synapses** are connections through which neurons communicate.
+
+```mermaid
+flowchart LR
+    A[Incoming signals / dendrites] --> B[Cell body]
+    B --> C[Axon]
+    C --> D[Connections to other neurons]
+```
+
+*Figure 1. Simplified signal flow in a biological neuron.*
+
 
 <img src="./img/b-neuron.jpg" width="50%" alt="Diagram of a biological neuron showing dendrites, nucleus, and axon">
 
-*(Figure 1: Diagram of a biological neuron detailing the dendrites, nucleus, and axon)*
+*(Figure 1b. Diagram of a biological neuron detailing the dendrites, nucleus, and axon)*
 
-> [!NOTE]  
-> While biological neurons inspire ANNs, modern artificial neural networks do not attempt to perfectly simulate brain biology. They are mathematical abstractions optimized for computational efficiency.
+> [!IMPORTANT]
+> Artificial neurons are **mathematical abstractions**, not faithful simulations of the brain. The biological analogy provides intuition, but artificial neural networks are designed for computation.
 
 <details>
-<summary><b>Deeper Dive: Neuroplasticity and Learning</b></summary>
-<br>
-Learning in biological systems is largely attributed to <i>neuroplasticity</i>—the brain's ability to modify its connections. When neurons fire together repeatedly, the synapse (the connection) between them strengthens. This biological concept, summarized by the phrase "neurons that fire together, wire together" (Hebb's rule), is directly analogous to how Artificial Neural Networks adjust their mathematical "weights" during the training phase.
+<summary><strong>Optional deeper dive: Biological learning versus artificial neural-network training</strong></summary>
+
+**Neuroplasticity** refers to changes in the connections and functioning of the nervous system. **Hebbian learning** is often summarized by the phrase “neurons that fire together, wire together.” This provides a *conceptual similarity* to changing connection strengths in artificial networks; it is **not** the same learning rule as the backpropagation and gradient-based optimization used by many modern MLPs.
+
 </details>
 
 ---
 
 ## 2. The Basic Unit: The Artificial Neuron (Perceptron)
 
-The foundational unit of an Artificial Neural Network is the artificial neuron. One of the earliest mathematical models of an artificial neuron is the **Perceptron**, introduced by Frank Rosenblatt in 1958. The perceptron serves as a simplified, linear computational model of its biological counterpart.
+A **perceptron** is an early model of an artificial neuron, associated with Frank Rosenblatt's work in the 1950s. In this lesson, *perceptron* means a neuron that computes a weighted sum and then applies a **step activation function**, returning either 0 or 1.
 
-<img src="./img/Perceptron.png" width="50%" alt="Diagram of a Perceptron showing inputs, weights, summation, activation function, and output">
+```mermaid
+flowchart LR
+    X1[Input x₁] --> S[Weighted sum + bias]
+    X2[Input x₂] --> S
+    S --> F[Step activation]
+    F --> Y[Output: 0 or 1]
+```
 
-*(Figure 2: Architecture of a Perceptron, illustrating inputs, weights, summation, bias, activation function, and output)*
+*Figure 2. An artificial neuron calculates a weighted sum and applies an activation function.*
 
-**Mathematical Model of a Perceptron:**
+For two inputs, the calculation is:
 
-1.  **Inputs ($x$):** The perceptron accepts a vector of numerical inputs $(x_1, x_2, ..., x_n)$. In practical applications, these represent features of the dataset (e.g., pixel intensities in an image). This corresponds to biological dendrites.
-2.  **Weights ($w$):** Every input is multiplied by a corresponding weight $(w_1, w_2, ..., w_n)$. Weights represent the signal strength of a specific input connection. A positive weight implies an excitatory connection; a negative weight implies an inhibitory connection.
-3.  **Summation and Bias ($b$):** The perceptron calculates the weighted sum of its inputs. To control the activation threshold effectively, a constant term called a **bias** ($b$) is added to the sum. 
-    *   $\text{Weighted Sum} = (x_1w_1 + x_2w_2 + ... + x_nw_n) + b$
-4.  **Activation Function:** The resulting sum is passed through an **activation function** to determine the final output. The original perceptron utilized a **Heaviside step function**:
-    *   If $\text{Sum} \ge 0$, the output is 1.
-    *   If $\text{Sum} < 0$, the output is 0.
-5.  **Output:** The discrete value returned by the activation function serves as the final output.
+$$
+z = w_1x_1 + w_2x_2 + b
+$$
 
-> [!IMPORTANT]  
-> **The Role of the Bias:** The bias is critical because it allows the activation threshold to shift left or right on the mathematical plane. Without a bias, the perceptron's decision boundary would be forced to pass exactly through the origin $(0,0)$, severely limiting the types of functions it could model.
+$$
+\mathrm{step}(z)=
+\begin{cases}
+1, & z\ge 0\\
+0, & z<0
+\end{cases}
+$$
+
+Here:
+
+- **Inputs** $x_1,x_2$ are feature values given to the neuron.
+- **Weights** $w_1,w_2$ determine how strongly each input contributes to the sum.
+- **Bias** $b$ is an added number that shifts the threshold.
+- **Activation function** converts the weighted sum into the neuron's output.
+
+**Work one example by hand.** Suppose $x=[1,0]$, $w=[0.5,0.5]$, and $b=-0.7$.
+
+$$
+z=(1)(0.5)+(0)(0.5)-0.7=-0.2
+$$
+
+Because $z<0$, the perceptron outputs **0**. If we keep the inputs and weights but change the bias to $-0.3$, then $z=0.2$ and the output becomes **1**.
+
+**Why the bias matters.** For two features, a perceptron's decision boundary is defined by
+
+$$w_1x_1+w_2x_2+b=0.$$
+
+For fixed, nonzero weights, changing $b$ **moves** this line without changing its orientation. If $b=0$, the boundary goes through the origin. The direction of the line depends on the weights.
 
 <details>
-<summary><b>Mathematical Context: Vector Notation (The Dot Product)</b></summary>
+<summary><strong>Optional mathematics: The dot product</strong></summary>
 
-In computer science and linear algebra, the weighted sum $(x_1w_1 + x_2w_2 + ... + x_nw_n)$ is rarely calculated using loops. Instead, it is expressed as the <b>dot product</b> of two vectors. 
-<br><br>
-If $\mathbf{x}$ is the input vector and $\mathbf{w}$ is the weight vector, the calculation is written as:
-<br>
-$z = \mathbf{w} \cdot \mathbf{x} + b$
-<br><br>
-Libraries like NumPy (used in the subsequent section) optimize this dot product at the hardware level, which is why neural networks rely heavily on parallel matrix multiplication.
+The expression $w_1x_1+w_2x_2$ is a **dot product**. With any number of inputs, we can write
+
+$$z=\mathbf{w}\cdot\mathbf{x}+b.$$
+
+Python's `numpy.dot()` computes this efficiently. It is the same weighted-sum operation we will use throughout the lesson.
+
+</details>
+
+**Check your understanding:** If $z=0$ exactly, is the perceptron's output 0 or 1 under the step-function definition above?
+
+<details>
+<summary><strong>Answer</strong></summary>
+
+The output is **1**, because the rule uses $z\ge 0$.
+
 </details>
 
 ---
 
 ## 3. Simple Computations: Modeling Logic Gates (AND, OR, NOT)
 
-Because a single perceptron calculates a linear function, it can perform basic mathematical computations and model standard Boolean logic gates. 
+A logic gate maps binary inputs (0 or 1) to a binary output. We can reproduce several gates by choosing suitable perceptron weights and biases. **Today, we set these values manually; we are not training the model.**
 
-The following Python code implements a perceptron computationally:
+| $x_1$ | $x_2$ | AND | OR | XOR |
+|:---:|:---:|:---:|:---:|:---:|
+| 0 | 0 | 0 | 0 | 0 |
+| 0 | 1 | 0 | 1 | 1 |
+| 1 | 0 | 0 | 1 | 1 |
+| 1 | 1 | 1 | 1 | 0 |
+
+### One fully worked gate: OR
+
+OR outputs 1 when **at least one** input is 1. Let
+
+$$w_1=1,\qquad w_2=1,\qquad b=-0.5.$$
+
+Then $z=x_1+x_2-0.5$.
+
+| Inputs $(x_1,x_2)$ | Weighted sum $z$ | Step output |
+|:---:|---:|:---:|
+| (0,0) | $-0.5$ | 0 |
+| (0,1) | $0.5$ | 1 |
+| (1,0) | $0.5$ | 1 |
+| (1,1) | $1.5$ | 1 |
+
+Here is the calculation as Python code:
 
 ```python
 import numpy as np
 
+
 def perceptron(inputs, weights, bias):
-    """Calculates the output of a basic linear perceptron utilizing a step function."""
-    assert len(inputs) == len(weights), "Input and weight vectors must be of equal length."
+    """Return 0 or 1 using a weighted sum and step activation."""
+    assert len(inputs) == len(weights), "Inputs and weights must match."
+    z = np.dot(inputs, weights) + bias
+    return 1 if z >= 0 else 0
 
-    # Calculate the dot product of inputs and weights, then add the bias
-    weighted_sum = np.dot(inputs, weights) + bias 
 
-    # Apply the step activation function
-    if weighted_sum >= 0:
-        return 1
-    else:
-        return 0
+gate_inputs = [[0, 0], [0, 1], [1, 0], [1, 1]]
+
+for pair in gate_inputs:
+    print(pair, "->", perceptron(pair, [1.0, 1.0], -0.5))
 ```
 
-> [!TIP]  
-> **Code Experimentation:** You can run this code in a Jupyter Notebook or any standard Python environment. Try altering the weights and biases slightly to see how the outputs change.
+**Expected outputs:** `0, 1, 1, 1` in the order shown.
 
-By defining specific static weights and biases, this generalized perceptron function acts as different logical gates.
+### What about AND and NOT?
 
-### OR Gate
-The OR function outputs 1 if at least one input is 1.
-```python
-# Configuration for an OR Gate
-weights_or = [1.0, 1.0]
-bias_or = -0.5
-inputs = [[0,0], [0,1], [1,0], [1,1]]
+- **AND** outputs 1 only if **both** inputs are 1. The same weights as OR can work with a different bias.
+- **NOT** has **one input** and returns the opposite value. It can be implemented using a negative weight.
 
-print("--- OR Gate Output ---")
-for input_pair in inputs:
-    output = perceptron(input_pair, weights_or, bias_or)
-    print(f"Input: {input_pair}, Output: {output}")
-```
+In **Activity 1**, you will find suitable parameters for AND and NOT yourself, then find *another* correct parameter set for at least one gate. This is more useful than memorizing particular numbers: many choices of weights and bias can implement the same truth table.
+
+**Think about it:** With the OR weights fixed at $[1,1]$, should the bias become **more negative** or **less negative** to make the gate behave like AND?
 
 <details>
-<summary><b>Why this works (Mathematical Breakdown for OR)</b></summary>
+<summary><strong>Answer</strong></summary>
 
-The perceptron evaluates the inequality: $1.0(x_1) + 1.0(x_2) - 0.5 \ge 0$.
-
-- If input is [0, 0]: $0 + 0 - 0.5 = -0.5$ (Less than 0 $\rightarrow$ Output 0)
-- If input is [1, 0]: $1.0 + 0 - 0.5 = 0.5$ (Greater than 0 $\rightarrow$ Output 1)
-- If input is [0, 1]: $0 + 1.0 - 0.5 = 0.5$ (Greater than 0 $\rightarrow$ Output 1)
-- If input is [1, 1]: $1.0 + 1.0 - 0.5 = 1.5$ (Greater than 0 $\rightarrow$ Output 1)
+**More negative.** The threshold becomes harder to reach: one input equal to 1 is no longer enough, but two inputs equal to 1 still are. Activity 1 asks you to determine a suitable value.
 
 </details>
-
-### AND Gate
-The AND function outputs 1 strictly when both inputs are 1.
-```python
-# Configuration for an AND Gate
-weights_and = [1.0, 1.0]
-bias_and = -1.5
-inputs = [[0,0], [0,1], [1,0], [1,1]]
-
-print("\n--- AND Gate Output ---")
-for input_pair in inputs:
-    output = perceptron(input_pair, weights_and, bias_and)
-    print(f"Input: {input_pair}, Output: {output}")
-```
-
-<details>
-<summary><b>Why this works (Mathematical Breakdown for AND)</b></summary>
-
-The perceptron evaluates the inequality: $1.0(x_1) + 1.0(x_2) - 1.5 \ge 0$.
-<br>
-Unlike the OR gate, a single input of 1 yields $1.0 - 1.5 = -0.5$ (Output 0). It strictly requires both inputs to be 1 to yield $2.0 - 1.5 = 0.5$, successfully crossing the zero threshold to output 1.
-</details>
-
-### NOT Gate
-The NOT function inverts a single input.
-```python
-# Configuration for a NOT Gate
-weights_not = [-1.0]
-bias_not = 0.5
-inputs = [[0], [1]] 
-
-print("\n--- NOT Gate Output ---")
-for input_val in inputs:
-    output = perceptron(input_val, weights_not, bias_not)
-    print(f"Input: {input_val}, Output: {output}")
-```
 
 ---
 
-## 4. The Limitation: Linear Separability and the XOR Problem
+## 4. The Limitation: Linear Separability and XOR
 
-While the single-layer perceptron successfully models basic logic gates, it possesses a fundamental theoretical limitation regarding the types of data it can classify. This limitation is defined by the concept of **linear separability**.
+A single perceptron is a **linear classifier**: the rule $\mathbf{w}\cdot\mathbf{x}+b=0$ describes one straight decision boundary in a two-dimensional input space. A step function is itself nonlinear, but it does **not** change the fact that a *single perceptron's decision boundary* is linear.
 
-When data points for logical AND or OR operations are plotted on a Cartesian plane, it is possible to draw a single, straight line (a hyperplane) that perfectly separates the coordinates resulting in an output of 1 from those resulting in an output of 0. Data sets that can be separated in this manner are *linearly separable*. 
+**Linearly separable data:** The two classes can be separated using one line (or, in higher dimensions, one hyperplane). AND and OR are linearly separable.
 
-<img src="./img/and2.png" width="50%" alt="Graph showing points for AND or OR, demonstrating linear separability">
+For example, the AND configuration $w=[1,1]$ and $b=-1.5$ has this boundary:
 
-*(Figure 3: Linearly separable data. A single hyperplane can successfully divide the two output classes.)*
+$$x_1+x_2=1.5.$$
 
-However, the perceptron mathematically fails when presented with the **XOR (Exclusive OR)** function. The XOR logic gate outputs 1 if the inputs are mutually exclusive (one is 1, the other is 0), and outputs 0 if the inputs are identical.
+The point $(1,1)$ lies on the class-1 side, while $(0,0)$, $(0,1)$, and $(1,0)$ lie on the class-0 side.
 
-| Input 1 | Input 2 | Output |
-| :------ | :------ | :----- |
-| 0       | 0       | 0      |
-| 0       | 1       | 1      |
-| 1       | 0       | 1      |
-| 1       | 1       | 0      |
+**The XOR challenge:** XOR gives 1 when exactly one of its two inputs is 1 and gives 0 when the inputs match. Its class-1 points, $(0,1)$ and $(1,0)$, occupy opposite corners of the square. Its class-0 points occupy the other two corners. **No single straight line can separate these two classes perfectly.**
 
-When plotting the XOR outputs, the data points form a diagonal opposition. 
+In Activity 1, you will plot AND and XOR, try to draw a separator, and investigate what happens when you change a perceptron's weights and bias.
 
-<img src="./img/xor2.png" width="50%" alt="Graph showing points for XOR, demonstrating non-linear separability">
+> [!NOTE]
+> **Historical context.** Research on perceptrons, including Marvin Minsky and Seymour Papert's 1969 book *Perceptrons*, highlighted limitations of certain early neural-network models. These limitations influenced attitudes toward neural networks, but the decline in AI research funding often called an “AI winter” had several causes; it should not be attributed to XOR alone.
 
-*(Figure 4: Non-linearly separable data representing the XOR problem. No single linear boundary can separate the output classes.)*
-
-Because the underlying mathematics of a single perceptron ($\mathbf{w} \cdot \mathbf{x} + b = 0$) exclusively define a linear boundary, a single perceptron is mathematically incapable of solving the XOR problem. 
-
-> [!IMPORTANT]  
-> **Historical Impact (The "AI Winter"):** This specific mathematical limitation was formally proven by Marvin Minsky and Seymour Papert in their 1969 book *Perceptrons*. Because most real-world data is non-linear, this proof led to heavy skepticism regarding neural networks, causing a significant decline in funding and research during the 1970s—a period often referred to as the first "AI Winter."
-
-<details>
-<summary><b>Conceptual Preview: How to overcome the XOR limitation</b></summary>
-
-If a single straight line cannot solve XOR, how is it solved? The solution requires drawing <i>multiple</i> lines and combining their results.
-<br><br>
-In architectural terms, this means combining multiple perceptrons together. You can mathematically construct an XOR gate by combining an OR gate, a NAND (NOT-AND) gate, and an AND gate. This requires routing the outputs of the first set of perceptrons into the inputs of a final perceptron. This concept introduces <b>hidden layers</b>, which leads to the next topic: Multi-Layer Perceptrons.
-
-> View [demo](./demo1.md)
-
-</details>
-
+**Question:** If one line is insufficient for XOR, what could we gain by combining the results of *several* neurons?
 
 ---
 
 ## 5. Overcoming the Limitation: Multi-Layer Perceptrons (MLPs)
 
-XOR shows why **one straight decision boundary is not enough**. One solution is to combine multiple neurons so that their outputs become inputs to other neurons. This is the basic idea behind a **Multi-Layer Perceptron (MLP)**, a type of feedforward neural network.
+A **Multi-Layer Perceptron (MLP)** connects neurons into layers. Typically, each neuron in a **dense** layer receives the outputs of every neuron in the preceding layer.
 
-<img src="./img/mlp.png" width="50%" alt="Diagram of an MLP with input, hidden, and output layers">
+```mermaid
+flowchart LR
+    X1[Input x₁] --> H1[Hidden neuron 1]
+    X1 --> H2[Hidden neuron 2]
+    X2[Input x₂] --> H1
+    X2 --> H2
+    H1 --> Y[Output neuron]
+    H2 --> Y
+```
 
-*Figure 5a: An MLP combines neurons into layers.*
+*Figure 3. A simple network with two input features, two hidden neurons, and one output neuron.*
 
-### The three parts of an MLP
+An MLP contains:
 
-1. **Input layer:** Receives the input features (for example, the two inputs of XOR). It passes these values into the network.
-2. **Hidden layer(s):** Each neuron combines its inputs using weights and a bias, then applies an activation function. Multiple hidden neurons allow the network to represent more than one linear boundary.
-3. **Output layer:** Combines the values from the preceding layer to produce the final output, such as a class score or predicted numerical value.
+1. **Input layer:** Receives the input features. These inputs are passed to the first trainable layer.
+2. **Hidden layer(s):** Each neuron calculates a weighted sum, adds a bias, and applies an activation function. The outputs become new features for the next layer.
+3. **Output layer:** Combines the preceding layer's outputs to produce a prediction.
 
-<img src="./img/a-neuron.jpg" width="50%" alt="Artificial neuron showing weighted sum followed by an activation function">
+### Why nonlinear activations matter
 
-*Figure 5b: A neuron in an MLP computes a weighted sum and applies an activation function.*
+Modern MLPs commonly use nonlinear activation functions, such as:
 
-### Why activation functions matter
+- **ReLU:** $f(z)=\max(0,z)$. It returns 0 for negative values and $z$ for positive values; often used in hidden layers.
+- **Sigmoid:** $f(z)=\frac{1}{1+e^{-z}}$. It produces a value strictly between 0 and 1; commonly used for the output of a binary classifier.
+- **Tanh:** Outputs values between $-1$ and $1$; another nonlinear option for hidden layers.
 
-The original perceptron uses a **step activation function** to produce an output of either 0 or 1. Although this function is nonlinear, a single perceptron can only create a **linear decision boundary**, which is why it cannot solve XOR. By combining multiple perceptrons into hidden layers, a neural network can create more complex, nonlinear decision boundaries. Modern Multi-Layer Perceptrons (MLPs) typically use other **nonlinear activation functions**, such as ReLU, sigmoid, or tanh, which are better suited to training with gradient-based methods.
-
-For now, recognize these two examples:
-
-- **ReLU:** $f(z) = \max(0,z)$. It outputs zero for negative inputs and the input itself for positive inputs; it is often used in hidden layers.
-- **Sigmoid:** $f(z) = \frac{1}{1+e^{-z}}$. It maps a number to a value between 0 and 1; it can be used in an output layer for binary classification.
-
-<img src="./img/relu.png" width="40%" alt="Graph of the ReLU activation function">
-<img src="./img/sigmoid.png" width="40%" alt="Graph of the sigmoid activation function">
+These are not the only activation functions. The central idea is that **stacking layers with only linear transformations still produces one overall linear transformation**. Nonlinear activations allow multilayer networks to represent more complicated relationships.
 
 > [!IMPORTANT]
-> **Key idea:** A single perceptron can draw one straight boundary. By combining neurons with non-linear activations, an MLP can represent non-linear decision boundaries, including those needed for XOR.
+> **One perceptron:** One straight decision boundary. **An MLP with nonlinear hidden activations:** Can combine multiple computations to form nonlinear decision boundaries, including a solution to XOR.
 
-**Think about it:** If we add more layers but use *no* non-linear activation functions, can we solve XOR? Why or why not?
+**Check your understanding:** If every layer simply calculated weighted sums and biases, without applying a nonlinear activation, could a deeper network represent XOR perfectly?
+
+<details>
+<summary><strong>Answer</strong></summary>
+
+No. Composing only affine (linear-plus-bias) transformations produces another affine transformation and therefore still gives a linear decision boundary.
+
+</details>
 
 ---
 
 ## 6. How an MLP Produces an Output: The Forward Pass
 
-A **forward pass** is simply the calculation from inputs to output, using the network's current weights and biases. It does not, by itself, change those weights.
+A **forward pass** calculates a network's output from its inputs, using weights and biases that are already assigned. A forward pass **does not update** these parameters.
 
-1. Give the network an input, such as `[0, 1]` for XOR.
-2. Each neuron in the first hidden layer calculates $z = \mathbf{w}\cdot\mathbf{x} + b$ and applies its activation function.
-3. The outputs of those neurons become the inputs of the next layer.
-4. The output layer calculates the network's final prediction.
+1. Present the input values.
+2. Each hidden neuron computes a weighted sum plus bias, then an activation.
+3. The resulting hidden-layer outputs become the next layer's inputs.
+4. The output neuron produces the network's final result.
 
-**Notice the connection:** Each neuron performs the same kind of weighted-sum calculation you saw in the perceptron. An MLP simply connects many such computations together.
+### Worked example: Build XOR from three perceptrons
 
-**Mini-check:** In a network with two inputs, three hidden neurons, and one output neuron, how many values does the hidden layer pass to the output layer? (Answer: three.)
+We can use the traditional **step activation** to show the logic explicitly. This is a hand-designed demonstration, **not a training procedure**. The hidden layer has two neurons: one computes OR and one computes NAND (NOT-AND). The output neuron computes AND of those two results.
+
+```mermaid
+flowchart LR
+    X1[Input x₁] --> OR[OR neuron]
+    X1 --> NAND[NAND neuron]
+    X2[Input x₂] --> OR
+    X2 --> NAND
+    OR --> AND[AND output neuron]
+    NAND --> AND
+```
+
+Choose these weights and biases:
+
+| Neuron | Inputs it receives | Weights | Bias | Activation |
+|---|---|---|---|---|
+| Hidden OR | $x_1,x_2$ | $[1,1]$ | $-0.5$ | Step |
+| Hidden NAND | $x_1,x_2$ | $[-1,-1]$ | $1.5$ | Step |
+| Output AND | OR output, NAND output | $[1,1]$ | $-1.5$ | Step |
+
+**Trace the input $[x_1,x_2]=[0,1]$.**
+
+**Hidden neuron 1 (OR):**
+
+$$z_{\mathrm{OR}}=(0)(1)+(1)(1)-0.5=0.5 \quad\Rightarrow\quad h_1=1$$
+
+**Hidden neuron 2 (NAND):**
+
+$$z_{\mathrm{NAND}}=(0)(-1)+(1)(-1)+1.5=0.5 \quad\Rightarrow\quad h_2=1$$
+
+**Output neuron (AND):**
+
+$$z_{\mathrm{out}}=(1)(1)+(1)(1)-1.5=0.5\quad\Rightarrow\quad\hat y=1$$
+
+This matches the XOR answer for $[0,1]$.
+
+Now check all four inputs:
+
+| Input | Hidden OR | Hidden NAND | Output AND | Expected XOR |
+|:---:|:---:|:---:|:---:|:---:|
+| (0,0) | 0 | 1 | 0 | 0 |
+| (0,1) | 1 | 1 | 1 | 1 |
+| (1,0) | 1 | 1 | 1 | 1 |
+| (1,1) | 1 | 0 | 0 | 0 |
+
+**Why this matters:** The same weighted-sum-plus-activation computation used in one perceptron appears **inside every neuron**. By connecting neurons, the network represents XOR even though one perceptron cannot.
 
 > [!NOTE]
-> We will investigate **how the network finds useful weights** in the next session. Today, the goal is to understand what the network computes and why its layered structure is useful.
+> We used step activations here because Boolean logic gates are easy to follow by hand. In **Activity 2**, we will instead build an MLP in Keras using a **ReLU hidden layer** and a **sigmoid output**, then allow Keras to learn parameters from examples. We will explore the details of learning in a later session.
+
+**Quick practice:** Without looking at the table, trace $[1,1]$ through the three neurons. What are the two hidden outputs and the final output?
+
+<details>
+<summary><strong>Answer</strong></summary>
+
+OR outputs 1; NAND outputs 0; AND of $[1,0]$ outputs 0. Thus XOR$(1,1)=0$.
+
+</details>
 
 ---
 
 ## 7. Key Terminology Recap
 
-- **Perceptron:** A single artificial neuron with a step activation; it defines a linear decision boundary.
-- **Weights and bias:** Numbers used to calculate a neuron's weighted sum.
-- **Activation function:** A function applied to the weighted sum; non-linear activations make MLPs more expressive.
-- **Linear separability:** Whether a straight line (or, in higher dimensions, a hyperplane) can separate classes.
-- **XOR:** A simple example that cannot be solved by a single linear decision boundary.
-- **MLP:** A network with an input layer, one or more hidden layers, and an output layer.
-- **Forward pass:** Computing the output of a network from a given input, without updating its weights.
+| Term | Meaning |
+|---|---|
+| **Artificial neuron** | Combines inputs using weights and bias, then applies an activation function. |
+| **Perceptron** | In this lesson, a step-activation artificial neuron producing 0 or 1. |
+| **Weight** | Controls an input's contribution to a neuron's weighted sum. |
+| **Bias** | Added value that shifts the neuron's activation threshold. |
+| **Activation function** | Transforms the weighted sum into the neuron's output. |
+| **Decision boundary** | Where a classifier changes its predicted class. |
+| **Linear separability** | Whether one straight line (or hyperplane) can separate the classes. |
+| **XOR** | Outputs 1 if exactly one of the two binary inputs is 1. |
+| **Hidden layer** | A layer of neurons between the input and output. |
+| **MLP** | An artificial neural network with one or more hidden layers. |
+| **Forward pass** | Computing a network's output without changing weights or biases. |
+
+### End-of-theory self-check
+
+1. What are the roles of a weight, a bias, and an activation function?
+2. Why is a single step-activation perceptron still called a *linear classifier*?
+3. What makes XOR different from AND in a two-dimensional plot?
+4. In the worked XOR network, what do the two hidden neurons compute?
+5. Why are nonlinear activations important when stacking multiple layers?
+
+**Next:** Complete **Activity 1: Perceptrons, Logic Gates, and the XOR Limitation**, where you will implement the perceptron, set weights and biases manually, and investigate the plots. After that, **Activity 2** introduces an MLP built with Keras.
 
 ---
 
 ## 8. Further Exploration
 
-For further academic study and practical experimentation with neural network architectures, the following resources are recommended:
+Optional resources for reviewing the concepts or experimenting with networks:
 
-- **Interactive Modeling:** [TensorFlow Playground](https://playground.tensorflow.org/) - A browser-based interface for visualizing neural network behavior, parameter adjustment, and decision boundary formation.
-- **Mathematical Foundations:** [Notes on Single-Layer Neural Networks](https://humphryscomputing.com/Notes/Neural/single.neural.html)
-- **University Course Materials:** [UW Madison Data Science: Neural Networks Overview](https://uw-madison-datascience.github.io/2022-10-26-machine-learning-novice-sklearn/06-neural-networks/index.html)
-- **Applied Deep Learning:** [Kaggle Introduction to Deep Learning](https://www.kaggle.com/learn/intro-to-deep-learning)
-- **Google Developer Documentation:** [Machine Learning Crash Course: Activation Functions](https://developers.google.com/machine-learning/crash-course/neural-networks/activation-functions)
+- [TensorFlow Playground](https://playground.tensorflow.org/) — Experiment with hidden layers and decision boundaries in a browser.
+- [Notes on Single-Layer Neural Networks](https://humphryscomputing.com/Notes/Neural/single.neural.html) — Additional mathematical context.
+- [University of Wisconsin: Neural Networks Overview](https://uw-madison-datascience.github.io/2022-10-26-machine-learning-novice-sklearn/06-neural-networks/index.html) — Further course material.
+- [Kaggle: Intro to Deep Learning](https://www.kaggle.com/learn/intro-to-deep-learning) — Applied introduction.
+- [Google Machine Learning Crash Course: Activation Functions](https://developers.google.com/machine-learning/crash-course/neural-networks/activation-functions) — Activation-function review.
 
 
----
-
-<details>
-<summary><b>Python Code for AND OR and XOR Data Visualization</b></summary>
-
-Here's the Python code to generate the scatter plots for the AND data points:
-
-```python
-import matplotlib.pyplot as plt
-import numpy as np
-
-# Define the input points (corners of the unit square)
-inputs = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-x_coords = inputs[:, 0]
-y_coords = inputs[:, 1]
-
-# AND outputs
-outputs_and = np.array([0, 0, 0, 1])
-
-# Colors: 0 -> blue, 1 -> red
-colors = ['blue', 'red']
-
-# --- Plot AND Gate ---
-plt.figure(figsize=(6, 6))
-plt.title('AND Gate Outputs')
-plt.xlabel('Input 1')
-plt.ylabel('Input 2')
-
-# Plot points
-for i in range(len(inputs)):
-    plt.scatter(
-        x_coords[i], y_coords[i],
-        color=colors[outputs_and[i]],
-        s=200,
-        zorder=3
-    )
-
-# Labels
-for i in range(len(inputs)):
-    plt.text(
-        x_coords[i] + 0.05,
-        y_coords[i],
-        f'({x_coords[i]},{y_coords[i]}) -> {outputs_and[i]}',
-        fontsize=9
-    )
-
-# --- Decision boundary for AND ---
-# x1 + x2 = 1.5  -> x2 = 1.5 - x1
-x = np.linspace(-0.5, 1.5, 100)
-y = 1.5 - x
-plt.plot(x, y, 'k--', label='Decision boundary')
-
-# Axis styling
-plt.xticks([0, 1])
-plt.yticks([0, 1])
-plt.xlim(-0.5, 1.5)
-plt.ylim(-0.5, 1.5)
-plt.grid(True, zorder=0)
-plt.axhline(0, color='black', linewidth=0.5)
-plt.axvline(0, color='black', linewidth=0.5)
-
-# Legend
-legend_handles = [
-    plt.scatter([], [], color='blue', s=100, label='Output 0'),
-    plt.scatter([], [], color='red', s=100, label='Output 1'),
-    plt.Line2D([0], [0], linestyle='--', color='black', label='Decision boundary')
-]
-
-plt.legend(handles=legend_handles, loc='center right')
-
-plt.show()
-```
-
-Here's the Python code to generate the scatter plots for the OR data points:
-
-```python
-import matplotlib.pyplot as plt
-import numpy as np
-
-# Inputs (unit square corners)
-inputs = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-x_coords = inputs[:, 0]
-y_coords = inputs[:, 1]
-
-# OR outputs
-outputs_or = np.array([0, 1, 1, 1])
-
-# Colors: 0 -> blue, 1 -> red
-colors = ['blue', 'red']
-
-# --- Plot OR Gate ---
-plt.figure(figsize=(6, 6))
-plt.title('OR Gate Outputs')
-plt.xlabel('Input 1')
-plt.ylabel('Input 2')
-
-# Plot points
-for i in range(len(inputs)):
-    plt.scatter(
-        x_coords[i], y_coords[i],
-        color=colors[outputs_or[i]],
-        s=200,
-        zorder=3
-    )
-
-# Labels
-for i in range(len(inputs)):
-    plt.text(
-        x_coords[i] + 0.05,
-        y_coords[i],
-        f'({x_coords[i]},{y_coords[i]}) -> {outputs_or[i]}',
-        fontsize=9
-    )
-
-# --- Decision boundary for OR ---
-# One valid separator: x1 + x2 = 0.5
-# (anything above this line is class 1)
-x = np.linspace(-0.5, 1.5, 100)
-y = 0.5 - x
-plt.plot(x, y, 'k--', label='Decision boundary')
-
-# Axes styling
-plt.xticks([0, 1])
-plt.yticks([0, 1])
-plt.xlim(-0.5, 1.5)
-plt.ylim(-0.5, 1.5)
-plt.grid(True, zorder=0)
-plt.axhline(0, color='black', linewidth=0.5)
-plt.axvline(0, color='black', linewidth=0.5)
-
-# Legend
-legend_handles = [
-    plt.scatter([], [], color='blue', s=100, label='Output 0'),
-    plt.scatter([], [], color='red', s=100, label='Output 1'),
-    plt.Line2D([0], [0], linestyle='--', color='black', label='Decision boundary')
-]
-
-plt.legend(handles=legend_handles, loc='center right')
-
-plt.show()
-```
-
-Here's the Python code to generate the scatter plots for the XOR data points:
-
-```python
-import matplotlib.pyplot as plt
-import numpy as np
-
-# XOR points
-inputs = np.array([
-    [0, 0],
-    [0, 1],
-    [1, 0],
-    [1, 1]
-])
-
-labels = np.array([0, 1, 1, 0])
-
-colors = ['blue', 'red']
-
-plt.figure(figsize=(6, 6))
-plt.title("XOR: Nonlinear separation")
-plt.xlabel("Input 1")
-plt.ylabel("Input 2")
-
-# plot points
-for i in range(len(inputs)):
-    x, y = inputs[i]
-    plt.scatter(x, y, color=colors[labels[i]], s=250)
-    plt.text(x + 0.05, y + 0.05, str(labels[i]))
-
-plt.axvline(0.5, color='black', linestyle='--')
-plt.axhline(0.5, color='black', linestyle='--')
-
-# highlight quadrants
-plt.fill_between([0, 0.5], 0, 0.5, color='blue', alpha=0.1)
-plt.fill_between([0.5, 1], 0.5, 1, color='blue', alpha=0.1)
-plt.fill_between([0, 0.5], 0.5, 1, color='red', alpha=0.1)
-plt.fill_between([0.5, 1], 0, 0.5, color='red', alpha=0.1)
-
-plt.xticks([0, 0.5, 1])
-plt.yticks([0, 0.5, 1])
-plt.grid(True, alpha=0.3)
-
-plt.show()
-```
-
-
-
-</details>
-
-<!-- 
-- https://carpentries-incubator.github.io/machine-learning-novice-sklearn/07-neural-networks/index.html
-- Practical NN with Scikit-Learn:** [Stack Abuse Tutorial](https://stackabuse.com/introduction-to-neural-networks-with-scikit-learn/) 
--->
-
-
-<!-- 
-Here's the Python code using Matplotlib to generate the scatter plots for the AND and XOR data points:
-
-```python
-import matplotlib.pyplot as plt
-import numpy as np
-
-# Define the input points (corners of the unit square)
-inputs = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-x_coords = inputs[:, 0] # First column (Input 1)
-y_coords = inputs[:, 1] # Second column (Input 2)
-
-# Define the outputs for AND and XOR
-outputs_and = np.array([0, 0, 0, 1])
-outputs_xor = np.array([0, 1, 1, 0])
-
-# Define colors for visualization (e.g., blue for 0, red for 1)
-colors = ['blue', 'red']
-
-# --- Plotting AND Gate ---
-plt.figure(figsize=(6, 6))
-plt.title('AND Gate Outputs')
-plt.xlabel('Input 1')
-plt.ylabel('Input 2')
-
-# Plot points based on their output class
-for i in range(len(inputs)):
-    plt.scatter(x_coords[i], y_coords[i],
-                color=colors[outputs_and[i]], # Color determined by AND output
-                s=200, # Size of points
-                zorder=3) # Plot points on top of gridlines
-
-# Add text labels for clarity (optional)
-for i in range(len(inputs)):
-    plt.text(x_coords[i] + 0.05, y_coords[i], f'({x_coords[i]},{y_coords[i]}) -> {outputs_and[i]}', fontsize=9)
-
-# Customize plot appearance
-plt.xticks([0, 1])
-plt.yticks([0, 1])
-plt.xlim(-0.5, 1.5)
-plt.ylim(-0.5, 1.5)
-plt.grid(True, zorder=0) # Grid behind points
-plt.axhline(0, color='black', linewidth=0.5)
-plt.axvline(0, color='black', linewidth=0.5)
-
-# Create legend handles manually
-legend_handles = [plt.scatter([], [], color='blue', s=100, label='Output 0'),
-                  plt.scatter([], [], color='red', s=100, label='Output 1')]
-plt.legend(handles=legend_handles, loc='center right')
-
-plt.show()
-
-
-# --- Plotting XOR Gate ---
-plt.figure(figsize=(6, 6))
-plt.title('XOR Gate Outputs')
-plt.xlabel('Input 1')
-plt.ylabel('Input 2')
-
-# Plot points based on their output class
-for i in range(len(inputs)):
-    plt.scatter(x_coords[i], y_coords[i],
-                color=colors[outputs_xor[i]], # Color determined by XOR output
-                s=200,
-                zorder=3)
-
-# Add text labels for clarity (optional)
-for i in range(len(inputs)):
-     plt.text(x_coords[i] + 0.05, y_coords[i], f'({x_coords[i]},{y_coords[i]}) -> {outputs_xor[i]}', fontsize=9)
-
-
-# Customize plot appearance
-plt.xticks([0, 1])
-plt.yticks([0, 1])
-plt.xlim(-0.5, 1.5)
-plt.ylim(-0.5, 1.5)
-plt.grid(True, zorder=0)
-plt.axhline(0, color='black', linewidth=0.5)
-plt.axvline(0, color='black', linewidth=0.5)
-
-# Reuse legend handles from above
-plt.legend(handles=legend_handles, loc='center right')
-
-plt.show()
-```
-
-This code will generate two separate plots:
-
-1.  **AND Plot:** Shows the four input points, colored according to the AND output ( (1,1) will be red, the others blue). You can clearly see these points *are* linearly separable.
-2.  **XOR Plot:** Shows the four input points, colored according to the XOR output ( (0,1) and (1,0) will be red, (0,0) and (1,1) will be blue). This visually demonstrates the non-linear separability challenge. 
--->
