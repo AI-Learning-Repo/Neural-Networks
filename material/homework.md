@@ -10,8 +10,8 @@ This homework prepares you for next week's session, where we will continue worki
 ## Part 1. GitHub Repository
 
 - ⭐ Submit your GitHub username through OMA.
-- ⭐ Create a **private GitHub repository** and add me as a collaborator. My GitHub username is `username`.
-- You will use this repository throughout the course to store your class activities and pair-programming Jupyter notebooks.
+- ⭐ Create a **private GitHub repository** and add me as a collaborator. My GitHub username is `55d41251`.
+- You will use this repository throughout the course to submit your class activities and pair-programming Jupyter notebooks.
 - Keep your repository private to avoid accidentally sharing solutions with other students.
 
 ## Part 2. Companion Course: MIT Hands-On Deep Learning
@@ -29,8 +29,9 @@ Focus on understanding the main concepts. You do not need to memorize the mathem
 
 Review the following mathematical concepts, which will help you understand how neural networks learn:
 
-- 🔔 [Partial Derivatives and Gradients](https://d2l.ai/chapter_preliminaries/calculus.html)
-- 🔔 [Vectors, Matrices, and Tensors](https://d2l.ai/chapter_preliminaries/linear-algebra.html)
+- ⭐ [The Matrix Calculus You Need For Deep Learning](https://explained.ai/matrix-calculus/)
+- ⭐ [Calculus on Computational Graphs: Backpropagation](https://colah.github.io/posts/2015-08-Backprop/)
+- 🔔 [Backpropagation in Neural Network](https://www.geeksforgeeks.org/machine-learning/backpropagation-in-neural-network/)
 
 ## Part 4. Visualizing Neural Network Learning
 
@@ -40,3 +41,9 @@ These videos provide intuitive visual explanations of concepts we will revisit i
 - 📘 Backpropagation:
   - [Intuition](https://youtu.be/Ilg3gGewQ5U)
   - [Calculus](https://youtu.be/tIeHLnjs5U8)
+- [A Visual Intro to NumPy and Data Representation](https://jalammar.github.io/visual-numpy/)
+
+## Part 5. Other
+
+- 🔔 [Partial Derivatives and Gradients](https://d2l.ai/chapter_preliminaries/calculus.html)
+- 🔔 [Vectors, Matrices, and Tensors](https://d2l.ai/chapter_preliminaries/linear-algebra.html)

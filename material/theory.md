@@ -213,6 +213,9 @@ Because the underlying mathematics of a single perceptron ($\mathbf{w} \cdot \ma
 If a single straight line cannot solve XOR, how is it solved? The solution requires drawing <i>multiple</i> lines and combining their results.
 <br><br>
 In architectural terms, this means combining multiple perceptrons together. You can mathematically construct an XOR gate by combining an OR gate, a NAND (NOT-AND) gate, and an AND gate. This requires routing the outputs of the first set of perceptrons into the inputs of a final perceptron. This concept introduces <b>hidden layers</b>, which leads to the next topic: Multi-Layer Perceptrons.
+
+> View [demo](./demo1.md)
+
 </details>
 
 
@@ -238,7 +241,7 @@ XOR shows why **one straight decision boundary is not enough**. One solution is 
 
 ### Why activation functions matter
 
-The original perceptron uses a **step function** to return either 0 or 1. Modern MLPs generally use other activation functions. In particular, **non-linear** activations are essential: without them, stacking linear layers would still be equivalent to a single linear transformation, and the network would not overcome the XOR limitation.
+The original perceptron uses a **step activation function** to produce an output of either 0 or 1. Although this function is nonlinear, a single perceptron can only create a **linear decision boundary**, which is why it cannot solve XOR. By combining multiple perceptrons into hidden layers, a neural network can create more complex, nonlinear decision boundaries. Modern Multi-Layer Perceptrons (MLPs) typically use other **nonlinear activation functions**, such as ReLU, sigmoid, or tanh, which are better suited to training with gradient-based methods.
 
 For now, recognize these two examples:
 
@@ -293,7 +296,7 @@ For further academic study and practical experimentation with neural network arc
 - **Mathematical Foundations:** [Notes on Single-Layer Neural Networks](https://humphryscomputing.com/Notes/Neural/single.neural.html)
 - **University Course Materials:** [UW Madison Data Science: Neural Networks Overview](https://uw-madison-datascience.github.io/2022-10-26-machine-learning-novice-sklearn/06-neural-networks/index.html)
 - **Applied Deep Learning:** [Kaggle Introduction to Deep Learning](https://www.kaggle.com/learn/intro-to-deep-learning)
-- **Google Developer Documentation:** [Machine Learning Crash Course – Activation Functions](https://developers.google.com/machine-learning/crash-course/neural-networks/activation-functions)
+- **Google Developer Documentation:** [Machine Learning Crash Course: Activation Functions](https://developers.google.com/machine-learning/crash-course/neural-networks/activation-functions)
 
 
 ---

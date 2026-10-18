@@ -31,7 +31,6 @@ The main topics include:
 - Multilayer Perceptrons (MLPs)
 - Deep Neural Networks (DNNs)
 - Convolutional Neural Networks (CNNs)
-- Recurrent Neural Networks (RNNs)
 - Transformers
 - Large Language Models (LLMs)
 
@@ -51,7 +50,7 @@ By the end of this course, you will be able to:
 
 ## Prerequisites
 
-- Data Processing and Machine Learning
+- Data Handling and Machine Learning
 
 ## Teaching Methods
 
@@ -64,6 +63,12 @@ You will receive preparation materials in advance. Classroom time focuses on app
 - **Class activities:** Any activities not completed during class are expected to be completed at home.
 - **Pair programming:** Pair-programming sessions will run from **Week 2 through Week 7**.
 - **Self-study:** You are expected to review theory, watch companion lectures, complete exercises, and prepare for upcoming sessions.
+
+**Course Arrangements**
+
+- **Pair Programming:** Pair programming in Week N will focus on topics covered in Week N−1, not topics introduced that same morning. This gives you time to understand, practice, and absorb the material before working on it collaboratively. Pair programming runs from Week 2 through Week 7.
+- **Exams:** To avoid overcrowding and provide a better exam environment, exams will be organized into two groups, with a maximum of 20 students in the room at a time. Students will be assigned to groups pseudo-randomly. One group will take the exam in the morning and the other in the afternoon. Group assignments will be communicated in advance.
+- **Keras and PyTorch:** The original plan was to use PyTorch throughout the course. However, based on the feedback, we will use Keras as our primary framework. In Week 8, we will provide materials demonstrating how to migrate our Keras examples to PyTorch, giving you a foundation for exploring PyTorch independently.
 
 ## Course Workload
 
@@ -101,10 +106,10 @@ An alternative assessment track is available for those who do not participate in
 
 **Weight Distribution**
 
-- **Group Activities in class** – 28%  
-- **Pair Programming in class** – 38%  
-- **Coding Exam**  – 27%  
-- **Feedback** – 7%  
+- **Group Activities in class**: 28%  
+- **Pair Programming in class**: 38%  
+- **Exam** : 27%  
+- **Feedback**: 7%  
 - **Bonus** Up to 100 additional points (equivalent to 10 percentage points), added to the standard assessment score.
 
 ## Materials

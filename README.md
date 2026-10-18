@@ -13,10 +13,15 @@
 
 **Part 1: Course Introduction**
 - [About the Course](./material/about.md)
+- Course Arrangements
+  - **Pair Programming:** Pair programming in Week N will focus on topics covered in Week N−1, not topics introduced that same morning. This gives you time to understand, practice, and absorb the material before working on it collaboratively. Pair programming runs from Week 2 through Week 7.
+  - **Exams:** To avoid overcrowding and provide a better exam environment, exams will be organized into two groups, with a maximum of 20 students in the room at a time. Students will be assigned to groups pseudo-randomly. One group will take the exam in the morning and the other in the afternoon. Group assignments will be communicated in advance.
+  - **Keras and PyTorch:** The original plan was to use PyTorch throughout the course. However, based on the feedback, we will use Keras as our primary framework. In Week 8, we will provide materials demonstrating how to migrate our Keras examples to PyTorch, giving you a foundation for exploring PyTorch independently.
+- Submission: We will use GitHub throughout the course to submit class activities and pair-programming Jupyter notebooks. The repository must be private to avoid accidentally sharing solutions with other students.
 
 **Part 2: From Perceptrons to Multi-Layer Perceptrons**
-- Demo: Neural networks and decision boundaries
 - [Theory and Summary](./material/theory.md)
+- [Demo: Neural networks and decision boundaries](./material/demo1.md)
 - [Activity 1: Perceptrons, Logic Gates, and XOR](./material/activity1.md)
 - [Activity 2: Building an MLP with Keras](./material/activity2.md)
 
@@ -25,9 +30,18 @@
 **Part 3: Working with MLPs**
 - Demo: Keras and neural network applications
 - [MLP Theory Recap](./material/theory.md#5-overcoming-limitations-with-multi-layer-networks-mlps)
+- [Demo: Activation Functions](https://developers.google.com/machine-learning/crash-course/neural-networks/activation-functions)
 - [Activity 3: MLP Regression with Keras](./material/activity3.md)
 - [Activity 4: Concrete Dataset Challenge](./material/activity4.md)
 - [Activity 5 (Optional): Visualizing Nonlinear Decision Boundaries](./material/activity5.md)
+
+<details>
+<summary>Links used in Session</summary>
+
+- https://playground.tensorflow.org/
+- https://developers.google.com/machine-learning/crash-course/neural-networks/nodes-hidden-layers
+- https://developers.google.com/machine-learning/crash-course/neural-networks/activation-functions
+</details>
 
 
 ----
@@ -35,7 +49,6 @@
 <details>
 <summary><b>Resources</b></summary>
 
-- https://playground.tensorflow.org/
 - Hands-On Machine Learning with Scikit-Learn and PyTorch, By Aurélien Géron
   - https://metropolia.finna.fi/Record/nelli15.41704215400041
   - https://colab.research.google.com/github/ageron/handson-ml3/

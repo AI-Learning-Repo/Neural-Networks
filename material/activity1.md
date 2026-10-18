@@ -9,7 +9,7 @@ In this activity, you will build a **single perceptron**, explore how its weight
 3. Visualize the difference between linearly separable and non-linearly separable data.
 4. Explain, in your own words, why a single perceptron cannot solve XOR.
 
-**How to work:** Complete the tasks before opening the sample solutions. Work with a partner when possible: predict the outcome first, run the code, then explain any difference.
+**How to work:** Complete the tasks before opening the sample solutions. Predict the outcome first, run the code, then explain any difference.
 
 ---
 
@@ -150,7 +150,7 @@ bias_not = 0.5
 ```
 </details>
 
-**Discuss with your partner:** What role does the bias play? What happens if you change the sign of the weight in the NOT gate?
+**Discussion:** What role does the bias play? What happens if you change the sign of the weight in the NOT gate?
 
 ### 3 Visualizing Linear Separability and the XOR Limitation
 
