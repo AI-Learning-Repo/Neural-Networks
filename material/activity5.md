@@ -24,18 +24,18 @@ By the end of this activity, you should be able to:
 
 We will create 400 random points on a two-dimensional plane.
 
-Each point has two coordinates: \(x_1\) and \(x_2\).
+Each point has two coordinates: $x_1$ and $x_2$.
 
 We assign a class based on the point's distance from the origin:
 
-- **Class 1:** Inside a circle of radius 1.2.
+- **Class 1:** Inside a circle of radius 1.2.$
 - **Class 0:** Outside the circle.
 
 Mathematically, a point is inside the circle when:
 
-\[
+$$
 x_1^2 + x_2^2 \leq 1.2^2
-\]
+$$
 
 ### Generate the data
 
@@ -408,9 +408,9 @@ For each experiment:
 - What differences do you notice between ReLU and Tanh?
 
 <details>
-<summary><strong>Instructor Notes</strong></summary>
+<summary><strong>Notes</strong></summary>
 
-The goal is to help students visualize the relationship between network architecture and representational capacity.
+The goal is to visualize the relationship between network architecture and representational capacity.
 
 Possible observations:
 
@@ -420,8 +420,6 @@ Possible observations:
 - Tanh networks can produce smoother-looking boundaries.
 
 Results depend on random initialization and training.
-
-Avoid introducing detailed optimization theory here. Those topics will be covered later in the course.
 
 </details>
 
