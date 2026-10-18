@@ -17,6 +17,7 @@ In this activity, you will build a small Multi-Layer Perceptron (MLP) using Kera
 
 > Keras provides a high-level API for building neural networks. TensorFlow, PyTorch and JAX provide the underlying computational frameworks. CPU, GPU and TPU are hardware on which the computations can run.
 
+----
 
 ## 1. Prepare the XOR data
 
@@ -46,6 +47,8 @@ print(y)
 - `y` has 4 expected outputs, one for each example.
 
 </details>
+
+----
 
 ## 2. Build the MLP
 
@@ -96,6 +99,8 @@ model.summary()
 
 </details>
 
+----
+
 ## 3. Prepare the model for training
 
 We tell Keras how to measure mistakes, how to update the model, and which performance measure to report. **We will explain the mathematics behind these choices in a future session.**
@@ -120,6 +125,8 @@ For now, focus on the role of each setting, not its internal mathematics.
 </details>
 
 **Check your understanding:** Which setting determines the score printed as *accuracy*?
+
+----
 
 ## 4. Train the model
 
@@ -156,6 +163,8 @@ The internal learning process, including backpropagation and optimization, comes
 > [!NOTE]
 > This tiny example does **not** guarantee a perfect result. Different random initial weights can lead to different outcomes, and some runs may fail to learn XOR. That is an interesting observation, not an indication that your code is necessarily incorrect.
 
+----
+
 ## 5. Inspect the predictions
 
 Accuracy gives a summary. Looking at each input and its predicted output tells us more.
@@ -189,6 +198,8 @@ for inputs, probability, predicted, expected in zip(
 
 </details>
 
+----
+
 ## 6. Experiment: change the architecture
 
 **Choose one experiment.** Before rerunning the model, predict what might change.
@@ -213,10 +224,11 @@ A single result is not enough to compare architectures reliably because model in
 
 </details>
 
+----
 
-## Troubleshooting & Concept Check: When Accuracy is Under 100%
+## 7. Troubleshooting & Concept Check: When Accuracy is Under 100%
 
-### Question 1: Does an accuracy of 75% mean my code is wrong or that an MLP cannot solve XOR?
+**Question 1: Does an accuracy of 75% mean my code is wrong or that an MLP cannot solve XOR?**
 
 **Hints to consider:**
 - How many examples are in the XOR dataset, and how many are correct if your score is 75%?
@@ -235,7 +247,7 @@ A single result is not enough to compare architectures reliably because model in
 
 </details>
 
-### Question 2: Why do small networks get trapped on XOR?
+**Question 2: Why do small networks get trapped on XOR?**
 
 **Hints to consider:**
 - What happens to the gradient of a `ReLU` neuron when its input is negative?
@@ -257,7 +269,7 @@ Two primary factors cause training to stall on XOR:
 </details>
 
 
-### Question 3: If your accuracy is less than 100%, what can you do?
+**Question 3: If your accuracy is less than 100%, what can you do?**
 
 **Hints to consider:**
 - How could you change the starting point?
@@ -286,6 +298,7 @@ If your model is stuck at 50% or 75%, try any of the following adjustments (reme
 
 </details>
 
+----
 
 
 ## Conclusion
