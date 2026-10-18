@@ -406,7 +406,9 @@ The MLP contains a **hidden layer with nonlinear activation functions**, allowin
 
 ## Complete runnable solution (Sections 1–5)
 
-The following script repeats all **required** code in one place. Use it to check your work **after** attempting the activity. The experiment in Section 6 is open-ended; a reproducible experiment helper is included in that section's solution above.
+The following script repeats the baseline workflow from Sections 1–5, in one place. Use it to check your work **after** attempting the activity. The experiment in Section 6 is open-ended; a reproducible experiment helper is included in that section's solution above.
+
+
 
 <details>
 <summary><strong>Show complete Python solution</strong></summary>

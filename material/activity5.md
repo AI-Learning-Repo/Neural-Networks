@@ -427,9 +427,8 @@ An MLP combines the results of multiple hidden neurons. With nonlinear activatio
 
 ---
 
-## 6. Experiment with the architecture (choose **one**)
+## 6. Experiment with the architecture
 
-Choose **one** modification; do not try every option unless you have extra time:
 
 1. Change both hidden layers from **16 to 4** neurons.
 2. Change both hidden layers from **16 to 32** neurons.
@@ -488,7 +487,8 @@ A smaller model **may** produce a simpler or less accurate approximation, but th
 
 ### Select your final model
 
-Select the model you want to evaluate using **validation results** and your boundary comparison. If you did not perform the optional experiment, your final model is simply `circle_model`.
+Select the model you want to evaluate using **validation results** and your boundary comparison.
+
 
 ```python
 # Default: use the original baseline model.
@@ -567,7 +567,7 @@ A single perceptron produces one straight boundary. An MLP combines hidden neuro
 <details>
 <summary><strong>Open the complete Python script</strong></summary>
 
-This script runs the **baseline architecture** from start to finish, including test evaluation. The optional architecture experiment in Section 6 is intentionally separate, so you can choose whether to perform it before final testing.
+This script runs the **baseline architecture** from start to finish, including test evaluation. The architecture experiment in Section 6 is intentionally separate, so you can choose whether to perform it before final testing.
 
 ```python
 import numpy as np
@@ -669,7 +669,7 @@ plt.axis("equal")
 plt.legend()
 plt.show()
 
-# 6. Optional: compare a fresh modified model using validation only.
+# 6. compare a fresh modified model using validation only.
 # See the smaller-model solution in Section 6 above.
 # If you select another model, assign it to selected_model below.
 selected_model = circle_model

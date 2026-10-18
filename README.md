@@ -3,6 +3,7 @@
 > [!IMPORTANT]  
 > - [Homework](./material/homework.md) for next Week.
 > - [Zoom Recordings](#)
+> - [self-assesment.xlsx](./material/self-assesment.xlsx)
 > - About Privacy
 
 ----
@@ -28,7 +29,6 @@
 ### Afternoon:
 
 **Part 3: Working with MLPs**
-- Demo: Keras and neural network applications
 - [MLP Theory Recap](./material/theory.md#5-overcoming-limitations-with-multi-layer-networks-mlps)
 - [Demo: Activation Functions](https://developers.google.com/machine-learning/crash-course/neural-networks/activation-functions)
 - [Activity 3: MLP Regression with Keras](./material/activity3.md)
