@@ -82,14 +82,14 @@ model.summary()
 
 **Hidden layer**
 
-- Weights: \(2 \times 4 = 8\)
-- Biases: \(4\)
+- Weights: $2 \times 4 = 8$
+- Biases: $4$
 - Total: **12**
 
 **Output layer**
 
-- Weights: \(4 \times 1 = 4\)
-- Biases: \(1\)
+- Weights: $4 \times 1 = 4$
+- Biases: $1$
 - Total: **5**
 
 **Network total: 17 trainable parameters.**
@@ -212,6 +212,81 @@ for inputs, probability, predicted, expected in zip(
 A single result is not enough to compare architectures reliably because model initialization is random. Students need only notice that architecture and training choices affect the result. We will study these effects more rigorously later.
 
 </details>
+
+
+## Troubleshooting & Concept Check: When Accuracy is Under 100%
+
+### Question 1: Does an accuracy of 75% mean my code is wrong or that an MLP cannot solve XOR?
+
+**Hints to consider:**
+- How many examples are in the XOR dataset, and how many are correct if your score is 75%?
+- What is the difference between whether a network *can* represent a function vs. whether gradient descent successfully *found* the right weights?
+
+<details>
+<summary><b>Answer: Representation vs. Optimization</b></summary>
+
+**No, your code is not broken!**
+
+1. **A score of 75% means 3 out of 4 examples were classified correctly.** In a 4-sample dataset, missing just one sample drops your accuracy from 100% down to 75%.
+2. **Representation $\neq$ Optimization:**
+   - **Representation (Theory):** A single perceptron can *never* represent XOR because it can only draw one straight line. An MLP with hidden neurons and nonlinear activations *can* represent XOR.
+   - **Optimization (Practice):** Training starts from random initial weights. Just because a valid solution exists somewhere in the weight space doesn't guarantee gradient descent will reach it every single run.
+3. **The "Lazy" Line:** Drawing a single straight line can easily classify 3 out of 4 points correctly (like an OR gate). Sometimes the network settles into this "good enough" local minimum early on and gets stuck there.
+
+</details>
+
+### Question 2: Why do small networks get trapped on XOR?
+
+**Hints to consider:**
+- What happens to the gradient of a `ReLU` neuron when its input is negative?
+- What happens if 1 or 2 neurons in a 4-neuron layer stop firing altogether?
+
+<details>
+<summary><b>Answer: Dying ReLUs and Local Minima</b></summary>
+
+Two primary factors cause training to stall on XOR:
+
+1. **The "Dying ReLU" Problem:**
+   - The ReLU function outputs `0` for any negative input, and its gradient becomes `0`.
+   - If a hidden neuron happens to receive negative values across all 4 XOR samples, it stops updating and effectively "dies."
+   - In a network with only 4 hidden neurons, losing even 1 or 2 neurons leaves too few active features to draw the two boundaries needed for XOR.
+
+2. **Flat Loss Landscapes:**
+   - With full-batch training (all 4 samples processed together in one step), the optimizer can land in a flat plateau or saddle point where gradients become too small to nudge the weights out before epochs run out.
+
+</details>
+
+
+### Question 3: If your accuracy is less than 100%, what can you do?
+
+**Hints to consider:**
+- How could you change the starting point?
+- What activation function avoids the "dying neuron" issue?
+- How could you give the network more capacity or more training time?
+
+<details>
+<summary><b>Answer: 4 Practical Fixes to Try</b></summary>
+
+If your model is stuck at 50% or 75%, try any of the following adjustments (remember to rebuild and recompile the model first):
+
+1. **Change the random seed (or retrain without one):**
+   - Different initial weights put your model in a completely different starting position on the loss surface. A new starting point will often descend straight to 100%.
+2. **Switch activation from `relu` to `tanh`:**
+   ```python
+   model.add(layers.Dense(units=4, activation="tanh"))
+   ```
+   - `tanh` outputs values between $-1$ and $+1$ (zero-centered) and does not completely shut off like ReLU. It is much more reliable for small logic problems like XOR.
+3. **Increase hidden units (e.g., from `units=4` to `units=8`):**
+   ```python
+   model.add(layers.Dense(units=8, activation="relu"))
+   ```
+   - Adding more neurons creates *redundancy*. Even if 1 or 2 neurons die or get stuck, the remaining neurons can still separate the inputs.
+4. **Train for more epochs (e.g., `num_epochs = 2000`):**
+   - If the learning rate is small or the loss surface is flat, the optimizer may simply need more training steps to escape a plateau.
+
+</details>
+
+
 
 ## Conclusion
 

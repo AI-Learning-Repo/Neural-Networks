@@ -209,7 +209,7 @@ X_train_val, X_test, y_train_val, y_test = train_test_split(
     cereal_features,
     cereal_target,
     test_size=0.2,
-    random_state=42
+    random_state=32
 )
 
 # Then separate 20% of the remaining data for validation
@@ -217,7 +217,7 @@ X_train, X_val, y_train, y_val = train_test_split(
     X_train_val,
     y_train_val,
     test_size=0.2,
-    random_state=42
+    random_state=32
 )
 
 print("Training:", X_train.shape)

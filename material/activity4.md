@@ -160,7 +160,7 @@ Use the same approach as Activity 3:
 
 1. Reserve 20% for testing.
 2. Split the remaining data into training and validation sets.
-3. Use `random_state=42` for reproducibility.
+3. Use `random_state=32` for reproducibility.
 
 ```python
 # YOUR CODE HERE
@@ -175,14 +175,14 @@ X_train_val, X_test, y_train_val, y_test = train_test_split(
     concrete_features,
     concrete_target,
     test_size=0.2,
-    random_state=42
+    random_state=32
 )
 
 X_train, X_val, y_train, y_val = train_test_split(
     X_train_val,
     y_train_val,
     test_size=0.2,
-    random_state=42
+    random_state=32
 )
 
 print("Training:", X_train.shape)
