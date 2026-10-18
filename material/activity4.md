@@ -25,8 +25,6 @@ By the end of this activity, you should be able to:
 python -m pip install numpy pandas matplotlib scikit-learn keras tensorflow
 ```
 
-The CSV is loaded from a public URL; for offline teaching, download it ahead of time and substitute its local file path.
-
 ---
 
 ## 1. Meet the concrete dataset

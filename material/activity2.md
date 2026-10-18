@@ -383,7 +383,7 @@ Rebuilding and reseeding makes each trial a fresh training run. Keep other setti
 
 **Do not automatically conclude** that any one of these changes will solve the problem. Compare the actual predictions and loss.
 
-**Optional instructor background (not required for this lesson):** With ReLU, a hidden unit whose pre-activation is nonpositive on every training example may receive no useful gradient signal from those examples. This is one possible reason that some initializations learn poorly. It does **not** follow that every run below 100% is caused by a “dead ReLU,” nor that adding epochs can always resolve the problem. The details belong in a later lesson about optimization and backpropagation.
+**Optional background (not required for this lesson):** With ReLU, a hidden unit whose pre-activation is nonpositive on every training example may receive no useful gradient signal from those examples. This is one possible reason that some initializations learn poorly. It does **not** follow that every run below 100% is caused by a “dead ReLU,” nor that adding epochs can always resolve the problem. The details belong in a later lesson about optimization and backpropagation.
 
 </details>
 

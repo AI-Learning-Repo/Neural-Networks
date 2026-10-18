@@ -24,7 +24,6 @@ By the end, you should be able to:
 python -m pip install numpy pandas matplotlib scikit-learn keras tensorflow
 ```
 
-The dataset is loaded from a public CSV URL, so the first run requires an internet connection. For offline teaching, download the CSV beforehand and replace the URL with a local filename.
 
 ---
 
