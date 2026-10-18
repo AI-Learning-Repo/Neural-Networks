@@ -26,6 +26,10 @@
 - [Activity 1: Perceptrons, Logic Gates, and XOR](./material/activity1.md)
 - [Activity 2: Building an MLP with Keras](./material/activity2.md)
 
+
+
+----
+
 ### Afternoon:
 
 **Part 3: Working with MLPs**
@@ -35,6 +39,8 @@
 - [Activity 4: Concrete Dataset Challenge](./material/activity4.md)
 - [Activity 5 (Optional): Visualizing Nonlinear Decision Boundaries](./material/activity5.md)
 
+----
+
 <details>
 <summary>Links used in Session</summary>
 
@@ -42,7 +48,6 @@
 - https://developers.google.com/machine-learning/crash-course/neural-networks/nodes-hidden-layers
 - https://developers.google.com/machine-learning/crash-course/neural-networks/activation-functions
 </details>
-
 
 ----
 
