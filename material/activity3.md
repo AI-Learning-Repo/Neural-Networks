@@ -142,8 +142,6 @@ We will use two datasets:
 cereal_data = pd.read_csv(
     "https://raw.githubusercontent.com/AI-Learning-Repo/resources/refs/heads/main/datasets/cereal.csv"
 )
-
-#concrete_data = pd.read_csv("https://raw.githubusercontent.com/AI-Learning-Repo/resources/refs/heads/main/datasets/concrete.csv")
 ```
 
 **Your tasks:**
@@ -163,9 +161,6 @@ cereal_data = pd.read_csv(
 ```python
 print(cereal_data.head())
 print(cereal_data.shape)
-
-#print(concrete_data.head())
-#print(concrete_data.shape)
 ```
 
 The targets are:

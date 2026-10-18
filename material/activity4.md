@@ -28,6 +28,33 @@ The concrete dataset contains information about concrete mixtures and their comp
 
 Our goal is to predict **CompressiveStrength**, a continuous numerical value, from the input features.
 
+
+### About the Concrete Compressive Strength Dataset
+
+The **Concrete Compressive Strength** dataset is a classic benchmark for regression in materials engineering.
+
+**Compressive strength** is the primary measure of concrete performance: it indicates how much compressive load a structural element can bear before fracturing, measured in **Megapascals (MPa)**. Standard residential concrete is typically around $20\text{--}30\text{ MPa}$, while high-strength commercial concrete can exceed $60\text{--}80\text{ MPa}$.
+
+**The Problem: Why Neural Networks?**
+
+Concrete strength does not follow a simple linear formula. It is a highly complex, nonlinear function of ingredient ratios, water-binder chemistry, and curing time. Because MLPs can learn nonlinear interactions, they are widely used in civil engineering to optimize mixture formulas without waiting months for physical lab testing.
+
+**Dataset Overview:**
+
+* **Instances:** 1,030 concrete samples tested in laboratory conditions.
+* **Input Features ($8$ continuous measurements):**
+  1. `Cement`: Amount of cement ($\text{kg/m}^3$) — the primary binder.
+  2. `BlastFurnaceSlag`: Recycled blast furnace byproduct ($\text{kg/m}^3$) — acts as a supplementary binder.
+  3. `FlyAsh`: Coal combustion byproduct ($\text{kg/m}^3$) — improves workability and long-term strength.
+  4. `Water`: Amount of water ($\text{kg/m}^3$) — key driver of hydration and workability.
+  5. `Superplasticizer`: Chemical additive ($\text{kg/m}^3$) — reduces water demand while maintaining fluidity.
+  6. `CoarseAggregate`: Crushed stone or gravel ($\text{kg/m}^3$) — structural bulk.
+  7. `FineAggregate`: Sand ($\text{kg/m}^3$) — fills voids between coarse aggregate.
+  8. `Age`: Curing duration in days ($1\text{ to }365\text{ days}$) before the physical crush test is conducted.
+* **Target ($y$):**
+  * `CompressiveStrength`: Concrete compressive strength in **Megapascals (MPa)**.
+
+
 ### Load the dataset
 
 ```python
