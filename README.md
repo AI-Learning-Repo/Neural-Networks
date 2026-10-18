@@ -9,15 +9,13 @@
 </p>
 
 
-### Links
+## Course Arrangements
 
-- [Use of AI in the course](./material/AI.md)
-- [Zoom Recordings](https://metropoliafi-my.sharepoint.com/:f:/g/personal/samiben_metropolia_fi/IgBa_dyuxYAISaLK3j9jXNBNAbMwTiSJEvT0Mv1aXgWBvuo?e=JM8kA8)
-- [Resources](./material/resources.md)
-- [Grading](./material/grading.md)
+- **Pair Programming:** Pair programming in Week N will focus on topics covered in Week N−1, not topics introduced that same morning. This gives you time to understand, practice, and absorb the material before working on it collaboratively. Pair programming runs from Week 2 through Week 7.
+- **Exams:** To avoid overcrowding and provide a better exam environment, exams will be organized into two groups, with a maximum of 20 students in the room at a time. Students will be assigned to groups pseudo-randomly. One group will take the exam in the morning and the other in the afternoon. Group assignments will be communicated in advance.
+- **Keras and PyTorch:** The original plan was to use PyTorch throughout the course. However, based on the feedback, we will use Keras as our primary framework. In Week 8, we will provide materials demonstrating how to migrate our Keras examples to PyTorch, giving you a foundation for exploring PyTorch independently.
 
-
-### Sessions
+## Sessions
 
 - [Week 1: Lecture notes and activities] - Multilayer Perceptrons (MLPs)
 - [Week 2: Lecture notes and activities] - MLPs, Deep Neural Networks
@@ -29,6 +27,12 @@
 - [Week 8: Lecture notes and activities] - Examination
 
 
+## Links
+
+- [Zoom Recordings](https://metropoliafi-my.sharepoint.com/:f:/g/personal/samiben_metropolia_fi/IgBa_dyuxYAISaLK3j9jXNBNAbMwTiSJEvT0Mv1aXgWBvuo?e=JM8kA8)
+- [Resources](./material/resources.md)
+- [Grading](./material/grading.md)
+- [Use of AI in the course](./material/AI.md)
 
 <!-- Links -->
 
