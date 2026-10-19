@@ -134,16 +134,11 @@ model.summary()
 | Output: 4 inputs → 1 neuron | `4 × 1 = 4` | `1` | **5** |
 | **Total** | **12** | **5** | **17** |
 
-In symbols, the network first calculates hidden activations and then an output score:
+In symbols, the network first calculates hidden activations and then an output score: $`h = \mathrm{ReLU}(xW_1 + b_1), \qquad \hat{y} = \sigma(hW_2 + b_2)`$
 
 <!-- $$
 h = \mathrm{ReLU}(xW_1 + b_1), \qquad \hat{y} = \sigma(hW_2 + b_2)
 $$ -->
-
-
-```math
-h = \operatorname{ReLU}(xW_1 + b_1), \qquad \hat{y} = \sigma(hW_2 + b_2)
-```
 
 Here, $\sigma$ is sigmoid. You **do not** need to calculate the matrix multiplications by hand in this activity.
 
