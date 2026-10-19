@@ -34,7 +34,6 @@
 
 **Part 3: Working with MLPs**
 - [MLP Theory Recap](./material/theory.md#5-overcoming-the-limitation-multi-layer-perceptrons-mlps)
-- [Demo: Activation Functions](https://developers.google.com/machine-learning/crash-course/neural-networks/activation-functions)
 - [Activity 3: MLP Regression with Keras](./material/activity3.md)
 - [Activity 4: Concrete Dataset Challenge](./material/activity4.md)
 - [Activity 5 (Optional): Visualizing Nonlinear Decision Boundaries](./material/activity5.md)
@@ -47,6 +46,9 @@
 - https://playground.tensorflow.org/
 - https://developers.google.com/machine-learning/crash-course/neural-networks/nodes-hidden-layers
 - https://developers.google.com/machine-learning/crash-course/neural-networks/activation-functions
+- https://developers.google.com/machine-learning/crash-course/overfitting/dividing-datasets
+- https://github.com/googlecolab/google-colab-cli
+- https://marketplace.visualstudio.com/items?itemName=google.colab
 </details>
 
 ----
