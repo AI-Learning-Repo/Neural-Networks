@@ -40,7 +40,7 @@
 
 ----
 
-<details>
+<details open>
 <summary>Links used in Session</summary>
 
 - https://playground.tensorflow.org/
