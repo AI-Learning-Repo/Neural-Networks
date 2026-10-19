@@ -483,6 +483,10 @@ print(f"Accuracy calculated from predictions: {calculated_accuracy:.0%}")
 
 </details>
 
+
+- [Here is the equivalent implementation](./src/activity2-tensorflow.py) written directly with pure TensorFlow using `tf.keras.Sequential`
+- [Here is the exact equivalent code](./src/activity2-pytorch.py) implemented in PyTorch using `torch.nn.Sequential`
+
 ### Optional references
 
 - [Keras 3: NumPy/Python utilities (`set_random_seed`)](https://keras.io/api/utils/python_utils/)
