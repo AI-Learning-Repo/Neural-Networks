@@ -22,7 +22,7 @@ By the end of this activity, you should be able to:
 **Software:** Python with NumPy, pandas, matplotlib, scikit-learn, **Keras 3**, and the TensorFlow backend. If necessary:
 
 ```bash
-python -m pip install numpy pandas matplotlib scikit-learn keras tensorflow
+!pip install numpy pandas matplotlib scikit-learn keras tensorflow
 ```
 
 ---
