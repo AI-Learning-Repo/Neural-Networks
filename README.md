@@ -3,7 +3,7 @@
 > [!IMPORTANT]  
 > - [Homework](./material/homework.md) for next Week.
 > - [Zoom Recordings](#)
-> - [self-assesment.xlsx](./material/self-assesment.xlsx)
+> - [Self Assessment](./material/self-assessment.xlsx)
 > - About Privacy
 
 ----
