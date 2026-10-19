@@ -63,6 +63,11 @@ flowchart LR
 
 A **perceptron** is an early model of an artificial neuron, associated with Frank Rosenblatt's work in the 1950s. In this lesson, *perceptron* means a neuron that computes a weighted sum and then applies a **step activation function**, returning either 0 or 1.
 
+<img src="./img/Perceptron.png" width="50%" alt="Diagram of a Perceptron showing inputs, weights, summation, activation function, and output">
+
+*(Figure 2: Architecture of a Perceptron, illustrating inputs, weights, summation, bias, activation function, and output)*
+
+
 ```mermaid
 flowchart LR
     X1[Input x₁] --> S[Weighted sum + bias]
@@ -71,7 +76,7 @@ flowchart LR
     F --> Y[Output: 0 or 1]
 ```
 
-*Figure 2. An artificial neuron calculates a weighted sum and applies an activation function.*
+*Figure 2b. An artificial neuron calculates a weighted sum and applies an activation function.*
 
 For two inputs, the calculation is:
 
@@ -201,6 +206,10 @@ A single perceptron is a **linear classifier**: the rule $\mathbf{w}\cdot\mathbf
 
 **Linearly separable data:** The two classes can be separated using one line (or, in higher dimensions, one hyperplane). AND and OR are linearly separable.
 
+<img src="./img/and2.png" width="50%" alt="Graph showing points for AND or OR, demonstrating linear separability">
+
+*(Figure 3: Linearly separable data. A single hyperplane can successfully divide the two output classes.)*
+
 For example, the AND configuration $w=[1,1]$ and $b=-1.5$ has this boundary:
 
 $$x_1+x_2=1.5.$$
@@ -210,6 +219,11 @@ The point $(1,1)$ lies on the class-1 side, while $(0,0)$, $(0,1)$, and $(1,0)$ 
 **The XOR challenge:** XOR gives 1 when exactly one of its two inputs is 1 and gives 0 when the inputs match. Its class-1 points, $(0,1)$ and $(1,0)$, occupy opposite corners of the square. Its class-0 points occupy the other two corners. **No single straight line can separate these two classes perfectly.**
 
 In Activity 1, you will plot AND and XOR, try to draw a separator, and investigate what happens when you change a perceptron's weights and bias.
+
+
+<img src="./img/xor2.png" width="50%" alt="Graph showing points for XOR, demonstrating non-linear separability">
+
+*(Figure 4: Non-linearly separable data representing the XOR problem. No single linear boundary can separate the output classes.)*
 
 > [!NOTE]
 > **Historical context.** Research on perceptrons, including Marvin Minsky and Seymour Papert's 1969 book *Perceptrons*, highlighted limitations of certain early neural-network models. These limitations influenced attitudes toward neural networks, but the decline in AI research funding often called an “AI winter” had several causes; it should not be attributed to XOR alone.
@@ -222,6 +236,12 @@ In Activity 1, you will plot AND and XOR, try to draw a separator, and investiga
 
 A **Multi-Layer Perceptron (MLP)** connects neurons into layers. Typically, each neuron in a **dense** layer receives the outputs of every neuron in the preceding layer.
 
+<img src="./img/mlp.png" width="50%" alt="Diagram of an MLP with input, hidden, and output layers">
+
+*Figure 5a: An MLP combines neurons into layers.*
+
+
+
 ```mermaid
 flowchart LR
     X1[Input x₁] --> H1[Hidden neuron 1]
@@ -232,13 +252,18 @@ flowchart LR
     H2 --> Y
 ```
 
-*Figure 3. A simple network with two input features, two hidden neurons, and one output neuron.*
+*Figure 5b: A simple network with two input features, two hidden neurons, and one output neuron.*
 
 An MLP contains:
 
 1. **Input layer:** Receives the input features. These inputs are passed to the first trainable layer.
 2. **Hidden layer(s):** Each neuron calculates a weighted sum, adds a bias, and applies an activation function. The outputs become new features for the next layer.
 3. **Output layer:** Combines the preceding layer's outputs to produce a prediction.
+
+
+<img src="./img/a-neuron.jpg" width="50%" alt="Artificial neuron showing weighted sum followed by an activation function">
+
+*Figure 5c: A neuron in an MLP computes a weighted sum and applies an activation function.*
 
 ### Why nonlinear activations matter
 
@@ -247,6 +272,10 @@ Modern MLPs commonly use nonlinear activation functions, such as:
 - **ReLU:** $f(z)=\max(0,z)$. It returns 0 for negative values and $z$ for positive values; often used in hidden layers.
 - **Sigmoid:** $f(z)=\frac{1}{1+e^{-z}}$. It produces a value strictly between 0 and 1; commonly used for the output of a binary classifier.
 - **Tanh:** Outputs values between $-1$ and $1$; another nonlinear option for hidden layers.
+
+
+<img src="./img/relu.png" width="40%" alt="Graph of the ReLU activation function">
+<img src="./img/sigmoid.png" width="40%" alt="Graph of the sigmoid activation function">
 
 These are not the only activation functions. The central idea is that **stacking layers with only linear transformations still produces one overall linear transformation**. Nonlinear activations allow multilayer networks to represent more complicated relationships.
 
@@ -330,7 +359,7 @@ Now check all four inputs:
 <details>
 <summary><strong>Answer</strong></summary>
 
-OR outputs 1; NAND outputs 0; AND of $[1,0]$ outputs 0. Thus XOR$(1,1)=0$.
+OR outputs 1; NAND outputs 0; AND of $[1,0]$ outputs 0. Thus XOR $(1,1)=0$.
 
 </details>
 
