@@ -33,7 +33,7 @@
 ### Afternoon:
 
 **Part 3: Working with MLPs**
-- [MLP Theory Recap](./material/theory.md#5-overcoming-limitations-with-multi-layer-networks-mlps)
+- [MLP Theory Recap](./material/theory.md#5-overcoming-the-limitation-multi-layer-perceptrons-mlps)
 - [Demo: Activation Functions](https://developers.google.com/machine-learning/crash-course/neural-networks/activation-functions)
 - [Activity 3: MLP Regression with Keras](./material/activity3.md)
 - [Activity 4: Concrete Dataset Challenge](./material/activity4.md)
