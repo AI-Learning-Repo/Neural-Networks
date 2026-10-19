@@ -25,6 +25,9 @@ python -m pip install numpy keras tensorflow
 
 Keras is a high-level API for defining and training networks. TensorFlow is the backend we will use to perform the computations. Keras 3 can also use other supported backends, but switching backends is **not required** for this lab.
 
+<!-- ![](./img/keras.png) -->
+<img src="./img/keras.png" width="50%">
+
 > **Important:** Our dataset has only **four examples**, and we will train and inspect the model on those *same four examples*. The resulting accuracy is **training accuracy**, not evidence that the network generalizes to unseen data. We will introduce train/validation/test splits in a later activity.
 
 ---
@@ -133,9 +136,14 @@ model.summary()
 
 In symbols, the network first calculates hidden activations and then an output score:
 
-$$
+<!-- $$
 h = \mathrm{ReLU}(xW_1 + b_1), \qquad \hat{y} = \sigma(hW_2 + b_2)
-$$
+$$ -->
+
+
+```math
+h = \operatorname{ReLU}(xW_1 + b_1), \qquad \hat{y} = \sigma(hW_2 + b_2)
+```
 
 Here, $\sigma$ is sigmoid. You **do not** need to calculate the matrix multiplications by hand in this activity.
 
