@@ -21,7 +21,7 @@ By the end, you should be able to:
 **Software:** Python with NumPy, pandas, matplotlib, scikit-learn, **Keras 3**, and a Keras backend (we use TensorFlow in this course). If necessary:
 
 ```bash
-python -m pip install numpy pandas matplotlib scikit-learn keras tensorflow
+!pip install numpy pandas matplotlib scikit-learn keras tensorflow
 ```
 
 
@@ -56,7 +56,68 @@ flowchart TD
 
 ### Keras and its backend
 
-Keras is a high-level API for building and training networks. Keras 3 supports TensorFlow, JAX, and PyTorch backends. We will use the **TensorFlow** backend, but backend internals are not a learning objective today.
+Keras is a high-level API that makes building and training neural networks easier.
+
+Instead of implementing complex mathematical operations ourselves, we can use Keras to define neural network architectures and train models with just a few lines of code.
+
+**Keras 3 supports multiple backend frameworks:**
+
+- TensorFlow
+- PyTorch
+- JAX
+
+These frameworks perform the underlying computations and can use different hardware, such as CPUs, GPUs, and TPUs.
+
+<img src="./img/keras.png" width="50%">
+
+<details>
+<summary><b>How Keras resolves the backend?</b></summary>
+
+In Keras (specifically Keras 3+), if you do not explicitly specify a backend, **`"tensorflow"` is the built-in default.**
+
+Here is how Keras decides which backend to use when you run `import keras`:
+
+1. **Checks the `KERAS_BACKEND` environment variable:**
+   It first checks if you defined an environment variable like `os.environ["KERAS_BACKEND"] = "torch"` or `"jax"`. Because you didn't define one, it moved to the next step.
+
+2. **Checks the configuration file (`~/.keras/keras.json`):**
+   If no environment variable is set, Keras looks for a JSON config file located at `~/.keras/keras.json`.
+   When Keras creates this file automatically, its default configuration is:
+   ```json
+   {
+       "floatx": "float32",
+       "epsilon": 1e-07,
+       "backend": "tensorflow",
+       "image_data_format": "channels_last"
+   }
+   ```
+  
+3. **Fallback default:**
+   If the config file does not exist, Keras has `"tensorflow"` hardcoded as its fallback backend. Since you had `tensorflow` installed in your Colab runtime, it successfully loaded TensorFlow as the engine.
+
+**How to use a different backend (PyTorch or JAX):**
+
+If you want to use **PyTorch** or **JAX**, you must set the environment variable **before** importing Keras:
+
+```python
+import os
+os.environ["KERAS_BACKEND"] = "torch"  # or "jax"
+
+import keras
+print(keras.config.backend())  # Output: 'torch'
+```
+
+*(Note: Setting `os.environ["KERAS_BACKEND"]` after running `import keras` will not work, as the backend is initialized upon the first import).*
+</details>
+
+<details>
+<summary><b>Why is this useful?</b></summary>
+
+- Keras allows us to focus on **building, training, and experimenting with neural networks** rather than implementing the underlying mathematical operations.
+- Keras 3 also allows standard Keras models written with backend-compatible operations to work across supported backend frameworks.
+- In this course, we will primarily use **Keras with the TensorFlow backend**. We will explore the internal workings of neural network training as the course progresses.
+</details>
+
 
 ```python
 import numpy as np

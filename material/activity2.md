@@ -20,7 +20,7 @@ By the end of this activity, you should be able to:
 **Software:** NumPy and **Keras 3** with the **TensorFlow backend**, consistent with the Keras approach used in Activities 3 and 4. If needed, install them in your Python environment:
 
 ```bash
-python -m pip install numpy keras tensorflow
+!pip install numpy keras tensorflow
 ```
 
 Keras is a high-level API for defining and training networks. TensorFlow is the backend we will use to perform the computations. Keras 3 can also use other supported backends, but switching backends is **not required** for this lab.
