@@ -2,7 +2,7 @@
 
 > [!IMPORTANT]  
 > - [Homework](./material/homework.md) for next Week.
-> - [Zoom Recordings](#)
+> - [Zoom Recordings](https://metropoliafi-my.sharepoint.com/:f:/g/personal/samiben_metropolia_fi/IgAhtmQUMQZgTorEcDalv0GFAbU-nybGf-c6Z_Q9XfRGSXU)
 > - [Self Assessment](./material/self-assessment.xlsx)
 > - About Privacy
 
@@ -15,10 +15,7 @@
 **Part 1: Course Introduction**
 - [About the Course](./material/about.md)
 - Course Arrangements
-  - **Pair Programming:** Pair programming in Week N will focus on topics covered in Week N−1, not topics introduced that same morning. This gives you time to understand, practice, and absorb the material before working on it collaboratively. Pair programming runs from Week 2 through Week 7.
-  - **Exams:** To avoid overcrowding and provide a better exam environment, exams will be organized into two groups, with a maximum of 20 students in the room at a time. Students will be assigned to groups pseudo-randomly. One group will take the exam in the morning and the other in the afternoon. Group assignments will be communicated in advance.
-  - **Keras and PyTorch:** The original plan was to use PyTorch throughout the course. However, based on the feedback, we will use Keras as our primary framework. In Week 8, we will provide materials demonstrating how to migrate our Keras examples to PyTorch, giving you a foundation for exploring PyTorch independently.
-- Submission: We will use GitHub throughout the course to submit class activities and pair-programming Jupyter notebooks. The repository must be private to avoid accidentally sharing solutions with other students.
+
 
 **Part 2: From Perceptrons to Multi-Layer Perceptrons**
 - [Theory and Summary](./material/theory.md)
@@ -73,6 +70,13 @@
 
 </details>
 
+
+<!-- 
+  - **Pair Programming:** Pair programming in Week N will focus on topics covered in Week N−1, not topics introduced that same morning. This gives you time to understand, practice, and absorb the material before working on it collaboratively. Pair programming runs from Week 2 through Week 7.
+  - **Exams:** To avoid overcrowding and provide a better exam environment, exams will be organized into two groups, with a maximum of 20 students in the room at a time. Students will be assigned to groups pseudo-randomly. One group will take the exam in the morning and the other in the afternoon. Group assignments will be communicated in advance.
+  - **Keras and PyTorch:** The original plan was to use PyTorch throughout the course. However, based on the feedback, we will use Keras as our primary framework. In Week 8, we will provide materials demonstrating how to migrate our Keras examples to PyTorch, giving you a foundation for exploring PyTorch independently.
+- Submission: We will use GitHub throughout the course to submit class activities and pair-programming Jupyter notebooks. The repository must be private to avoid accidentally sharing solutions with other students. 
+-->
 
 <!-- 
 
