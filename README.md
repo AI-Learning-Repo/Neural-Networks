@@ -23,7 +23,7 @@
 
 ## Links
 
-- [Zoom Recordings](https://metropoliafi-my.sharepoint.com/:f:/g/personal/samiben_metropolia_fi/IgAhtmQUMQZgTorEcDalv0GFAbU-nybGf-c6Z_Q9XfRGSXU?email=Gam.TweHe%40metropolia.fi&e=S7AtR8)
+- [Zoom Recordings](https://metropoliafi-my.sharepoint.com/:f:/g/personal/samiben_metropolia_fi/IgAhtmQUMQZgTorEcDalv0GFAbU-nybGf-c6Z_Q9XfRGSXU)
 - [Resources](./material/resources.md)
 - [Grading](./material/grading.md)
 - [Use of AI in the course](./material/AI.md)
