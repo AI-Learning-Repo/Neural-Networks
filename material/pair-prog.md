@@ -1,0 +1,2 @@
+<!-- - **Pair Programming:** Pair programming in Week N will focus on topics covered in Week N−1, not topics introduced that same morning. This gives you time to understand, practice, and absorb the material before working on it collaboratively. Pair programming runs from Week 2 through Week 7.
+- Submission: We will use GitHub throughout the course to submit class activities and pair-programming Jupyter notebooks. The repository must be private to avoid accidentally sharing solutions with other students. -->
