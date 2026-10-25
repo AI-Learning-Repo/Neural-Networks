@@ -6,7 +6,7 @@
 
 This demonstration explains the full training cycle through a worked numerical example. Follow the worked calculations in order. Repeating the hand calculations is optional practice. The emphasis is on interpreting predictions, losses, gradients, and parameter updates.
 
-The arithmetic simulation uses basic Python. The optional visualizations use NumPy and Matplotlib where indicated. **Run the supplied plotting code to view each figure, then describe the pattern it shows. Writing plotting code from scratch is not an assessed task.** Printed step $k$ represents the state after $k$ completed updates.
+<!-- The arithmetic simulation uses basic Python. The optional visualizations use NumPy and Matplotlib where indicated. **Run the supplied plotting code to view each figure, then describe the pattern it shows. Writing plotting code from scratch is not an assessed task.** Printed step $k$ represents the state after $k$ completed updates. -->
 
 **Python setup:** [Install and check the Week 2 libraries](1-python_setup.md). The plots use NumPy and Matplotlib; the arithmetic simulation needs no additional libraries.
 
@@ -26,7 +26,9 @@ $$
 \frac{dL}{dw}=\frac{dL}{d\hat y}\frac{d\hat y}{dw}
 $$
 
-The demonstration applies this rule one factor at a time. With several weights, a partial derivative measures the effect of changing one weight while holding the others fixed. For more examples, see the [calculus review](calculus_review.md). No hand calculation is required to use this refresher.
+The demonstration applies this rule one factor at a time. With several weights, a partial derivative measures the effect of changing one weight while holding the others fixed. 
+
+<!-- For more examples, see the [calculus review](calculus_review.md). No hand calculation is required to use this refresher. -->
 
 ## Learning objectives
 
