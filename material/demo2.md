@@ -91,15 +91,11 @@ plt.show()
 
 Probability describes how likely an event is. **Odds** compare the probability that the event happens with the probability that it does not happen:
 
-```math
-\boxed{\text{odds}=\frac{p}{1-p}}
-```
+$\mathrm{odds}=\frac{p}{1-p}$
 
 **Logit** means the *natural logarithm of the odds*:
 
-```math
-\boxed{\operatorname{logit}(p)=\ln\left(\frac{p}{1-p}\right)}
-```
+$\mathrm{logit}(p)=\ln\left(\frac{p}{1-p}\right)$
 
 It is **not** $\ln(p)$. The denominator $1-p$ is essential: it converts probability into odds *before* taking the logarithm.
 
@@ -109,25 +105,21 @@ These are illustrative forecasts, not real weather predictions.
 
 **Example A — 20% probability of rain**
 
-```math
-\begin{aligned}
-p &= 0.20\\
-\text{odds} &= \frac{0.20}{0.80}=0.25\\
-\operatorname{logit}(0.20) &= \ln(0.25)\approx -1.3863
-\end{aligned}
-```
+$p=0.20$
+
+$\mathrm{odds}=\frac{0.20}{0.80}=0.25$
+
+$\mathrm{logit}(0.20)=\ln(0.25)\approx -1.3863$
 
 The odds are **1 to 4 in favor of rain**, or equivalently 4 to 1 against rain. The negative logit indicates that rain is less likely than no rain.
 
 **Example B — 80% probability of rain**
 
-```math
-\begin{aligned}
-p &= 0.80\\
-\text{odds} &= \frac{0.80}{0.20}=4\\
-\operatorname{logit}(0.80) &= \ln(4)\approx +1.3863
-\end{aligned}
-```
+$p=0.80$
+
+$\mathrm{odds}=\frac{0.80}{0.20}=4$
+
+$\mathrm{logit}(0.80)=\ln(4)\approx +1.3863$
 
 The odds are **4 to 1 in favor of rain**. The positive logit indicates that rain is more likely than no rain.
 
@@ -148,15 +140,11 @@ Taking the logarithm solves two practical problems for a linear classifier:
 
 A logistic regression model makes the **log-odds** a linear function of the inputs:
 
-```math
-\boxed{z=w_1x_1+w_2x_2=\ln\left(\frac{p}{1-p}\right)}
-```
+$z=w_1x_1+w_2x_2=\ln\left(\frac{p}{1-p}\right)$
 
 It then applies sigmoid to recover the probability:
 
-```math
-\boxed{p=\sigma(z)=\frac{1}{1+e^{-z}}}
-```
+$p=\sigma(z)=\frac{1}{1+e^{-z}}$
 
 Another way to express this relationship is that **odds equal $e^z$**. The use of log-odds is convenient for this model, not a requirement that every binary classifier use a logit.
 
