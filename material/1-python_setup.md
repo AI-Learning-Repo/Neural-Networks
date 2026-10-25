@@ -10,7 +10,7 @@ Google Colab is the main environment for these materials. First run the imports 
 |---|---|
 | Lecture plots | NumPy, Matplotlib |
 | Symbolic calculus examples | SymPy |
-| Titanic, Auto MPG, and Heart pair programming | NumPy, pandas, Matplotlib, scikit-learn, Keras, TensorFlow |
+| Titanic and Auto MPG | NumPy, pandas, Matplotlib, scikit-learn, Keras, TensorFlow |
 
 The package named `scikit-learn` is imported as `sklearn`. Run only the notebook command needed for the missing library or group:
 
