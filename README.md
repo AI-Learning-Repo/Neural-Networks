@@ -36,26 +36,18 @@
   <summary>Links used in Session</summary>
 
   - https://playground.tensorflow.org/
+  - Deep Learning from Scratch
+  - https://metropolia.finna.fi/Record/nelli15.4100000009347178
+  - https://github.com/SethHWeidman/DLFS_code
   </details>
 
 ### Monday Afternoon:
 
+- Google Colab with VS Code???
 - Grade for Data Handling and Machine Learning course
 - Pair Programming 1
 - Pair Programming 2: Calculus Review for Neural Networks: Ordinary and Partial Derivatives 
   
-----
-
-<details open>
-<summary>Links used in Session</summary>
-
-- https://playground.tensorflow.org/
-- https://developers.google.com/machine-learning/crash-course/
-- Deep Learning from Scratch
-  - https://metropolia.finna.fi/Record/nelli15.4100000009347178
-  - https://github.com/SethHWeidman/DLFS_code
-</details>
-
 ----
 
 <details>

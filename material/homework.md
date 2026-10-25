@@ -14,6 +14,7 @@ This homework prepares you for next week's session, where we will continue worki
 <!-- https://developers.google.com/machine-learning/ -->
 
 - DNN
+- stochastic gradient descent (SDG)
 - Introduction to Regularization
 - Using L1 and L2 Regularization with Keras to Decrease Overfitting
 - Drop Out for Keras to Decrease Overfitting
