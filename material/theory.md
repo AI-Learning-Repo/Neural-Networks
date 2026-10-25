@@ -10,7 +10,9 @@ The central learning cycle remains the same throughout:
 
 **Forward pass → Calculate loss → Backpropagation → Gradient descent → Repeat**
 
-The supplied Python examples are for running, observing, and interpreting. Writing plotting code from scratch is not a learning objective.
+The supplied Python examples are for running, observing, and interpreting. Writing plotting code from scratch is not a learning objective. Hand calculations are optional practice.
+
+**Python setup:** [Install and check the Week 2 libraries](1-python_setup.md). The supplied examples use NumPy and Matplotlib.
 
 ## Learning objectives
 

@@ -4,6 +4,8 @@
 
 ## Purpose of this reading
 
+This is a conceptual reading with no complete Python programs to run. For the companion demos, activities, and calculus review, use the [Week 2 Python setup instructions](1-python_setup.md).
+
 The earlier examples used one or two weights to make predictions, calculate a loss, and update the model. Larger neural networks follow the **same fundamental learning cycle**:
 
 **Forward pass → Loss → Backpropagation → Parameter update → Repeat**

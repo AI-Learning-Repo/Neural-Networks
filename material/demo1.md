@@ -4,9 +4,29 @@
 
 ## How to use this demonstration
 
-This demonstration explains the full training cycle through a worked numerical example. Follow the calculations in order, then check each result using the supplied Python code. The emphasis is on interpreting predictions, losses, gradients, and parameter updates.
+This demonstration explains the full training cycle through a worked numerical example. Follow the worked calculations in order. Repeating the hand calculations is optional practice. The emphasis is on interpreting predictions, losses, gradients, and parameter updates.
 
 The arithmetic simulation uses basic Python. The optional visualizations use NumPy and Matplotlib where indicated. **Run the supplied plotting code to view each figure, then describe the pattern it shows. Writing plotting code from scratch is not an assessed task.** Printed step $k$ represents the state after $k$ completed updates.
+
+**Python setup:** [Install and check the Week 2 libraries](1-python_setup.md). The plots use NumPy and Matplotlib; the arithmetic simulation needs no additional libraries.
+
+## Calculus refresher before the demonstration
+
+A derivative measures the local slope of a function. For a square function, the derivative is:
+
+$$
+f(w)=w^2,\qquad f'(w)=2w
+$$
+
+At $w=2$, the slope is 4: a small increase in the weight increases the function value. A negative slope means a small increase decreases the function value.
+
+The chain rule connects successive calculations. If a weight changes a prediction, and the prediction changes a loss, multiply the two local sensitivities:
+
+$$
+\frac{dL}{dw}=\frac{dL}{d\hat y}\frac{d\hat y}{dw}
+$$
+
+The demonstration applies this rule one factor at a time. With several weights, a partial derivative measures the effect of changing one weight while holding the others fixed. For more examples, see the [calculus review](calculus_review.md). No hand calculation is required to use this refresher.
 
 ## Learning objectives
 

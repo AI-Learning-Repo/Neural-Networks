@@ -1,4 +1,4 @@
-# Activity 3 — Binary Classification: From Logit and Sigmoid to Backpropagation and Gradient Descent
+# Activity 2 — Binary Classification: From Logit and Sigmoid to Backpropagation and Gradient Descent
 
 **Guided reinforcement | One logistic neuron, two inputs, two weights, and no bias in the core activity**
 
@@ -6,11 +6,13 @@
 
 This activity follows the same conceptual path as the binary-classification demonstration. The first sections establish the difference between **probability, odds, logit, sigmoid, and binary cross-entropy (BCE)**. The later sections apply those ideas to a forward pass, the chain rule, partial derivatives, and a gradient-descent update.
 
-Attempt each numbered question before opening its worked answer. Record the calculations and explain what each result means. Repetition of important ideas is intentional: the same forward → loss → backpropagation → update cycle appears in regression and classification.
+Hand calculations are optional practice. Read each numbered question, consider the reasoning, then open its worked answer and explain what the result means. Repetition of important ideas is intentional: the same forward → loss → backpropagation → update cycle appears in regression and classification.
 
 **Visualization instructions:** Run the supplied Python code, observe the resulting plots, and interpret them. **Writing plotting code from scratch is not assessed.** The core activity is the two-weight, no-bias calculation. The bias and learning-rate dataset exercises are extensions.
 
 NumPy and Matplotlib are used for the visualizations. The worked hand calculations do not require Python.
+
+**Python setup:** [Install and check the Week 2 libraries](1-python_setup.md).
 
 ## Learning objectives
 
@@ -466,6 +468,8 @@ graph LR
     Y["True label y = 1"]:::input --> BCE
 ```
 
+**Connection to Demo 2:** This activity restarts at weights $(0,0)$, whereas [Demo 2](demo2.md#why-the-activity-uses-different-starting-weights) starts at $(1,-2)$. For the shared input $(2,1)$, both weighted sums equal zero: `0*2 + 0*1 = 1*2 + (-2)*1 = 0`. Both therefore predict probability 0.5 and, for label 1, BCE approximately 0.693147. The gradients and parameter changes are identical for this observation, but the weights remain different and can give different predictions on other inputs.
+
 ### Step 1 — Forward pass: logit, probability, loss
 
 **Question 7.** Calculate (a) the logit $z$, (b) the sigmoid probability $p$, and (c) the BCE loss. Identify which calculations depend on the target label. Does a forward pass update the weights?
@@ -860,6 +864,10 @@ To compare learning rates fairly, use the same dataset and initial parameters fo
 | 6 | 0 | 2 | 1 |
 
 All six observations contribute to each gradient in the supplied program. It is therefore **full-batch gradient descent**, not one-example SGD.
+
+**Dataset limitation:** This dataset cannot be perfectly separated by a linear classifier, even with a bias. The negative example $(1,1)$ is the midpoint of the positive examples $(2,0)$ and $(0,2)$. A linear score with a bias at the midpoint is the average of the two endpoint scores. If both positive examples have scores above the classification threshold, the midpoint must also lie above it, so all three labels cannot be classified correctly together.
+
+The experiment studies learning-rate stability rather than perfect fitting. More updates or a different learning rate cannot remove this model limitation: do not expect perfect classification or mean BCE to approach zero on this dataset.
 
 For a dataset of $n$ examples, the mean BCE is:
 

@@ -17,7 +17,7 @@ By the end of this review, the following ideas should be clear:
 
 Each example has the same sequence: **function → intuition → calculation → value at a point → Python verification → visualization → interpretation**. Read the derivation before opening the corresponding code block. Run the supplied Python code, observe the figures, and explain how their shapes relate to the derivative values. **Creating plotting code is not an assessed objective.**
 
-Python dependencies: `sympy`, `numpy`, and `matplotlib`. Install them if needed with `pip install sympy numpy matplotlib`.
+**Python setup:** [Install and check the Week 2 libraries](1-python_setup.md). This review uses SymPy for symbolic derivatives and NumPy and Matplotlib for visualizations. Hand calculations are optional practice; the supplied code verifies the worked examples.
 
 The symbol $w$ denotes one variable. The symbols $w_1$ and $w_2$ denote two independently adjustable variables, as in a neural network with two weights.
 

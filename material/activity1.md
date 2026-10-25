@@ -1,12 +1,14 @@
-# Activity 2 — From One Weight to Two Weights: Partial Derivatives, Backpropagation, and Gradient Descent
+# Activity 1 — From One Weight to Two Weights: Partial Derivatives, Backpropagation, and Gradient Descent
 
 **Guided reinforcement | One linear neuron, two inputs, two weights, and an optional bias**
 
 ## How to use this guided activity
 
-This activity reinforces the theory through short calculations and explanations. Attempt each question before opening its worked answer. The emphasis is on explaining the reasoning, not merely obtaining the same numbers.
+This activity reinforces the theory through worked calculations and explanations. Hand calculations are optional practice. Read each question, consider the reasoning, then open its worked answer to check the result.
 
-Use paper or a notebook to record predictions, losses, gradients, and updated parameters. The arithmetic simulations use basic Python; the supplied visualizations use NumPy and Matplotlib where indicated. **For every visualization, run the provided Python code, inspect the resulting figure, and explain what it shows. Creating plotting code from scratch is not an assessed task.** The core tasks are the forward pass, partial derivatives, and one parameter update; repeated-update and learning-rate explorations are extensions.
+The arithmetic simulations use basic Python; the supplied visualizations use NumPy and Matplotlib where indicated. **Open each visualization's code section, run the supplied code, inspect the resulting figure, and explain what it shows. Creating plotting code from scratch is not an assessed task.** The core concepts are the forward pass, partial derivatives, and one parameter update; repeated-update and learning-rate explorations are extensions.
+
+**Python setup:** [Install and check the Week 2 libraries](1-python_setup.md).
 
 ## Learning objectives
 

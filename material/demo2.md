@@ -5,7 +5,9 @@
 
 This demonstration builds on the one-weight regression example. The same learning cycle is retained: **forward pass → loss → backpropagation → gradient descent**. The main differences are that the output is now a probability and the loss is **binary cross-entropy (BCE)**.
 
-Follow the explanations and manual calculations in order. **Run the supplied Python code to view the plots, then explain the patterns. Writing plotting code from scratch is not an assessed task.** The plotting examples use NumPy and Matplotlib; the short training simulation uses basic Python.
+Follow the explanations and worked calculations in order. Repeating the hand calculations is optional practice. **Open the plotting code sections, run the supplied code to view the plots, then explain the patterns. Writing plotting code from scratch is not an assessed task.** The plotting examples use NumPy and Matplotlib; the short training simulation uses basic Python.
+
+**Python setup:** [Install and check the Week 2 libraries](1-python_setup.md).
 
 ## Learning objectives
 
@@ -427,6 +429,16 @@ graph LR
     Y["True label y = 1"]:::input --> BCE
     BCE --> L["Loss L"]:::loss
 ```
+
+### Why the activity uses different starting weights
+
+This demonstration starts with weights $(1,-2)$; [Activity 2](activity2.md#7-guided-calculation-two-weights-no-bias) starts with $(0,0)$. Both use inputs $(2,1)$, no bias, and label 1. Different weights can produce the same weighted sum for a particular input:
+
+$$
+z_{\mathrm{demo}}=1(2)+(-2)(1)=0,\qquad z_{\mathrm{activity}}=0(2)+0(1)=0
+$$
+
+Both therefore start at probability 0.5 and BCE approximately 0.693147. Their gradients are also identical for this observation. With the same learning rate, the parameter changes and updated predictions match, although the weights remain different. This agreement concerns the shared input; predictions for other inputs can differ.
 
 ### Step 1 — Forward pass: logit, probability, and loss
 
