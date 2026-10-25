@@ -1,10 +1,12 @@
-# Pair Programming 1: Auto MPG Regression with an MLP
+# Pair Programming 2: Titanic Survival Classification with an MLP
 
-**Focus:** Apply the neural-network workflow studied in Week 1 to a real-world regression dataset, including missing numerical values and a categorical input.
+**Focus:** Apply the neural-network workflow studied in Week 1 to binary classification with numerical and categorical inputs, missing values, and a constructed feature.
 
-In Week 1, the cereal-rating and concrete-strength activities introduced regression with a multi-layer perceptron (MLP). This Week 2 exercise applies the same principles to **predicting vehicle fuel efficiency**. The task is to load an unfamiliar dataset, prepare its inputs, build and train an MLP, compare configurations using validation results, and evaluate a selected model on held-out test data.
+In Week 1, the cereal-rating and concrete-strength tasks used MLPs to predict numerical values. This Week 2 activity uses the same general workflow to predict a **binary outcome**: whether a passenger survived the sinking of the Titanic. The familiar steps remain: explore the data, separate inputs and target, split the data, preprocess, build and train a model, compare validation results, and evaluate the selected model on the test set.
 
-The [Auto MPG dataset](https://raw.githubusercontent.com/mwaskom/seaborn-data/master/mpg.csv) records information about older cars. The supplied CSV has **398 rows**. Its target, `mpg`, represents **miles per US gallon**; a larger value means that a vehicle can travel farther on one US gallon of fuel. Each row is a vehicle record. The model is a learning exercise, not a reliable estimator for present-day vehicles or engineering decisions.
+The Titanic dataset is familiar from earlier classical machine-learning work. This activity reuses that data context while changing the estimator to an MLP, allowing the comparison to focus on the output layer, loss function, and neural-network training workflow.
+
+The [Titanic CSV](https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv) contains **891 passenger records**. The target is `survived`: **0 = did not survive; 1 = survived**. This is a historical dataset used to practise machine-learning methods; predictions should not be interpreted as causes of survival or as a reliable model for present-day safety decisions.
 
 **Python setup:** Use the [shared Colab installation and import checks](1-python_setup.md#google-colab-setup). These pair-programming exercises require NumPy, pandas, Matplotlib, scikit-learn, Keras, and TensorFlow. Install a package only if its import is missing, then restart the runtime/session if requested and rerun setup.
 
@@ -12,88 +14,96 @@ The [Auto MPG dataset](https://raw.githubusercontent.com/mwaskom/seaborn-data/ma
 
 By the end of the session, each pair should be able to:
 
-1. Identify a continuous target, explore its distribution, and explain a mean-prediction baseline.
-2. Create training, validation, and test sets without using held-out observations to fit preprocessing.
-3. Handle missing numerical inputs, encode a categorical input, and standardize numerical features.
-4. Construct, compile, and train a Keras MLP with a **linear** output for regression.
-5. Interpret training and validation **MSE** and **MAE**, and compare model configurations using validation results.
-6. Select a model **before** final testing and compare its test MAE with the baseline.
-7. Interpret numerical predictions in MPG and apply the original preprocessing to a new vehicle record.
+1. Distinguish binary classification from the regression tasks studied in Week 1.
+2. Explore class frequencies and interpret a majority-class baseline.
+3. Create training, validation, and test sets without data leakage.
+4. Construct a feature, handle missing values, encode categories, and standardize numerical inputs using training-fitted preparation.
+5. Build, compile, and train a Keras MLP with one sigmoid output.
+6. Interpret training and validation loss/accuracy and select a model **before** final testing.
+7. Interpret predicted probabilities and reuse exactly the same preprocessing for a new passenger record.
 
 ## How pair programming works
 
-- **Driver:** Types and runs the code, explaining decisions while coding.
-- **Navigator:** Reads the task, checks variable names and shapes, watches for data leakage, and asks questions before execution.
+- **Driver:** Types and runs code, and explains the choice of each operation.
+- **Navigator:** Reads the task, checks names and shapes, looks for data leakage, and asks questions before execution.
 - **Switch roles** after Sections 2, 4, 6, 8, and 10. Both partners should contribute code and explanations.
-- Complete sections in order. Expand a **Hint** only after discussing an approach. Hints are not full solutions.
-- Keep **test targets and test performance out of model selection**. Test features may be processed using transformations fitted on the training set; the final test assessment belongs in Section 11.
-- Record actual outputs. Neural-network training results can vary between runs.
+- Complete the sections in order. Open a **Hint** after discussing an approach. Hints do not provide complete solutions.
+- Keep **test labels and test scores out of model selection**. Test inputs may be processed with training-fitted transformations, but test performance is assessed only in Section 11.
+- Record the results observed during execution; neural-network outcomes may vary between runs.
 
-**Work format:** Create a Google Colab notebook with Markdown and Python cells. Complete the `TODO` blocks. Familiar operations remain for the pair to implement. Supplied code is reserved for the initial environment, the less familiar categorical encoding, and plots intended for interpretation rather than plotting-code assessment.
+**Work format:** Create a Google Colab notebook with separate Markdown and Python cells. Complete the `TODO` cells. Supplied code is limited to setup, unfamiliar categorical encoding, classification-specific compilation, and visualizations intended for interpretation. There is **no complete model-building solution**.
 
 ## Workflow
 
 ```mermaid
 flowchart LR
-    A[Load Auto MPG data] --> B[Select inputs and target]
+    A[Load and inspect data] --> B[Choose inputs and target]
     B --> C[Split train, validation, test]
-    C --> D[Inspect training data and baseline]
-    D --> E[Encode origin categories]
-    E --> F[Impute and scale numerical features]
-    F --> G[Build and train regression MLP]
-    G --> H[Compare validation MAE]
-    H --> I[Evaluate selected model on test]
-    I --> J[Predict new vehicle MPG]
+    C --> D[Explore training data]
+    D --> E[Construct family size]
+    E --> F[Impute missing inputs]
+    F --> G[Encode and scale]
+    G --> H[Build and train MLP]
+    H --> I[Choose model with validation]
+    I --> J[Evaluate on test once]
+    J --> K[Predict a new case]
 ```
 
 ---
 
-## 1. Recall: What changes in a regression task?
+## 1. Recall: Regression versus binary classification
 
-| Choice | Binary classification | Auto MPG regression |
+| Choice | Week 1: regression | Week 2: Titanic classification |
 |---|---|---|
-| Target | Class `0` or `1` | Continuous `mpg` |
-| Output layer | One sigmoid neuron | One **linear** neuron |
-| Training loss | Binary cross-entropy | Mean squared error (MSE) |
-| Reported metric | Accuracy | Mean absolute error (MAE) |
-| Interpretation | Estimated class-1 probability | Predicted miles per US gallon |
+| Target | Numerical rating or strength | `survived`: 0 or 1 |
+| Output layer | One linear neuron | One sigmoid neuron |
+| Training loss | Mean squared error (MSE) | Binary cross-entropy (BCE) |
+| Reported metric | Mean absolute error (MAE) | Classification accuracy |
 
-A linear output does not restrict predictions to the range 0–1. For a regression MLP, the last Dense layer normally uses **one neuron with the default linear activation**. This output can represent a numerical value such as 25.4 MPG. The network is not guaranteed to produce only physically realistic values, so predictions still require interpretation.
+For binary classification, a sigmoid converts a model score $z$ into an output $p$ between 0 and 1:
+
+$$
+p=\sigma(z)=\frac{1}{1+e^{-z}}
+$$
+
+The output $p$ is treated as the model-estimated probability of **class 1**, meaning survival in this dataset. A threshold of 0.5 converts this output to a class: predict 1 when $p\geq 0.5$, and 0 otherwise. A model score is **not** a statement of certainty about an individual historical passenger.
 
 **Discuss before coding**
 
-1. Why is this prediction problem regression rather than classification?
-2. Why would a sigmoid output be an unsuitable default for predicting MPG?
-3. What would a prediction of 25 MPG mean, and what would it *not* establish?
+1. Why is a linear output less appropriate for this task than a sigmoid output?
+2. What does a model output of `0.8` mean? Does it confirm an individual outcome?
+3. Why is regression MAE in rating points or megapascals unsuitable as the main metric here?
 
 <details>
-<summary><strong>Hint — regression output</strong></summary>
+<summary><strong>Hint — classification objective</strong></summary>
 
-Consider whether the target is a class label or a numerical measurement. Recall the linear output used for cereal ratings and concrete strength in Week 1.
+Consider the two possible target labels, the range of a probability, and the distinction between a predicted probability and an observed outcome.
 
 </details>
 
 ---
 
-## 2. Get the data and inspect its structure
+## 2. Load and inspect the Titanic data
 
-The exercise uses **four numerical inputs** and the categorical field `origin`.
+Use only the following fields for this activity. The downloaded CSV has additional columns; some, such as `alive`, reveal the target directly and must **not** become predictors.
 
-| Field | Role | Meaning |
+| Field | Meaning | Role |
 |---|---|---|
-| `mpg` | Target | Fuel efficiency, miles per US gallon |
-| `weight` | Numerical input | Vehicle weight, pounds |
-| `horsepower` | Numerical input | Engine power, horsepower |
-| `displacement` | Numerical input | Engine displacement, cubic inches |
-| `model_year` | Numerical input | Two-digit model year, such as `76` for 1976 |
-| `origin` | Categorical input | Recorded region of origin (`usa`, `europe`, or `japan`) |
+| `survived` | 0 = did not survive; 1 = survived | Target |
+| `pclass` | Ticket class: 1, 2, or 3 | Ordinal numerical input |
+| `sex` | Recorded sex category | Categorical input |
+| `age` | Age in years | Numerical input |
+| `sibsp` | Siblings/spouses aboard, excluding the passenger | Used to construct a feature |
+| `parch` | Parents/children aboard, excluding the passenger | Used to construct a feature |
+| `fare` | Recorded ticket fare in pounds | Numerical input |
+| `embarked` | Boarding port: C, Q, or S | Categorical input |
 
-The extra fields `cylinders`, `acceleration`, and `name` are **not model inputs** in this exercise. In particular, `name` is free text and is not directly passed into the MLP. The addition of `origin` provides practice in encoding categorical features.
+For consistency with the specified feature choices, `pclass` is treated as an **ordinal numerical input**, not one-hot encoded. This is a modeling choice; an alternative exercise could test categorical encoding of ticket class.
 
-**Supplied setup** — run this cell at the beginning of the notebook:
+**Supplied setup** — run this code at the beginning of the notebook:
 
 ```python
-# Install packages first if the Colab environment needs them.
+# Uncomment only if installation is needed in the runtime.
 # %pip install numpy pandas matplotlib scikit-learn keras tensorflow
 
 import numpy as np
@@ -108,216 +118,283 @@ from sklearn.preprocessing import StandardScaler
 
 keras.utils.set_random_seed(42)
 
-DATA_URL = "https://raw.githubusercontent.com/mwaskom/seaborn-data/master/mpg.csv"
+DATA_URL = "https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv"
 print("Keras backend:", keras.config.backend())
 ```
 
 **Pair tasks**
 
-1. Read `DATA_URL` into a DataFrame called `mpg_data`.
-2. Display the first five rows, the shape, the column names, and column data types.
-3. Check missing values for all columns. In particular, inspect `mpg` and `horsepower`.
-4. Identify the five selected inputs and the one target. Explain why `name` is excluded.
-5. Keep `mpg_data` unchanged and use a copy for modeling. If any target (`mpg`) values are missing, remove **only those rows**, and report how many were excluded.
+1. Load `DATA_URL` into a DataFrame named `titanic_data`.
+2. Display the first five rows, the shape, and the column names.
+3. Inspect data types and missing-value counts for the eight listed fields.
+4. Identify the observed target values and the positive class.
+5. Explain why this is **binary classification**.
 
 ```python
-# TODO: Load the CSV into mpg_data.
-# TODO: Display rows, dimensions, types, and missing-value counts.
-# TODO: Create a working copy and remove rows with missing mpg, if any.
-# TODO: Report the number of removed rows.
+# TODO: Read the CSV into titanic_data.
+# TODO: Display rows, shape, and column names.
+# TODO: Inspect types, missing values, and unique target values.
 ```
 
 <details>
-<summary><strong>Hint — loading and inspecting data</strong></summary>
+<summary><strong>Hint — inspecting tabular data</strong></summary>
 
-Recall `pd.read_csv(...)`, `.head()`, `.shape`, `.dtypes`, `.isna().sum()`, and `.dropna(subset=[...])` from Week 1. A missing target cannot be replaced with a guessed value for supervised training. Missing **input** values will be handled later.
+Recall the Week 1 pandas operations `pd.read_csv(...)`, `.head()`, `.shape`, `.dtypes`, `.isna().sum()`, and `.value_counts()`.
 
 </details>
 
-**Checkpoint:** Record the original row count, working row count, target units, selected feature names, and any missing-input concern.
+**Checkpoint:** Record the dataset dimensions, the meaning of one row, the target labels, and the fields permitted as predictors.
 
 ---
 
 ## 3. Select features and reserve held-out data
 
-Let `X` contain the input columns and `y` contain the `mpg` target. The target must not appear among the model inputs, because that would reveal the answer during training.
+The input table `X` must contain **only** the seven raw predictor columns listed above. The target `y` must contain `survived`. Excluding other CSV columns prevents accidental use of a field that leaks the answer or falls outside this exercise.
 
 **Pair tasks**
 
-1. Select **only** `weight`, `horsepower`, `displacement`, `model_year`, and `origin` as `X`. Select `mpg` as `y`.
-2. First reserve **20%** of the observations for `X_test`, `y_test`.
-3. From the remaining observations, reserve **20%** for `X_val`, `y_val`.
-4. Call the remaining data `X_train`, `y_train`. Use `random_state=42` for both splits and **do not stratify** this regression task.
-5. Print all input and target shapes. Confirm that the resulting proportions are approximately **64% training / 16% validation / 20% test**, with no overlap in row indices.
+1. Create `X` from `pclass`, `sex`, `age`, `sibsp`, `parch`, `fare`, and `embarked`; create `y` from `survived`.
+2. Check for missing labels. If any exist, exclude the affected rows from **both** `X` and `y` before splitting; report the number excluded.
+3. Reserve **20%** for `X_test`, `y_test`, using `random_state=42` and stratification by `y`.
+4. From the other **80%**, reserve **20% of that remainder** for `X_val`, `y_val`, stratified using `y_train_val`.
+5. Name the remaining data `X_train`, `y_train`, and print the shapes. Confirm that original row indices do not overlap across splits.
 
 ```python
-# TODO: Select X and y by column names from the working copy.
-# TODO: Create train+validation / test split.
-# TODO: Split train+validation into training / validation.
-# TODO: Inspect shapes and confirm disjoint row indices.
+# TODO: Select the seven raw predictors by their column names.
+# TODO: Select the target and handle any missing target labels.
+
+# TODO: Split train+validation / test (stratify by the labels).
+
+# TODO: Split training / validation (stratify again).
+
+# TODO: Print shapes and confirm that row indices do not overlap.
 ```
 
 <details>
-<summary><strong>Hint — split before fitting preprocessing</strong></summary>
+<summary><strong>Hint — two-stage split</strong></summary>
 
-Recall the two calls to `train_test_split(...)` used in Week 1. The second call works on the training-plus-validation portion, not the original full DataFrame. The test set is reserved before imputation, scaling, and model selection.
+The first `train_test_split(...)` call returns train-plus-validation and test partitions. The second call divides the first partition. In classification, `stratify=y` in the first call and `stratify=y_train_val` in the second help maintain similar class proportions. The resulting split is approximately **64% training / 16% validation / 20% test**.
 
 </details>
 
-**Discuss:** Why should missing-value replacement and numerical scaling be fitted only after this split? What makes validation different from test data?
+**Discuss:** Why must the final test labels remain outside model selection? Why should preprocessing statistics be learned from training rows only?
 
 ---
 
-## 4. Explore training data and establish a mean baseline
+## 4. Explore training data and establish a majority-class baseline
 
-Exploratory analysis can reveal missing measurements, unusual ranges, and patterns that the MLP may need to learn. To avoid inspecting the held-out target distribution during model development, perform this analysis using **training observations only**.
-
-A simple regression **baseline** predicts the **mean training MPG** for every vehicle, regardless of its features. It provides a reference for interpreting the eventual neural-network error. This mean baseline is a simple reference; a training-median baseline minimizes training absolute error among constant predictions and can be compared as an optional extension.
+Exploration and baseline decisions use **training rows only**. The baseline always predicts the most common training label. This gives a reference point for interpreting later accuracy.
 
 **Pair tasks**
 
-1. Display summary statistics for `y_train` and the four numerical columns in `X_train`.
-2. Count missing `horsepower` measurements **within training data**. Investigate one unusually large or small training value without removing the row automatically.
-3. Count repeated combinations of selected feature and target values in training data (excluding the row index); explain why repeated measurements do not necessarily represent the same vehicle.
-4. Calculate the mean of `y_train` and save it as `baseline_mpg`.
-5. Explain why a model should aim for a lower MAE than this baseline.
-6. Calculate the correlation between training `weight` and training `mpg`. Describe its sign and one limitation of Pearson correlation.
+1. Count class 0 and class 1 in `y_train`, and calculate their proportions.
+2. Identify the **majority training class**, store it as `majority_class`, and record its training proportion.
+3. Inspect the training `age` distribution, including missing values and a possible extreme value.
+4. Run the three supplied plots, then write one observation supported by each plot.
+5. Explain why an accuracy of 70% would not automatically mean the MLP is better than the baseline.
 
 ```python
-# TODO: Inspect training-only numerical summaries and missing values.
-# TODO: Calculate baseline_mpg from y_train only.
-# TODO: Calculate training weight/MPG correlation.
-# TODO: Record one modeling implication from the data inspection.
+# TODO: Count training labels and compute their percentages.
+# TODO: Store the most frequent training label as majority_class.
+# TODO: Inspect ages and note missingness or unusually large/small values.
 ```
 
-<details>
-<summary><strong>Hint — baseline and correlation</strong></summary>
-
-Use `.describe()` for numerical summaries, `.mean()` for the training-target mean, and `.corr(...)` to examine a numerical relationship. The baseline uses no learned input-to-output relationship; it is a constant prediction.
-
-</details>
-
-### Run and interpret two training-data plots
-
-Run the supplied code, observe the plots, and explain the result. Plotting syntax is **not** the assessed skill here.
+### Run and interpret the class-count plot
 
 <details>
-<summary><strong>Show supplied Python plotting code — MPG distribution and weight relationship</strong></summary>
+<summary><strong>Show supplied Python plotting code — survival classes</strong></summary>
 
 ```python
-plt.figure(figsize=(7, 4))
-plt.hist(y_train, bins=18, edgecolor="black")
-plt.xlabel("MPG (miles per US gallon)")
-plt.ylabel("Number of training vehicles")
-plt.title("Training target distribution")
-plt.tight_layout()
-plt.show()
+class_counts = y_train.value_counts().reindex([0, 1], fill_value=0)
 
-plt.figure(figsize=(7, 4))
-plt.scatter(X_train["weight"], y_train, alpha=0.7)
-plt.xlabel("Weight (pounds)")
-plt.ylabel("MPG (miles per US gallon)")
-plt.title("Training vehicle weight versus MPG")
+plt.figure(figsize=(6, 4))
+plt.bar(["Did not survive (0)", "Survived (1)"], class_counts.values)
+plt.ylabel("Number of training passengers")
+plt.xlabel("Recorded survival class")
+plt.title("Training class counts")
 plt.tight_layout()
 plt.show()
 ```
 
 </details>
 
-**Pair discussion:** Is MPG spread evenly across the training vehicles? Does greater vehicle weight appear associated with higher or lower MPG? Why does a scatter plot not prove causation?
+### Run and interpret the age histogram
 
-**Checkpoint:** Record `baseline_mpg`, one relationship seen in the plots, and one reason preprocessing will be needed.
-
----
-
-## 5. Encode the categorical input `origin`
-
-The `origin` column contains text categories. Dense neural-network layers require numerical inputs. **One-hot encoding** represents each known category with a separate 0/1 indicator column.
-
-Encoding the data partitions independently may produce different feature columns. To keep input meaning and order consistent, the **training** encoded columns define the feature layout for validation, test, and later inference.
-
-**Supplied reference code — categorical encoding:**
+<details>
+<summary><strong>Show supplied Python plotting code — age distribution</strong></summary>
 
 ```python
-numeric_columns = ["weight", "horsepower", "displacement", "model_year"]
-categorical_columns = ["origin"]
+plt.figure(figsize=(7, 4))
+plt.hist(X_train["age"].dropna(), bins=20)
+plt.xlabel("Age (years)")
+plt.ylabel("Number of training passengers")
+plt.title("Recorded ages in the training data")
+plt.tight_layout()
+plt.show()
+```
 
-X_train_encoded = pd.get_dummies(
-    X_train, columns=categorical_columns, dtype=np.float32
+</details>
+
+### Run and interpret survival proportions by ticket class
+
+<details>
+<summary><strong>Show supplied Python plotting code — passenger class</strong></summary>
+
+```python
+train_plot_data = pd.DataFrame({
+    "pclass": X_train["pclass"],
+    "survived": y_train
+})
+survival_by_class = (
+    train_plot_data.groupby("pclass")["survived"].mean().sort_index()
 )
 
-# Use the columns learned from training for held-out observations.
+plt.figure(figsize=(6, 4))
+plt.bar(survival_by_class.index.astype(str), survival_by_class.values)
+plt.xlabel("Passenger class")
+plt.ylabel("Observed training survival proportion")
+plt.ylim(0, 1)
+plt.title("Training survival proportion by passenger class")
+plt.tight_layout()
+plt.show()
+```
+
+</details>
+
+<details>
+<summary><strong>Hint — majority-class baseline</strong></summary>
+
+Use `.value_counts()` on `y_train`, not on the test labels. The training majority-class proportion is a first indication of the accuracy obtained by predicting one label for every training observation. The test score of this baseline is computed later, in Section 11.
+
+</details>
+
+**Checkpoint:** Record the majority class, its training proportion, two data-quality observations, and one pattern in the plots. Observed associations do not prove causation.
+
+---
+
+## 5. Construct `family_size` and handle missing inputs
+
+This task includes a small feature-engineering step. Define the size of the passenger's traveling family group as:
+
+$$
+\text{family\_size}=1+\text{sibsp}+\text{parch}
+$$
+
+The added 1 counts the passenger. For modeling, `family_size` **replaces** `sibsp` and `parch` rather than being added alongside them. The final six input fields, before encoding, are:
+
+| Numerical inputs | Categorical inputs |
+|---|---|
+| `pclass`, `age`, `fare`, `family_size` | `sex`, `embarked` |
+
+Missing numerical values are replaced using **training medians**. Missing categorical values are replaced using the **most frequent training category (mode)**. In particular, check `age` and `embarked` for missing entries before carrying out this operation.
+
+**Supplied column groups:**
+
+```python
+numerics = ["pclass", "age", "fare", "family_size"]
+categorical_variables = ["sex", "embarked"]
+```
+
+**Pair tasks**
+
+1. Create independent copies named `X_train_fe`, `X_val_fe`, and `X_test_fe`.
+2. Construct `family_size` in each partition using the same row-wise formula; remove `sibsp` and `parch` and retain the six final feature columns in a fixed order.
+3. Make copies named `X_train_filled`, `X_val_filled`, and `X_test_filled`.
+4. Create a `SimpleImputer(strategy="median")` named `numeric_imputer`. Fit it on the **training numerical columns only** and apply it to all three partitions.
+5. Determine the training mode for **each** categorical column; retain these values as `category_modes`. Fill missing categorical entries in all three partitions with the corresponding **training** mode.
+6. Verify that no missing values remain in any of the six model inputs.
+
+```python
+# TODO: Copy X_train, X_val, X_test and construct family_size in each.
+# TODO: Keep only the six modeling columns, with consistent order.
+
+# TODO: Make X_train_filled, X_val_filled, X_test_filled.
+
+# TODO: Fit numeric_imputer on X_train_filled[numerics] only.
+# TODO: Transform the same numerical columns in all three partitions.
+
+# TODO: Determine category_modes from training categorical columns only.
+# TODO: Fill missing categorical values in all partitions with training modes.
+
+# TODO: Inspect prepared shapes and missing-value counts.
+```
+
+<details>
+<summary><strong>Hint — feature engineering and missing values</strong></summary>
+
+A row-wise construction uses `1 + frame["sibsp"] + frame["parch"]`. Use `.drop(columns=[...])` or explicit column selection so the original count columns are not also passed to the MLP. `SimpleImputer` uses `fit_transform()` for training data and `transform()` for validation/test data. For one categorical column, `.mode(dropna=True).iloc[0]` gives the most frequent observed training category; use the saved value with `.fillna(...)` on each partition.
+
+</details>
+
+**Discuss:** Why can a median or mode calculated using validation or test data introduce leakage? Why is an unknown age not equivalent to age zero?
+
+---
+
+## 6. Encode categorical inputs and standardize numerical inputs
+
+The categorical fields `sex` and `embarked` are text labels, not continuous numerical measurements. **One-hot encoding** creates indicator columns for their categories. Separate encoding of each partition could produce different columns, so validation and test features must be aligned with the training columns.
+
+The following **categorical encoding code is supplied** because it introduces a preprocessing detail beyond the familiar numerical workflow:
+
+```python
+X_train_encoded = pd.get_dummies(
+    X_train_filled, columns=categorical_variables, dtype=np.float32
+)
+
 def encode_like_training(frame):
     encoded = pd.get_dummies(
-        frame, columns=categorical_columns, dtype=np.float32
+        frame, columns=categorical_variables, dtype=np.float32
     )
     return encoded.reindex(columns=X_train_encoded.columns, fill_value=0)
 
-X_val_encoded = encode_like_training(X_val)
-X_test_encoded = encode_like_training(X_test)
+X_val_encoded = encode_like_training(X_val_filled)
+X_test_encoded = encode_like_training(X_test_filled)
 ```
 
-**Pair tasks**
+If a category has not appeared in the training data, it receives zeros across the known indicator columns for that categorical field. This is the rule used for this activity; it is not a learned representation of the unseen category.
 
-1. Run the supplied code. Print the encoded feature names and the shapes of the three DataFrames.
-2. Check that training, validation, and test columns have **identical names and order**.
-3. Explain why there can be more model-input columns than the five original feature columns.
-4. Explain why `weight` should not be one-hot encoded and why `origin` should not be standardized as a continuous measurement.
-
-```python
-# TODO: Display encoded column names and shapes.
-# TODO: Check matching columns and order across splits.
-```
-
-**Discussion:** A category unseen during training becomes all zeros across that category's training-known indicators with this simple encoder. Why must the encoding rule be retained when a model is used later? In a deployed application, unseen categories would require an explicit policy.
-
----
-
-## 6. Impute missing inputs, then standardize numerical features
-
-Missing `horsepower` values cannot be sent directly into the MLP as `NaN`. In Week 1, **median imputation** replaced missing entries using a median learned from training observations. The same rule applies here.
-
-Numerical features are then **standardized**, helping optimization when measurements have different scales. For a numerical value $x$, the standardized value $z$ is:
+The numerical inputs must also be standardized. Standardization uses the training feature mean and standard deviation:
 
 $$
 z=\frac{x-\mu_{\mathrm{train}}}{\sigma_{\mathrm{train}}}
 $$
 
-Here, $\mu_{\mathrm{train}}$ and $\sigma_{\mathrm{train}}$ denote the **training-feature** mean and standard deviation. Values for validation and test observations are transformed using these same statistics. Imputation happens **before** standardization.
+Here, $x$ is the original numerical value; $\mu_{\mathrm{train}}$ and $\sigma_{\mathrm{train}}$ are calculated from the training split. Leave the 0/1 indicator columns unchanged.
 
 **Pair tasks**
 
-1. Create copies named `X_train_prepared`, `X_val_prepared`, and `X_test_prepared` from the three encoded DataFrames.
-2. Create an imputer named `imputer` using `SimpleImputer(strategy="median")` and fit it **only on training** `numeric_columns`. Transform the same columns in validation and test, without refitting.
-3. Create a scaler named `scaler` using `StandardScaler()` and fit it **only on the imputed training** `numeric_columns`. Transform the imputed validation and test columns with the same scaler.
-4. Leave the 0/1 `origin` indicator columns unchanged.
-5. Convert the three prepared DataFrames into NumPy arrays named `train_X`, `val_X`, and `test_X`, using `dtype="float32"`. Create target arrays `train_y`, `val_y`, and `test_y` from their matching target Series.
-6. Check shapes, matching feature order, and the absence of missing/non-finite model inputs.
+1. Run the supplied encoding code and inspect the resulting column names and shapes.
+2. Check that all three encoded DataFrames have **identical column order**.
+3. Create a `StandardScaler` named `scaler`. Fit it on `X_train_encoded[numerics]` only.
+4. Make `X_train_scaled`, `X_val_scaled`, and `X_test_scaled`. Scale only the four numerical columns with the **same** scaler.
+5. Convert the scaled input tables to `float32` NumPy arrays named `train_X`, `val_X`, and `test_X`. Convert the corresponding target labels to arrays named `train_y`, `val_y`, and `test_y`.
+6. Print all input and label shapes. Check for missing or non-finite values and confirm that the target is not an input.
 
 ```python
-# TODO: Copy the encoded DataFrames.
-# TODO: Fit median imputer on training numerical columns only.
-# TODO: Transform validation/test numerical columns with the fitted imputer.
-# TODO: Fit scaler on imputed training numerical columns only.
-# TODO: Transform validation/test with the same fitted scaler.
-# TODO: Convert prepared inputs and targets to float32 NumPy arrays.
-# TODO: Print shapes and check for NaN/infinite values.
+# TODO: Inspect encoded shapes and confirm identical column order.
+
+# TODO: Create scaler and copies of the encoded DataFrames.
+# TODO: Fit on training numerics only; transform numerics in all splits.
+
+# TODO: Create train_X, val_X, test_X as float32 arrays.
+# TODO: Create train_y, val_y, test_y arrays.
+# TODO: Print shapes and check for missing / non-finite values.
 ```
 
 <details>
-<summary><strong>Hint — order of transformations</strong></summary>
+<summary><strong>Hint — training-only scaling</strong></summary>
 
-For the imputer, use `fit_transform()` on the **training numerical columns**, then `transform()` for validation and test. Repeat the same training-only fitting pattern with the scaler, *after* imputation. A selection such as `frame[numeric_columns] = ...` can assign transformed values back to a DataFrame copy. Use `.to_numpy(dtype="float32")` to prepare Keras inputs.
+Recall Week 1: `fit_transform()` learns training statistics and transforms the training values. For validation and test values, use `transform()` without fitting again. A selected-column assignment may use `frame[numerics] = ...`. Convert a DataFrame with `.to_numpy(dtype="float32")`.
 
 </details>
 
-**Checkpoint:** Confirm that there are no `NaN` values in the model arrays and that every partition has the same number and order of input columns. Explain why fitting separate imputers or scalers on each partition would be incorrect.
+**Checkpoint:** The input arrays have the same number and order of columns. The row counts may differ. `survived` must not appear among the prepared input columns.
 
 ---
 
-## 7. Build the regression MLP
+## 7. Build the MLP: 16 hidden neurons and one sigmoid output
 
-The baseline MLP has **one hidden layer with 16 ReLU neurons** and **one linear output neuron**. The model produces one numerical MPG prediction for each input row.
+The baseline network contains **one hidden Dense layer with 16 ReLU neurons** and **one sigmoid output neuron**. The input width depends on the categories represented in the encoded training data.
 
 ```mermaid
 graph LR
@@ -334,127 +411,123 @@ graph LR
     end
 
     subgraph Output_Layer ["Output layer"]
-        out["1 linear neuron: MPG"]:::output
+        p["1 sigmoid neuron: p"]:::output
     end
 
     x --> h
-    h --> out
+    h --> p
 ```
 
-The input box represents **N separate feature values**, not a single input neuron; `N` equals `train_X.shape[1]` after one-hot encoding. A Dense layer connects every incoming value to each neuron and includes **one bias per neuron**.
-
-For a Dense layer, the number of trainable parameters is:
+The diagram groups neurons by layer rather than drawing every connection. Each Dense neuron includes one trainable bias. If $N$ is the number of columns in `train_X`, the number of trainable parameters is:
 
 $$
-\text{parameters}=(\text{input values}\times\text{neurons})+\text{biases}
+\begin{aligned}
+\text{Hidden layer} &= 16N+16 \\
+\text{Output layer} &= 16+1 \\
+\text{Total} &= 16N+33
+\end{aligned}
 $$
 
 **Pair tasks**
 
-1. Create a `Sequential` model named `model`, with an input matching `train_X`.
-2. Add **16 ReLU** neurons in one hidden layer.
-3. Add **one linear output** for MPG.
-4. Run `model.summary()` and calculate the number of trainable parameters manually.
+1. Set the random seed to 42 immediately before constructing the baseline model.
+2. Use `Sequential`, `Input`, and `Dense` to create a model named `model`.
+3. Use an input shape based on `train_X.shape[1]`.
+4. Add a 16-neuron ReLU hidden layer followed by one sigmoid output neuron.
+5. Display `model.summary()` and verify its total trainable parameters against the expression above.
 
 ```python
-# TODO: Initialize a Sequential regression model.
-# TODO: Add Input, 16-neuron ReLU hidden layer, and linear output.
-# TODO: Inspect model.summary() and calculate the parameter count.
+# TODO: Set the random seed and create model.
+# TODO: Add an input, a 16-ReLU hidden layer, and one sigmoid output.
+# TODO: Print model.summary() and verify the parameter count.
 ```
 
 <details>
-<summary><strong>Hint — reuse the Week 1 architecture pattern</strong></summary>
+<summary><strong>Hint — model architecture</strong></summary>
 
-Use `Input(shape=(train_X.shape[1],))` to match the number of prepared inputs. A Dense layer without an explicit activation uses a linear output by default. For reproducible initialization, call `keras.utils.set_random_seed(42)` immediately before constructing the baseline model.
+Recall the Week 1 `Sequential` pattern. An input layer can use `Input(shape=(train_X.shape[1],))`; hidden and output layers use `Dense(...)`. The hidden activation is `"relu"`; the final activation is `"sigmoid"`.
 
 </details>
 
-**Discuss:** Why is only one output neuron needed? Why would 16 output neurons not match the target? Is the linear output guaranteed to be positive?
+**Discuss:** Why is there one sigmoid output rather than one output neuron per passenger category? What changes from the linear output of the Week 1 regression models?
 
 ---
 
-## 8. Compile the MLP for regression
+## 8. Compile the MLP for binary classification
 
-Construction defines the network's computation. Compilation selects the training objective, optimizer, and reported metric. These regression settings were introduced in Week 1:
+Model construction defines the network's calculations. Compilation specifies the optimizer, loss function, and reported metric:
 
-- **Adam (`"adam"`)** uses gradient information to update weights. Backpropagation computes gradients; the optimizer applies updates.
-- **Mean squared error (`"mean_squared_error"`)** is the training loss. Squaring emphasizes larger errors.
-- **Mean absolute error (`"mae"`)** measures the average absolute difference between predicted and actual MPG, expressed directly in **MPG**.
+- **`optimizer="adam"`** updates trainable parameters using gradients and adaptive step sizes. Backpropagation calculates gradients; Adam applies parameter updates.
+- **`loss="binary_crossentropy"`** measures how well predicted probabilities agree with 0/1 labels. The training loss is **BCE**, not regression MSE.
+- **`metrics=["accuracy"]`** reports the fraction classified correctly; for one sigmoid output, Keras uses a default probability threshold of 0.5 for binary accuracy.
 
-For $n$ examples, where $y_i$ is actual MPG and $\hat y_i$ is predicted MPG:
-
-$$
-\mathrm{MSE}=\frac{1}{n}\sum_{i=1}^{n}(y_i-\hat y_i)^2
-$$
+For one example with true label $y\in\{0,1\}$ and sigmoid output $p$, binary cross-entropy is:
 
 $$
-\mathrm{MAE}=\frac{1}{n}\sum_{i=1}^{n}|y_i-\hat y_i|
+L=-\left[y\ln(p)+(1-y)\ln(1-p)\right]
 $$
 
-MSE has units of **MPG squared**, while MAE has units of **MPG**. Both are better suited to this continuous target than classification accuracy.
+For a class-1 example, the loss is $-\ln(p)$; for class 0, it is $-\ln(1-p)$. Keras implements this loss with numerical safeguards during training.
 
-**Pair tasks**
-
-1. Compile `model` with Adam, MSE as the loss, and MAE as the reported metric.
-2. Explain what each `compile()` argument controls.
-3. Explain why MAE is easier to interpret in the original target units than MSE.
+**Supplied code — classification training settings:**
 
 ```python
-# TODO: Compile model using the regression optimizer, loss, and metric.
+model.compile(
+    optimizer="adam",
+    loss="binary_crossentropy",
+    metrics=["accuracy"]
+)
 ```
 
-<details>
-<summary><strong>Hint — familiar Week 1 settings</strong></summary>
+**Pair discussion**
 
-Recall the `compile(optimizer=..., loss=..., metrics=...)` call from the Week 1 cereal and concrete regression work. Use `"adam"`, `"mean_squared_error"`, and `["mae"]` for this exercise. The optimizer is not the loss function.
-
-</details>
-
-**Discussion:** If a prediction differs from the actual MPG by 5, how does that error contribute to MAE and MSE? Why should the signed errors not simply be averaged?
+1. What is the purpose of each `compile()` argument?
+2. For a passenger whose label is 1, which predicted probability gives lower BCE: 0.9 or 0.1? Why?
+3. What is the difference between backpropagation and the Adam optimizer?
+4. Why should accuracy be compared with the majority-class baseline?
 
 ---
 
 ## 9. Train the baseline and interpret learning curves
 
-An **epoch** is one pass through the training observations. A mini-batch is the subset of observations used for one training step. `fit()` returns a `History` object that records training and validation values at each epoch.
+As in Week 1, `fit()` trains the MLP and returns a `History` object. An **epoch** is one complete pass through the training data. A **mini-batch** is a smaller collection of training examples used for one optimization step.
 
 **Pair tasks**
 
-1. Train `model` on `train_X`, `train_y` with `epochs=300` and `batch_size=32`.
-2. Set `validation_data=(val_X, val_y)` and an appropriate `verbose` value.
+1. Train `model` on `train_X`, `train_y` for **150 epochs** with `batch_size=32`.
+2. Set `validation_data=(val_X, val_y)` and choose an appropriate `verbose` value.
 3. Save the returned object as `history`.
-4. Inspect `history.history` and record the final training and validation **MSE** and **MAE**.
+4. Inspect `history.history` and record final training/validation **BCE** and **accuracy**.
+5. Run the supplied plots, observe the curves, and explain the patterns.
 
 ```python
-# TODO: Train model and save the returned History object as history.
-# TODO: Inspect final training/validation MSE and MAE values.
+# TODO: Call model.fit(...) using the training and validation arrays.
+# TODO: Save its history and inspect final loss and accuracy values.
 ```
 
 <details>
-<summary><strong>Hint — familiar fit workflow</strong></summary>
+<summary><strong>Hint — fitting the model</strong></summary>
 
-The training arrays are the first two arguments to `fit()`. The named arguments include `epochs`, `batch_size`, and `validation_data`. With the compile settings from Section 8, the history keys include `loss`, `val_loss`, `mae`, and `val_mae`.
+`fit(...)` takes the training features and labels first. The named arguments include `epochs`, `batch_size`, `validation_data`, and `verbose`. The history keys include `loss`, `val_loss`, `accuracy`, and `val_accuracy`.
 
 </details>
 
-### Run and interpret the MSE plot
-
-Run the supplied plotting code. Observe the pattern; plotting syntax is not the assessed objective.
+### Run and interpret the BCE plot
 
 <details>
-<summary><strong>Show supplied Python plotting code — training and validation MSE</strong></summary>
+<summary><strong>Show supplied Python plotting code — training and validation BCE</strong></summary>
 
 ```python
-train_mse = history.history["loss"]
-val_mse = history.history["val_loss"]
-epochs = range(1, len(train_mse) + 1)
+train_loss = history.history["loss"]
+validation_loss = history.history["val_loss"]
+epoch_numbers = range(1, len(train_loss) + 1)
 
 plt.figure(figsize=(7, 4))
-plt.plot(epochs, train_mse, label="Training MSE")
-plt.plot(epochs, val_mse, label="Validation MSE")
+plt.plot(epoch_numbers, train_loss, label="Training BCE")
+plt.plot(epoch_numbers, validation_loss, label="Validation BCE")
 plt.xlabel("Epoch")
-plt.ylabel("MSE (MPG squared)")
-plt.title("Auto MPG MLP: training and validation loss")
+plt.ylabel("Binary cross-entropy")
+plt.title("Titanic MLP: training and validation loss")
 plt.legend()
 plt.tight_layout()
 plt.show()
@@ -462,22 +535,23 @@ plt.show()
 
 </details>
 
-### Run and interpret the MAE plot
+### Run and interpret the accuracy plot
 
 <details>
-<summary><strong>Show supplied Python plotting code — training and validation MAE</strong></summary>
+<summary><strong>Show supplied Python plotting code — training and validation accuracy</strong></summary>
 
 ```python
-train_mae = history.history["mae"]
-val_mae = history.history["val_mae"]
-epochs = range(1, len(train_mae) + 1)
+train_accuracy = history.history["accuracy"]
+validation_accuracy = history.history["val_accuracy"]
+epoch_numbers = range(1, len(train_accuracy) + 1)
 
 plt.figure(figsize=(7, 4))
-plt.plot(epochs, train_mae, label="Training MAE")
-plt.plot(epochs, val_mae, label="Validation MAE")
+plt.plot(epoch_numbers, train_accuracy, label="Training accuracy")
+plt.plot(epoch_numbers, validation_accuracy, label="Validation accuracy")
 plt.xlabel("Epoch")
-plt.ylabel("MAE (MPG)")
-plt.title("Auto MPG MLP: training and validation MAE")
+plt.ylabel("Accuracy")
+plt.ylim(0, 1)
+plt.title("Titanic MLP: training and validation accuracy")
 plt.legend()
 plt.tight_layout()
 plt.show()
@@ -487,155 +561,177 @@ plt.show()
 
 **Pair discussion**
 
-1. Do the training and validation errors follow the same trend?
-2. What might a sustained increase in validation error while training error decreases suggest?
-3. Why is one noisy epoch not enough to prove overfitting?
-4. If validation MAE is 3 MPG, what does that mean in practical terms?
+1. Does validation BCE follow the training BCE trend throughout training?
+2. What might a sustained decrease in training loss accompanied by an increase in validation loss suggest?
+3. Why is a single noisy validation epoch not enough to establish overfitting?
+4. Can two models have similar classification accuracy but different BCE values? Explain.
 
 ---
 
 ## 10. Pair challenge: Change one thing, then select a model
 
-The baseline architecture and training settings are now fixed. Test results are not used to select a configuration. As in Week 1, **validation MAE** is the main comparison measure for this regression task.
+Model comparisons must use **validation results**, not test results. A new candidate model must start with **newly initialized weights**; calling `fit()` again on the baseline continues its existing training rather than creating a separate candidate.
 
 **Pair tasks**
 
-1. Choose **one** modification: train for **150** instead of 300 epochs, use **8** hidden ReLU neurons instead of 16, or use **two hidden layers with 16 and 8 ReLU neurons**.
-2. Predict how the change might affect validation MAE, and explain the prediction.
-3. Build a **fresh** candidate network with newly initialized weights and train it using the same prepared training and validation arrays.
-4. Keep the optimizer, loss, metric, batch size, and data split unchanged, except for the single selected modification.
-5. Compare the **final epoch's validation MAE** for the baseline and candidate. Record final validation MSE as additional evidence.
-6. Assign the trained model with **lower final validation MAE** to `final_model`. Do not inspect test error yet.
+1. Choose **one** modification: use 8 hidden neurons rather than 16; use two hidden layers of 16 and 8 neurons; or train for 80 epochs instead of 150.
+2. Predict whether the change could improve or worsen validation BCE, with a brief reason.
+3. Build, compile, and train a **fresh** candidate with the same split, imputation, encoding, scaler, loss, optimizer, and batch size. Use a consistent random seed before building each model; rerun the baseline with the same initial seed if necessary for a more controlled comparison.
+4. Compare **final-epoch validation BCE** for both models. Record validation accuracy as additional information.
+5. Select the model with the lower final validation BCE; save the selected **trained** model as `final_model`. Do **not** inspect test performance yet.
 
 ```python
-# TODO: Create and train a fresh candidate model with ONE change.
-# TODO: Read final validation MAE from both History objects.
-# TODO: Compare the models and assign the selected model to final_model.
+# TODO: Create and compile a fresh candidate model.
+# TODO: Train it using the same preprocessed training and validation sets.
+# TODO: Compare final validation BCE and record validation accuracy.
+# TODO: Assign the selected trained model to final_model.
 ```
 
-| Model | Hidden layers / epochs | Final validation MAE (MPG) | Final validation MSE (MPG squared) | Observation |
+| Model | Architecture / epochs | Final validation BCE | Final validation accuracy | Observation |
 |---|---|---|---|---|
-| Baseline | 16 ReLU neurons; 300 epochs | | | |
-| Candidate | One change | | | |
+| Baseline | 16 ReLU → 1 sigmoid; 150 epochs | | | |
+| Candidate | One chosen change | | | |
 
 <details>
-<summary><strong>Hint — fair model comparison</strong></summary>
+<summary><strong>Hint — a valid model comparison</strong></summary>
 
-Do not continue training the original baseline as the candidate. Call `keras.utils.set_random_seed(42)` immediately before constructing the fresh candidate. Build a new `Sequential` model, compile it, and call `fit()` on the same train/validation arrays. Compare the **last** `val_mae` entry from each `History` object; those values describe the model weights stored at the end of training. The minimum at an earlier epoch does not automatically restore earlier weights.
+Use the final entry in each model's `val_loss` history to compare the weights actually retained after `fit()`. A minimum validation loss from an earlier epoch does **not** automatically restore those earlier weights. Compare the same metric and keep the test set out of the choice.
 
 </details>
 
-**Discuss:** Does adding neurons always improve validation error? Can training longer make validation performance worse? Does one split establish which model would be best for every dataset?
+**Discuss:** Is a larger model guaranteed to generalize better? Can an accuracy increase accompany a worse BCE? What can one random split establish, and what remains uncertain?
 
 ---
 
-## 11. Final evaluation: Held-out test set and mean baseline
+## 11. Final evaluation: Held-out test data and the baseline
 
-The model choice is now fixed. Evaluate **only the selected model** on test observations to obtain an estimate of performance on unseen data. Also compute the error of the training-mean baseline on the **same** test observations.
+Once `final_model` is fixed, the test set can be used for a **held-out final assessment after validation-based model selection**. No further architecture choice should be made based on the test results.
 
 **Pair tasks**
 
-1. Call `final_model.evaluate(test_X, test_y, ...)` to obtain test MSE and test MAE.
-2. Construct a constant prediction for each test row using the `baseline_mpg` calculated from **training** targets in Section 4.
-3. Calculate the **test MAE** of this baseline, without fitting a new baseline to test targets.
-4. Compare the MLP and the mean baseline using test MAE. State the difference in MPG.
-5. Explain why a lower test MAE does not establish suitability for modern vehicles, and why the test result should not trigger another round of model selection.
+1. Use `final_model.evaluate(test_X, test_y, ...)` to record **test BCE** and **test accuracy**.
+2. Calculate test accuracy for a baseline predicting the **majority class identified from `y_train`** for every test row.
+3. Compare MLP and baseline test accuracies. State whether the MLP improves on this particular reference.
+4. Explain one limitation of accuracy for a binary-classification task and one limitation of results from a single split.
 
 ```python
 # TODO: Evaluate final_model on the held-out test arrays.
-# TODO: Generate a constant baseline using baseline_mpg.
-# TODO: Calculate the baseline test MAE.
-# TODO: Compare and interpret both test MAE values.
+# TODO: Calculate test accuracy of the training-majority-class baseline.
+# TODO: Record and interpret both sets of results.
 ```
 
 <details>
-<summary><strong>Hint — evaluating regression fairly</strong></summary>
+<summary><strong>Hint — evaluate once, without new model selection</strong></summary>
 
-`evaluate()` returns the metrics selected in `compile()`, including loss and MAE. A mean baseline can be represented by an array filled with `baseline_mpg`, with the same length as `test_y`. Compare absolute errors and calculate their average. Preserve the selected MLP even if its test result is disappointing; report that limitation.
+`evaluate()` returns the compiled loss and metric values. The majority-class reference compares each test label with the single class chosen from the **training** labels. The final test result is a report, not a new criterion for selecting or changing the model.
 
 </details>
 
-**Checkpoint:** Record selected architecture, test MSE, test MAE, mean-baseline test MAE, and one reason the comparison has limitations.
+### Optional extension: Inspect classification errors
+
+A **confusion matrix** distinguishes correct and incorrect predictions for each class. For this task, a *false negative* is a passenger who **survived** (`1`) but was predicted **not to survive** (`0`). The following supplied plot uses the selected model and is for interpretation, not further model selection.
+
+<details>
+<summary><strong>Show supplied Python plotting code — final-model confusion matrix</strong></summary>
+
+```python
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
+test_probabilities = final_model.predict(test_X, verbose=0).ravel()
+test_predictions = (test_probabilities >= 0.5).astype(int)
+cm = confusion_matrix(test_y, test_predictions, labels=[0, 1])
+
+ConfusionMatrixDisplay(
+    confusion_matrix=cm,
+    display_labels=["Did not survive (0)", "Survived (1)"]
+).plot(values_format="d")
+plt.title("Selected MLP: test confusion matrix")
+plt.tight_layout()
+plt.show()
+```
+
+</details>
+
+**Optional discussion:** Identify false-positive and false-negative counts. Which kind of mistake would not be visible from accuracy alone? No further training decision follows this inspection.
+
+**Checkpoint:** Record the selected model, its test BCE and accuracy, the baseline test accuracy, and one qualification of the result.
 
 ---
 
-## 12. Numerical predictions and final reflection
+## 12. Predict a hypothetical passenger and reflect
 
-A regression MLP produces a numerical estimate, not a class label. Every input used for inference must undergo the **same encoding, imputation, scaling, and column ordering** used during training. Neither the imputer nor the scaler should be refitted on a new vehicle record.
+The selected MLP can produce a sigmoid output for a new record, but the input must pass through **the same feature construction, training-derived imputation values, one-hot columns, and scaler** used for the training data. No component is refitted on the new record.
 
-### A. Inspect held-out predictions
+Use the following hypothetical passenger (there is no known survival label for this example):
+
+| `pclass` | `sex` | `age` | `sibsp` | `parch` | `fare` | `embarked` |
+|---:|---|---:|---:|---:|---:|---|
+| 3 | female | 28 | 1 | 0 | 15.0 | S |
+
+**Supplied input record:**
+
+```python
+new_passenger_raw = pd.DataFrame([{
+    "pclass": 3,
+    "sex": "female",
+    "age": 28,
+    "sibsp": 1,
+    "parch": 0,
+    "fare": 15.0,
+    "embarked": "S"
+}])
+```
 
 **Pair tasks**
 
-1. Use `final_model.predict(test_X[:5])` to obtain predicted MPG for five held-out vehicles.
-2. Compare the predictions with `test_y[:5]` and calculate signed errors (`prediction - actual`) and absolute errors.
-3. Present the comparison in a small table with units and explain which of those five predictions had the largest absolute error.
+1. Compute `family_size` and keep the same six input fields, in the same order as for the training data.
+2. Apply the **already-fitted** `numeric_imputer` and the saved `category_modes`; do not use the new row to calculate new medians or modes.
+3. Apply `pd.get_dummies(...)`, then align the result to **`X_train_encoded.columns`** using the same rule as Section 6.
+4. Apply the **already-fitted** `scaler` to the four numerical columns only. Convert the final row to a `float32` array with the same column count and order as `train_X`.
+5. Run `final_model.predict(...)` and report the estimated probability of survival and the predicted 0/1 class using the 0.5 threshold.
+6. Explain why the result is a **model estimate**, not a verified historical outcome.
 
 ```python
-# TODO: Predict five held-out MPG values.
-# TODO: Compare predicted MPG, actual MPG, and errors in a table.
+# TODO: Build the family_size feature and select the six model columns.
+# TODO: Apply saved numerical and categorical missing-value replacements.
+# TODO: Encode and align columns exactly as during training.
+# TODO: Apply the fitted scaler to numerical columns only.
+# TODO: Convert to float32 and make a sigmoid prediction.
+# TODO: Convert to a class with threshold 0.5 and interpret the result.
 ```
 
 <details>
-<summary><strong>Hint — numerical outputs</strong></summary>
+<summary><strong>Hint — predicting with the same preprocessing</strong></summary>
 
-For one output neuron, `predict()` returns a two-dimensional array with one column. `.ravel()` converts it to a one-dimensional sequence. Subtract actual MPG to get the signed error and use `np.abs(...)` for the absolute error.
-
-</details>
-
-### B. Predict MPG for a hypothetical vehicle
-
-The hypothetical vehicle below provides all five inputs expected by this MLP, including the categorical field `origin`.
-
-| `weight` (lb) | `horsepower` | `displacement` (cu in) | `model_year` | `origin` |
-|---:|---:|---:|---:|---|
-| 3000 | 100 | 200 | 76 | `usa` |
-
-**Pair tasks**
-
-1. Put this single vehicle into a one-row DataFrame using the five feature names.
-2. Encode its `origin` and align its columns to `X_train_encoded.columns`.
-3. Use the **fitted** imputer and scaler to transform its four numerical columns; do not call either `fit()` or `fit_transform()`.
-4. Convert the prepared row to a float32 array and predict MPG using `final_model`.
-5. Report the estimate with units and explain why it is not a verified fuel-efficiency measurement.
-
-```python
-# TODO: Build a one-row DataFrame for the hypothetical vehicle.
-# TODO: Apply the saved training-column encoding rule.
-# TODO: Use existing imputer and scaler with transform(), not fit().
-# TODO: Predict and report MPG.
-```
-
-<details>
-<summary><strong>Hint — reuse the full preprocessing sequence</strong></summary>
-
-`pd.DataFrame([ {...} ])` can represent one observation. Apply `pd.get_dummies(...)`, then `reindex(columns=X_train_encoded.columns, fill_value=0)` exactly as for validation and test inputs. Use `imputer.transform(...)` before `scaler.transform(...)` on the four numeric columns. Input order must match training.
+The steps from Sections 5 and 6 must be reused in the same sequence. The saved training category columns are `X_train_encoded.columns`. A predicted sigmoid value can be flattened with `.ravel()`, compared with `0.5`, and converted to a 0/1 class. The target is not present in the hypothetical passenger input.
 
 </details>
 
 ### Exit discussion
 
-1. Which parts of the workflow remained the same as the Week 1 regression activities?
-2. Why must imputation, encoding, and scaling learned during training be kept for inference?
-3. What do **backpropagation**, **Adam**, **MSE**, and **MAE** each contribute to this MLP exercise?
-4. Why was **validation MAE** used for model selection rather than test MAE?
-5. What is one limitation of the Auto MPG data, and what additional evidence would be needed before broader use?
+1. Which parts of the Week 1 MLP regression workflow remained unchanged, and which parts changed for binary classification?
+2. What problem does `family_size` address, and why are its original component columns omitted from the model inputs?
+3. Which preprocessing statistics must come from training data only? What does one-hot alignment preserve?
+4. What do **binary cross-entropy**, **backpropagation**, and **Adam** each do?
+5. Why is the test set used only after validation-based model selection?
+6. What must be stored alongside model weights before predicting on future records?
 
 ## Submission checklist
 
 - [ ] Both partners contributed code and switched Driver/Navigator roles.
-- [ ] The CSV was loaded, inspected, and restricted to the selected inputs and target.
-- [ ] Training, validation, and test sets were formed before fitted preprocessing.
-- [ ] A mean training-MPG baseline and training-only EDA findings were recorded.
-- [ ] `origin` was one-hot encoded with consistent columns across splits.
-- [ ] Missing numerical inputs were imputed and scaled using **training statistics only**.
-- [ ] A regression MLP was constructed with 16 ReLU neurons and one linear output; parameter counts were checked.
-- [ ] Adam, MSE, and MAE were used appropriately; training and validation plots were interpreted.
-- [ ] A fresh candidate was compared using **validation MAE**, before the test assessment.
-- [ ] Selected-model test MAE was compared with the mean-baseline test MAE.
-- [ ] Five predictions and one hypothetical new-vehicle prediction were explained, with preprocessing reused correctly.
-- [ ] The notebook runs from top to bottom and includes a reflection on leakage, generalization, and limits of the results.
+- [ ] Dataset exploration and training-only survival patterns were recorded.
+- [ ] Only specified features were used; no target leakage occurred.
+- [ ] Stratified training/validation/test splits were created without overlapping rows.
+- [ ] `family_size` replaced `sibsp` and `parch` in the six model input fields.
+- [ ] Numerical medians, category modes, encoding alignment, and scaling were learned from training data only.
+- [ ] Model-input arrays had matching feature order and contained no missing values.
+- [ ] The 16-ReLU / one-sigmoid baseline was built and its parameters checked.
+- [ ] Adam, BCE, and accuracy were interpreted; learning curves were inspected.
+- [ ] A fresh candidate was selected using final validation BCE before test evaluation.
+- [ ] Test results were compared with the training-majority-class baseline.
+- [ ] The hypothetical passenger was processed without refitting and a prediction was interpreted.
+- [ ] A short reflection identified limitations of this historical, observational dataset.
 
 ---
 
-**Key connection to Week 1:** The training/validation/test workflow, MLP construction, loss and metric interpretation, and validation-based model selection remain the same. This dataset adds practical experience with **missing inputs**, **categorical encoding**, and **reusing the complete fitted preprocessing process** for new numerical predictions.
+**Key connection to Week 1:** The train/validation/test discipline, preprocessing rules, Keras workflow, and validation-first model selection remain the same. The new focus is **classification**: sigmoid output, binary cross-entropy, class accuracy, and a majority-class baseline. The Titanic dataset also provides practice with **feature construction, missing-value imputation, and categorical encoding**.
