@@ -2,8 +2,6 @@
 
 **Focus:** Apply the neural-network workflow studied in Week 1 to binary classification with numerical and categorical inputs, missing values, and a constructed feature.
 
-In Week 1, the cereal-rating and concrete-strength tasks used MLPs to predict numerical values. This Week 2 activity uses the same general workflow to predict a **binary outcome**: whether a passenger survived the sinking of the Titanic. The familiar steps remain: explore the data, separate inputs and target, split the data, preprocess, build and train a model, compare validation results, and evaluate the selected model on the test set.
-
 The Titanic dataset is familiar from earlier classical machine-learning work. This activity reuses that data context while changing the estimator to an MLP, allowing the comparison to focus on the output layer, loss function, and neural-network training workflow.
 
 The [Titanic CSV](https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv) contains **891 passenger records**. The target is `survived`: **0 = did not survive; 1 = survived**. This is a historical dataset used to practise machine-learning methods; predictions should not be interpreted as causes of survival or as a reliable model for present-day safety decisions.
@@ -53,7 +51,7 @@ flowchart LR
 
 ## 1. Recall: Regression versus binary classification
 
-| Choice | Week 1: regression | Week 2: Titanic classification |
+| Choice | Regression |  Classification |
 |---|---|---|
 | Target | Numerical rating or strength | `survived`: 0 or 1 |
 | Output layer | One linear neuron | One sigmoid neuron |
@@ -277,7 +275,7 @@ Use `.value_counts()` on `y_train`, not on the test labels. The training majorit
 This task includes a small feature-engineering step. Define the size of the passenger's traveling family group as:
 
 $$
-\text{family\_size}=1+\text{sibsp}+\text{parch}
+\text{family\\_size} = 1 + \text{sibsp} + \text{parch}
 $$
 
 The added 1 counts the passenger. For modeling, `family_size` **replaces** `sibsp` and `parch` rather than being added alongside them. The final six input fields, before encoding, are:
