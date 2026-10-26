@@ -1,4 +1,4 @@
-# Activity 1 — From One Weight to Two Weights: Partial Derivatives, Backpropagation, and Gradient Descent
+# Activity 1: From One Weight to Two Weights: Partial Derivatives, Backpropagation, and Gradient Descent
 
 **Guided reinforcement | One linear neuron, two inputs, two weights, and an optional bias**
 
@@ -284,72 +284,118 @@ The two-weight loss is a surface $L(w_1,w_2)$. A contour plot shows this surface
 For the current example,
 
 $$
-L(w_1,w_2)=\frac{1}{2}(2w_1+w_2-6)^2
+L(w_1,w_2)=\frac{1}{2}(w_1-1)^2+\frac{1}{2}(w_2-2)^2
 $$
 
-The line
+This produces a smooth, bowl-shaped surface with a **single minimum** at $(w_1,w_2)=(1,2)$, where the loss is zero.
 
-$$
-2w_1+w_2=6
-$$
-
-is a **valley of zero-loss solutions**. Along this line, the prediction is exactly correct, so the loss is zero. Gradient descent moves from $(3,1)$ downhill on the loss surface toward this valley. **Run the supplied code below to see the 3D surface and trajectory; the task is to interpret the path, not to implement plotting.**
 
 <details>
-<summary>Show supplied Python code — 3D loss surface and gradient descent trajectory</summary>
+<summary>Show supplied Python code: 3D loss surface and gradient descent trajectory</summary>
 
 ```python
+"""Two-weight regression loss: 3D gradient and gradient-descent trajectory."""
+from pathlib import Path
+
 import numpy as np
 import matplotlib.pyplot as plt
 
-x1, x2, y = 2.0, 1.0, 6.0
-eta = 0.1
-w1, w2 = 3.0, 1.0
-path = [(w1, w2)]
-loss_path = [0.5 * (w1 * x1 + w2 * x2 - y) ** 2]
+# Each row is one training example: [x1, x2].
+X = np.array([[1.0, 0.0], [0.0, 1.0]])
+y = np.array([1.0, 2.0])
+learning_rate = 0.2
+n_steps = 12
+weights = np.array([4.0, -1.0])
 
-for _ in range(12):
-    error = w1 * x1 + w2 * x2 - y
-    w1 -= eta * error * x1
-    w2 -= eta * error * x2
-    path.append((w1, w2))
-    loss_path.append(0.5 * (w1 * x1 + w2 * x2 - y) ** 2)
+# Record the loss before any update (step 0), then after each update.
+path = [weights.copy()]
+losses = [0.5 * np.sum((X @ weights - y) ** 2)]
 
-w1_grid = np.linspace(1.4, 3.5, 300)
-w2_grid = np.linspace(-0.6, 3.6, 300)
-W1, W2 = np.meshgrid(w1_grid, w2_grid)
-L = 0.5 * (2 * W1 + W2 - 6) ** 2
+for _ in range(n_steps):
+    predictions = X @ weights                    # Forward pass
+    residuals = predictions - y
+    gradient = X.T @ residuals                    # Partial derivatives
+    weights = weights - learning_rate * gradient  # Gradient descent
+    path.append(weights.copy())
+    losses.append(0.5 * np.sum((X @ weights - y) ** 2))
 
-path = np.array(path)
-loss_path = np.array(loss_path)
-zero_loss_w2 = 6 - 2 * w1_grid
-zero_loss_L = np.zeros_like(w1_grid)
+path = np.asarray(path)
+losses = np.asarray(losses)
 
-fig = plt.figure(figsize=(9, 7))
+# Values of the loss over a grid of possible weight pairs.
+w1_axis = np.linspace(-0.5, 4.5, 100)
+w2_axis = np.linspace(-1.5, 3.5, 100)
+W1, W2 = np.meshgrid(w1_axis, w2_axis)
+L = 0.5 * ((W1 - 1) ** 2 + (W2 - 2) ** 2)
+
+fig = plt.figure(figsize=(11, 8))
 ax = fig.add_subplot(111, projection="3d")
 
-surf = ax.plot_surface(W1, W2, L, alpha=0.8)
-ax.contour(W1, W2, L, zdir="z", offset=0, levels=8)
+# Transparent bowl keeps the actual trajectory visible.
+ax.plot_surface(W1, W2, L, cmap="Blues", alpha=0.25,
+                linewidth=0, antialiased=True)
+ax.plot_wireframe(W1, W2, L, rstride=14, cstride=14,
+                  color="slategray", alpha=0.18, linewidth=0.8)
 
-ax.plot(w1_grid, zero_loss_w2, zero_loss_L, "--", linewidth=2,
-        label="All zero-loss solutions")
-ax.plot(path[:, 0], path[:, 1], loss_path, "o-", linewidth=2,
-        label="Gradient descent")
+# Actual weight pairs and losses reached by the optimizer.
+ax.plot(path[:, 0], path[:, 1], losses, "o-", color="#9d174d",
+        linewidth=3.4, markersize=5.4, label="Gradient-descent trajectory")
+ax.scatter(path[0, 0], path[0, 1], losses[0],
+           color="#9d174d", s=105, depthshade=False)
+ax.scatter(1.0, 2.0, 0.0, color="darkgreen", marker="*",
+           s=250, depthshade=False, label="Minimum: (1, 2), loss 0")
 
-ax.text(path[0, 0], path[0, 1], loss_path[0], "Start (3, 1)")
-ax.text(path[-1, 0], path[-1, 1], loss_path[-1], "Approaching zero-loss valley")
+# At the start, the two-component gradient is (3, -3).
+# Lift the uphill direction to the tangent plane of the 3D surface:
+# its vertical component is grad(L) dot (small_step * grad(L)).
+grad0 = X.T @ (X @ path[0] - y)
+arrow_scale = 0.11
+up_xy = arrow_scale * grad0
+up_z = float(np.dot(grad0, up_xy))
+ax.quiver(path[0, 0], path[0, 1], losses[0],
+          up_xy[0], up_xy[1], up_z,
+          color="#c2410c", linewidth=4, arrow_length_ratio=0.20,
+          label="Positive gradient: uphill")
 
-ax.set_xlabel("Weight w1")
-ax.set_ylabel("Weight w2")
-ax.set_zlabel("Loss L")
-ax.set_title("Two-weight loss surface and gradient descent")
-ax.set_xlim(1.4, 3.5)
-ax.set_ylim(-0.6, 3.6)
-ax.set_zlim(0, np.max(L))
-ax.legend()
-plt.tight_layout()
+# This green arrow is the *actual first gradient-descent update*.
+# Its weight-space direction is exactly opposite to the gradient.
+first_step = path[1] - path[0]
+first_loss_change = losses[1] - losses[0]
+ax.quiver(path[0, 0], path[0, 1], losses[0],
+          first_step[0], first_step[1], first_loss_change,
+          color="#15803d", linewidth=4, arrow_length_ratio=0.22,
+          label="First update: downhill")
+
+ax.text(path[0, 0] - 0.4, path[0, 1] + 0.1, losses[0] + 1.1,
+        "Start (step 0)", color="#741039", weight="bold")
+ax.text(path[1, 0], path[1, 1], losses[1] + 0.7,
+        "Step 1", color="#741039", weight="bold")
+
+ax.set_xlabel("Weight w1", labelpad=12)
+ax.set_ylabel("Weight w2", labelpad=12)
+ax.set_zlabel("Loss L", labelpad=12)
+ax.set_title("Gradient and gradient descent on a 3D loss bowl", pad=18)
+ax.set_xlim(-0.5, 4.5)
+ax.set_ylim(-1.5, 3.5)
+ax.set_zlim(0, 15)
+ax.set_box_aspect((1.0, 1.0, 0.95))
+ax.view_init(elev=32, azim=-150)
+ax.legend(loc="upper left", fontsize=9)
+
+# Save the same figure for use in the GitHub chapter.
+output = Path("img/two_weight_gradient_descent_3d.png")
+output.parent.mkdir(parents=True, exist_ok=True)
+fig.savefig(output, dpi=180, bbox_inches="tight")
 plt.show()
+
+print(f"Initial gradient: {grad0}")
+print(f"Initial loss: {losses[0]:.3f}")
+print(f"Loss after first update: {losses[1]:.3f}")
+print(f"Final weights after {n_steps} updates: {path[-1]}")
+print(f"Final loss: {losses[-1]:.5f}")
 ```
+
+The code saves the figure to `img/two_weight_gradient_descent_3d.png`. The example uses $12$ gradient-descent updates. The final weight pair is approximately $(1.206,1.794)$ and the final loss is approximately $0.0425$. The update moves toward the minimum, but the chosen number of steps does not reach it exactly.
 
 </details>
 
@@ -386,39 +432,133 @@ Thus repeated updates reduce the magnitude of the error when $\lvert1-5\eta\rver
 **Try the code:** Run the following supplied Python program to compare the learning rates visually. Explain the differences between decreasing loss, oscillation, and divergence. Writing the plotting code is not required.
 
 <details>
-<summary>Show supplied Python code — Learning-rate comparison</summary>
+<summary>Show supplied Python code: Learning-rate comparison</summary>
 
 ```python
+"""3D visualization of learning rates for a two-weight regression model.
+
+Dependencies: numpy, matplotlib.
+Each training step is one full-batch gradient descent update.
+"""
+from pathlib import Path
+
 import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.lines import Line2D
 
-x1, x2, y = 2.0, 1.0, 6.0
+# Two observations: (x1, x2, target).
+X = np.array([[2.0, 1.0], [1.0, -2.0]])
+y = np.array([6.0, 1.0])
 rates = [0.05, 0.10, 0.20, 0.30, 0.40, 0.50]
-steps = 12
+num_updates = 12
+shown_updates = 2  # A common 3D scale makes the first two steps easy to compare.
+start = np.array([3.0, 1.0])
+optimum = np.array([2.6, 0.8])
 
-plt.figure(figsize=(9, 5))
+
+def loss(weights):
+    residuals = X @ weights - y
+    return 0.5 * np.sum(residuals ** 2)
+
+
+def gradient(weights):
+    residuals = X @ weights - y
+    return X.T @ residuals
+
+
+def run_gradient_descent(eta):
+    # All rates restart from the same initial parameters.
+    weights = start.copy()
+    weight_history = [weights.copy()]
+    loss_history = [loss(weights)]  # Step 0: before any update.
+    for _ in range(num_updates):
+        grad = gradient(weights)  # Gradient at the current weights.
+        weights = weights - eta * grad  # Full-batch update.
+        weight_history.append(weights.copy())
+        loss_history.append(loss(weights))
+    return np.array(weight_history), np.array(loss_history)
+
+
+# Display values for selected updates. Loss is not modified for plotting.
+print("Each step is one full-batch update using both observations.")
+print("Learning rate | L(0) | L(1) | L(2) | L(4) | L(12)")
+results = {}
 for eta in rates:
-    w1, w2 = 3.0, 1.0
-    losses = []
-    for step in range(steps + 1):
-        error = w1*x1 + w2*x2 - y
-        losses.append(0.5*error**2)
-        if step < steps:
-            # Gradients are computed from the current parameters
-            dw1, dw2 = error*x1, error*x2
-            w1 -= eta*dw1
-            w2 -= eta*dw2
-    # Positive floor permits displaying zero loss on a log scale
-    plt.semilogy(range(steps + 1),
-                 [max(value, 1e-12) for value in losses],
-                 marker="o", label=f"learning rate = {eta:.2f}")
+    weights, losses = run_gradient_descent(eta)
+    results[eta] = (weights, losses)
+    print(f"{eta:>13.2f} | " + " | ".join(f"{losses[k]:.6g}" for k in [0, 1, 2, 4, 12]))
 
-plt.xlabel("Number of updates")
-plt.ylabel("Loss (log scale; zeros shown at 1e-12)")
-plt.title("Effect of learning rate on training loss")
-plt.xticks(range(steps + 1))
-plt.grid(alpha=0.25)
-plt.legend()
-plt.tight_layout()
+# Common domain and vertical scale for all six panels.
+w1_vals = np.linspace(1.75, 3.70, 58)
+w2_vals = np.linspace(0.35, 1.40, 58)
+W1, W2 = np.meshgrid(w1_vals, w2_vals)
+E1 = 2 * W1 + W2 - 6
+E2 = W1 - 2 * W2 - 1
+Z = 0.5 * (E1**2 + E2**2)
+
+fig = plt.figure(figsize=(16.5, 10.0))
+fig.suptitle("Learning rates on a 3D loss surface: first two updates", fontsize=17, y=0.985)
+
+for i, eta in enumerate(rates, 1):
+    ax = fig.add_subplot(2, 3, i, projection="3d")
+    ax.plot_surface(W1, W2, Z, cmap="Blues", alpha=0.35,
+                    rstride=2, cstride=2, linewidth=0,
+                    antialiased=True, shade=False)
+
+    weight_history, loss_history = results[eta]
+    path = weight_history[:shown_updates + 1]
+    z_path = loss_history[:shown_updates + 1]
+
+    # The path is plotted at its exact computed loss value.
+    ax.plot(path[:, 0], path[:, 1], z_path,
+            color="darkorange", linewidth=3.2, marker="o",
+            markersize=5.5, markeredgecolor="white", zorder=8)
+    # Each arrow is one actual parameter update in 3D.
+    for k in range(shown_updates):
+        ax.quiver(path[k, 0], path[k, 1], z_path[k],
+                  path[k+1, 0] - path[k, 0],
+                  path[k+1, 1] - path[k, 1],
+                  z_path[k+1] - z_path[k],
+                  color="darkorange", linewidth=2.2,
+                  arrow_length_ratio=0.19, normalize=False)
+
+    ax.scatter(*start, loss(start), color="black", s=40, depthshade=False)
+    ax.scatter(*optimum, 0.0, color="forestgreen", s=75, marker="*", depthshade=False)
+    ax.set_title(f"η = {eta:.2f}     Loss: {z_path[0]:.3f} → {z_path[1]:.3f} → {z_path[2]:.3f}",
+                 fontsize=10.3, pad=13)
+    ax.set_xlabel("Weight $w_1$", labelpad=3)
+    ax.set_ylabel("Weight $w_2$", labelpad=3)
+    ax.set_zlabel("Loss $L$", labelpad=3)
+    ax.set_xlim(w1_vals[0], w1_vals[-1])
+    ax.set_ylim(w2_vals[0], w2_vals[-1])
+    ax.set_zlim(0, 3.4)
+    ax.set_xticks([2.0, 2.6, 3.2, 3.6])
+    ax.set_yticks([0.4, 0.8, 1.2])
+    ax.set_zticks([0, 1, 2, 3])
+    ax.view_init(elev=30, azim=-59)
+    ax.set_box_aspect((1.45, 1.0, 0.95))
+    ax.tick_params(labelsize=8, pad=1)
+    ax.grid(alpha=0.12)
+
+legend_items = [
+    Line2D([0], [0], color="darkorange", marker="o", linewidth=2.5,
+           label="Gradient-descent updates"),
+    Line2D([0], [0], color="black", marker="o", linewidth=0, markersize=6,
+           label="Start: (3, 1)"),
+    Line2D([0], [0], color="forestgreen", marker="*", linewidth=0, markersize=10,
+           label="Minimum: (2.6, 0.8)"),
+]
+fig.legend(handles=legend_items, loc="lower center", ncol=3,
+           bbox_to_anchor=(0.5, 0.023), fontsize=10, frameon=False)
+fig.text(0.5, 0.065,
+         "All panels use the same axes. Two updates are shown in 3D; 12 updates are calculated and printed.",
+         ha="center", fontsize=10)
+fig.subplots_adjust(left=0.015, right=0.985, top=0.93, bottom=0.11,
+                    wspace=0.035, hspace=0.2)
+
+# Save inside the img folder for embedding in a GitHub Markdown chapter.
+Path("img").mkdir(exist_ok=True)
+fig.savefig("img/learning_rates_3d.png", dpi=170, bbox_inches="tight")
 plt.show()
 ```
 
@@ -498,11 +638,6 @@ The gradient vector is now
 
 $\displaystyle \nabla L=\begin{bmatrix}\frac{\partial L}{\partial w_1}\\\frac{\partial L}{\partial w_2}\\\frac{\partial L}{\partial b}\end{bmatrix} =\boxed{\begin{bmatrix}4\\2\\2\end{bmatrix}}$
 
-The gradient vector is now:
-
-$$
-\nabla L = \begin{bmatrix} \frac{\partial L}{\partial w_1} \\ \frac{\partial L}{\partial w_2} \\ \frac{\partial L}{\partial b} \end{bmatrix} = \begin{bmatrix} 4 \\ 2 \\ 2 \end{bmatrix}
-$$
 
 </details>
 
@@ -561,7 +696,7 @@ for step in range(8):
 **Try the code:** Run the supplied program to view both loss curves. Describe what differs at the start and why this is not a controlled comparison of learning speed. Creating the plot is not an assessed task.
 
 <details>
-<summary>Show supplied Python code — Compare training loss with and without bias</summary>
+<summary>Show supplied Python code: Compare training loss with and without bias</summary>
 
 ```python
 import matplotlib.pyplot as plt

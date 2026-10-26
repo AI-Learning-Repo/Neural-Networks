@@ -1,4 +1,4 @@
-# Demo 1 — One Weight: Backpropagation and Gradient Descent
+# Demo 1: Backpropagation and Gradient Descent (One Weight)
 
 **Worked demonstration | One linear neuron, one input, one trainable weight, and no bias**
 
@@ -351,7 +351,7 @@ graph LR
 
 **Training goal:** Find a weight that makes the prediction equal to the target. For this example, the exact solution is $w^*=6/2=3$, but gradient descent will approach it through repeated updates rather than being given the answer.
 
-## 2. Step 1 — Forward pass
+## 2. Step 1: Forward pass
 
 **Prediction**
 
@@ -375,7 +375,7 @@ The forward pass computes **how large the error is**. It does not, by itself, de
 
 **Prediction checkpoint:** The prediction is too high and the input is positive. Determine whether the weight should increase or decrease before examining the gradient.
 
-## 3. Step 2 — Backward pass (backpropagation)
+## 3. Step 2: Backward pass (backpropagation)
 
 The question is how sensitive the loss is to a change in the weight:
 
@@ -457,7 +457,7 @@ The gradient at $w=8$ is **positive**. A small increase in $w$ would increase th
 **Terminology note:** With one trainable variable, $dL/dw$ is an ordinary derivative. In a model with several trainable parameters, each derivative is a *partial derivative*, and the collection of partial derivatives forms the gradient vector.
 
 
-## 4. Step 3 — Gradient descent update
+## 4. Step 3: Gradient descent update
 
 Now that we know the gradient ($\frac{dL}{dw} = 20$), how do we actually update the weight?
 
@@ -718,12 +718,12 @@ flowchart LR
 
 The gradient is **not** the downhill direction. The **negative gradient** is downhill. In higher-dimensional parameter spaces, this is the direction of steepest *local* descent under the usual Euclidean notion of distance. A learning rate that is too large can nevertheless overshoot the minimum and increase the loss.
 
-### Visualization 1 — Loss landscape and weight updates
+### Visualization 1: Loss landscape and weight updates
 
 The curve is $L(w)=2(w-3)^2$. Markers show the actual gradient-descent updates from $w=8$ toward $w=3$. **Run the supplied Python code to see the plot; identify the starting point, the minimum, and the sequence of updates. Plot construction is not an assessed task.**
 
 <details>
-<summary>Show supplied Python code — Loss landscape and descent path</summary>
+<summary>Show supplied Python code: Loss landscape and descent path</summary>
 
 ```python
 import numpy as np
@@ -770,12 +770,12 @@ plt.show()
 
 </details>
 
-### Visualization 2 — Loss over training iterations
+### Visualization 2: Loss over training iterations
 
 As updates continue, the loss approaches zero. The horizontal axis is the number of completed weight updates. **Run the supplied Python code and explain why the curve becomes flatter. Writing plotting code is not assessed.**
 
 <details>
-<summary>Show supplied Python code — Loss versus completed updates</summary>
+<summary>Show supplied Python code: Loss versus completed updates</summary>
 
 ```python
 import matplotlib.pyplot as plt

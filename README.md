@@ -24,22 +24,24 @@
 
 ### Monday Morning:
 
-- Grades for Data Handling and Machine Learning course
-- [From Small Neural Networks to Large-Scale Training](./material/theory2.md)
+
 - How Neural Networks Learn: From Regression to Binary Classification
   - [Summary](./material/theory.md)
   - [Demo 1](./material/demo1.md)
   - [Activity 1](./material/activity1.md)
   - [Demo 2](./material/demo2.md)  
   - [Activity 2](./material/activity2.md)
-  <details>
-  <summary>Links used in Session</summary>
+- [From Small Neural Networks to Large-Scale Training](./material/theory2.md)
+- Grades for Data Handling and Machine Learning course
+
+<details>
+<summary>Links used in Session</summary>
 
   - https://playground.tensorflow.org/
   - Deep Learning from Scratch
-  - https://metropolia.finna.fi/Record/nelli15.4100000009347178
-  - https://github.com/SethHWeidman/DLFS_code
-  </details>
+    - https://metropolia.finna.fi/Record/nelli15.4100000009347178
+    - https://github.com/SethHWeidman/DLFS_code
+</details>
 
 ### Monday Afternoon:
 
