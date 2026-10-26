@@ -14,11 +14,13 @@
 >   - Mini lecture (~35min)
 >   - Group / Pair programming (~35min)
 
+<!-- 
 ----
 
 > [!NOTE]  
 > - The theory course explains how neural networks work. The project course demonstrates how neural-network-based systems can be engineered into useful AI products.
-> - **Keras and PyTorch:** The original plan was to use PyTorch throughout the course. However, based on the feedback, we will use Keras as our primary framework. In Week 8, we will provide materials demonstrating how to migrate our Keras examples to PyTorch, giving you a foundation for exploring PyTorch independently.
+> - **Keras and PyTorch:** The original plan was to use PyTorch throughout the course. However, based on the feedback, we will use Keras as our primary framework. In Week 8, we will provide materials demonstrating how to migrate our Keras examples to PyTorch, giving you a foundation for exploring PyTorch independently. 
+-->
 
 ----
 
@@ -40,7 +42,6 @@
 
 - [Pair Programming 1](./material/pair-prog.md)
 - Pair Programming 2: [Calculus Review for Neural Networks](./material/calculus_review.md)
-  
 
 ---
 

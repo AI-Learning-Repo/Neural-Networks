@@ -54,6 +54,8 @@ This provides the starting point for understanding larger neural networks. Inste
 
 A **multilayer perceptron (MLP)** is a type of *feedforward neural network*. It typically consists of an input layer, one or more hidden layers of fully connected neurons, and an output layer.
 
+> Note that `feedforward` describes the network's architecture, not how it learns. In an MLP, `feedforward` simply means that data flows strictly in one direction, from the input layer through the hidden layers to the output, without circular feedback loops (unlike recurrent networks). It does not mean the network lacks backward flow during training. In fact, MLPs rely entirely on backpropagation: after each forward pass calculates a prediction and a loss, error gradients travel backward through the layers via the chain rule so the weights can be updated.
+
 In a fully connected layer, each neuron receives information from all neurons in the preceding layer. Each hidden neuron calculates a weighted sum, adds a bias, and typically applies a **nonlinear activation function**, such as ReLU or sigmoid.
 
 Nonlinear activations are important because stacking layers that perform only linear or affine transformations is mathematically equivalent to a single affine transformation. Nonlinearity allows the network to represent more complex relationships between inputs and outputs.
