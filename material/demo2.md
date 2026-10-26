@@ -2,6 +2,7 @@
 
 The binary classifier in this demonstration uses **two inputs, two weights, and one sigmoid output neuron**. It has no bias and no hidden layer. The model first produces a numerical score, then converts that score into a probability. During training, binary cross-entropy (BCE) measures how well the predicted probability agrees with the true label.
 
+
 ```mermaid
 flowchart LR
     classDef input fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
@@ -27,7 +28,8 @@ flowchart LR
     bce --> loss["Loss L"]:::loss
 ```
 
-### Step 1 — Calculate the weighted sum
+
+### Step 1: Calculate the weighted sum
 
 Each input is multiplied by its corresponding weight. The model adds these products to produce one score, $z$. This score may be negative, zero, or positive.
 
@@ -44,7 +46,7 @@ z&=(1)(2)+(-2)(1)\\
 \end{aligned}
 $$
 
-### Step 2 — Apply sigmoid to obtain a probability
+### Step 2: Apply sigmoid to obtain a probability
 
 Sigmoid converts the score into the predicted probability $p$ of class 1. For a finite score, the probability is strictly between 0 and 1.
 
@@ -60,7 +62,7 @@ $$
 
 The model assigns a probability of 0.5 to class 1. So far, no weights have changed.
 
-### Step 3 — Calculate binary cross-entropy
+### Step 3: Calculate binary cross-entropy
 
 BCE uses the predicted probability $p$ and the actual binary label $y$ to measure the penalty for the prediction.
 
@@ -89,3 +91,31 @@ $$
 This expression describes what the score represents; it is **not another operation inserted between the weighted sum and sigmoid**. It is also different from BCE, which uses the logarithms $\ln(p)$ and $\ln(1-p)$ to calculate a loss.
 
 **Checkpoint:** In the diagram, which step converts a score into a probability, and which step compares that probability with the true label?
+
+
+
+
+```mermaid
+flowchart LR
+    classDef input fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    classDef intermediate fill:#fff3e0,stroke:#f57c00,stroke-width:2px;
+    classDef output fill:#e8f5e9,stroke:#388e3c,stroke-width:2px;
+    classDef loss fill:#fce4ec,stroke:#c2185b,stroke-width:2px;
+
+    subgraph Input_Layer ["Input layer"]
+        x1(("x₁")):::input
+        x2(("x₂")):::input
+    end
+
+    subgraph Output_Layer ["Output layer: one sigmoid neuron"]
+        z["Weighted sum z"]:::intermediate
+        p(("Probability p")):::output
+        z -->|"sigmoid"| p
+    end
+
+    x1 -->|"w₁"| z
+    x2 -->|"w₂"| z
+    p --> bce["Binary cross-entropy"]:::loss
+    y["True label y"]:::input --> bce
+    bce --> loss["Loss L"]:::loss
+```
