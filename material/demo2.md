@@ -1,4 +1,4 @@
-# Demonstration — Binary Classification with Two Weights: Sigmoid, Logit, BCE, and Gradient Descent
+# Demonstration: Binary Classification with Two Weights
 
 
 ## How to use this demonstration
@@ -181,12 +181,12 @@ print(sigmoid(0))   # 0.5
 print(sigmoid(1))   # approximately 0.7311
 ```
 
-### Plot 1 — The sigmoid curve
+### Plot 1: The sigmoid curve
 
 Run the supplied code and observe the curve near $z=0$, at large negative scores, and at large positive scores.
 
 <details>
-<summary>Show Python code — Plot 1: sigmoid and the probability threshold</summary>
+<summary>Show Python code: Plot 1: sigmoid and the probability threshold</summary>
 
 ```python
 import numpy as np
@@ -232,7 +232,7 @@ It is **not** $\ln(p)$. The denominator $1-p$ is essential: it converts probabil
 
 These are illustrative forecasts, not real weather predictions.
 
-**Example A — 20% probability of rain**
+**Example A: 20% probability of rain**
 
 $p=0.20$
 
@@ -242,7 +242,7 @@ $\mathrm{logit}(0.20)=\ln(0.25)\approx -1.3863$
 
 The odds are **1 to 4 in favor of rain**, or equivalently 4 to 1 against rain. The negative logit indicates that rain is less likely than no rain.
 
-**Example B — 80% probability of rain**
+**Example B: 80% probability of rain**
 
 $p=0.80$
 
@@ -292,12 +292,12 @@ print(logit(0.5))  # 0.0
 print(logit(0.8))  # approximately +1.3863
 ```
 
-### Plot 2 — Why log-odds are zero-centered
+### Plot 2: Why log-odds are zero-centered
 
 Run the code and compare the neutral points: odds equal 1 at 50%, but log-odds equal 0.
 
 <details>
-<summary>Show Python code — Plot 2: odds and log-odds versus probability</summary>
+<summary>Show Python code: Plot 2: odds and log-odds versus probability</summary>
 
 ```python
 import numpy as np
@@ -379,12 +379,12 @@ $$
 | 0.900 | 0.1054 |
 | 0.999 | 0.0010 |
 
-### Plot 3 — Loss for $y=1$
+### Plot 3: Loss for $y=1$
 
 Run the code. Observe how strongly the loss penalizes a prediction close to 0 when the actual class is 1.
 
 <details>
-<summary>Show Python code — Plot 3: BCE loss for true class 1</summary>
+<summary>Show Python code: Plot 3: BCE loss for true class 1</summary>
 
 ```python
 import numpy as np
@@ -425,12 +425,12 @@ $$
 | 0.900 | 2.3026 |
 | 0.999 | 6.9078 |
 
-### Plot 4 — Loss for $y=0$
+### Plot 4: Loss for $y=0$
 
 Run the code. Observe how strongly the loss penalizes a prediction close to 1 when the actual class is 0.
 
 <details>
-<summary>Show Python code — Plot 4: BCE loss for true class 0</summary>
+<summary>Show Python code: Plot 4: BCE loss for true class 0</summary>
 
 ```python
 import numpy as np
@@ -468,12 +468,12 @@ $$
 
 Here $\ln$ denotes the **natural logarithm**. The BCE formula uses the logarithm of a *probability* or of its *complement*. The earlier logit formula uses the logarithm of the *odds*. These are related but different expressions.
 
-### Plot 5 — Compare both BCE curves
+### Plot 5: Compare both BCE curves
 
 Run the code and identify where the two loss curves cross. Explain why both labels have the same loss when the predicted probability is 0.5.
 
 <details>
-<summary>Show Python code — Plot 5: BCE for both true classes</summary>
+<summary>Show Python code: Plot 5: BCE for both true classes</summary>
 
 ```python
 import numpy as np
@@ -567,7 +567,7 @@ $$
 
 Both therefore start at probability 0.5 and BCE approximately 0.693147. Their gradients are also identical for this observation. With the same learning rate, the parameter changes and updated predictions match, although the weights remain different. This agreement concerns the shared input; predictions for other inputs can differ.
 
-### Step 1 — Forward pass: logit, probability, and loss
+### Step 1: Forward pass: logit, probability, and loss
 
 **Calculate the logit:**
 
@@ -597,7 +597,7 @@ $$
 
 **Interpretation:** The model assigns probability 0.5 to class 1. The loss is approximately 0.6931. So far, no weights have changed: this was the **forward pass**.
 
-### Step 2 — Backpropagation: calculate two partial derivatives
+### Step 2: Backpropagation: calculate two partial derivatives
 
 The loss depends on **both** weights. The question is how a small change in each weight affects the loss while the other independent weight is held fixed.
 
@@ -713,7 +713,7 @@ The two gradients form a vector:
 
 A negative partial derivative means that **increasing that weight slightly would decrease the loss**, holding the other weight fixed. Backpropagation has computed the gradients; it has **not** changed the weights.
 
-### Step 3 — Gradient descent: update the weights
+### Step 3: Gradient descent: update the weights
 
 Gradient descent subtracts the gradient scaled by the learning rate:
 
@@ -799,12 +799,12 @@ for step in range(12):
 
 The expression used for `loss` is algebraically equivalent to BCE for a sigmoid output, but avoids taking the logarithm of a probability that may round to 0 or 1.
 
-### Plot 6 — Probability and loss over repeated updates
+### Plot 6: Probability and loss over repeated updates
 
 Run the supplied code. Observe whether the probability assigned to the true class increases and whether the loss decreases. The plotting code is provided; the task is to **interpret the results**, not to create plotting code.
 
 <details>
-<summary>Show Python code — Plot 6: probability and BCE loss during training</summary>
+<summary>Show Python code: Plot 6: probability and BCE loss during training</summary>
 
 ```python
 import math
