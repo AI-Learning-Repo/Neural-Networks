@@ -30,7 +30,10 @@
   - [Activity 1](./material/activity1.md)
   - [Demo 2](./material/demo2.md)  
   - [Activity 2](./material/activity2.md)
-- [From Small Neural Networks to Large-Scale Training](./material/theory2.md)
+- From Small Neural Networks to Large-Scale Training
+  - [From a neuron to an MLP and a deep neural network](./material/theory2.md#1-from-a-neuron-to-an-mlp-and-a-deep-neural-network)
+  - [From three parameters to billions: how are gradients calculated?](./material/theory2.md#2-from-three-parameters-to-billions-how-are-gradients-calculated)
+  - [From gradient descent to SGD: how much data is used for each update?](./material/theory2.md#3-from-gradient-descent-to-sgd-how-much-data-is-used-for-each-update)
 - Grades for Data Handling and Machine Learning course
 
 <details>

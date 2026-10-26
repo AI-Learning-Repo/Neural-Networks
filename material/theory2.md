@@ -2,6 +2,11 @@
 
 *An introductory connection between multilayer perceptrons, deep neural networks, automatic differentiation, and stochastic gradient descent*
 
+1. [From a neuron to an MLP and a deep neural network](#1-from-a-neuron-to-an-mlp-and-a-deep-neural-network)
+2. [From three parameters to billions: how are gradients calculated?](#2-from-three-parameters-to-billions-how-are-gradients-calculated)
+3. [From gradient descent to SGD: how much data is used for each update?](#3-from-gradient-descent-to-sgd-how-much-data-is-used-for-each-update)
+
+
 ## Purpose of this reading
 
 This is a conceptual reading with no complete Python programs to run.
