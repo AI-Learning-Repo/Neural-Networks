@@ -1,4 +1,4 @@
-# Activity 2 — Binary Classification: From Logit and Sigmoid to Backpropagation and Gradient Descent
+# Activity 2: Binary Classification: From Logit and Sigmoid to Backpropagation and Gradient Descent
 
 **Guided reinforcement | One logistic neuron, two inputs, two weights, and no bias in the core activity**
 
@@ -55,12 +55,12 @@ At `z = 0`, `exp(-z) = 1`, so `p = 1/(1+1) = 0.5`. For every finite real score, 
 
 </details>
 
-### Visualization 1 — Sigmoid
+### Visualization 1: Sigmoid
 
 Run the following code. Observe where the curve crosses $p=0.5$ and how it behaves for large negative and positive scores.
 
 <details>
-<summary>Python code — Run and observe the sigmoid curve</summary>
+<summary>Python code: Run and observe the sigmoid curve</summary>
 
 ```python
 import numpy as np
@@ -103,13 +103,13 @@ The logit is **not** $\ln(p)$. The denominator $1-p$ converts probability into o
 
 These probabilities are illustrative, not actual weather forecasts.
 
-**Example A — 20% chance of rain**
+**Example A: 20% chance of rain**
 
 - Probability: $p=0.20$.
 - Odds for rain: $\frac{0.20}{0.80}=0.25$, or 1 to 4.
 - Logit: $\ln(0.25)\approx-1.3863$.
 
-**Example B — 80% chance of rain**
+**Example B: 80% chance of rain**
 
 - Probability: $p=0.80$.
 - Odds for rain: $\frac{0.80}{0.20}=4$, or 4 to 1.
@@ -159,12 +159,12 @@ print(logit(0.5))  # 0.0
 print(logit(0.8))  # approximately +1.3863
 ```
 
-### Visualization 2 — Odds and log-odds
+### Visualization 2: Odds and log-odds
 
 Run the code and compare their neutral values: **odds = 1**, but **log-odds = 0**.
 
 <details>
-<summary>Python code — Run and compare odds with log-odds</summary>
+<summary>Python code: Run and compare odds with log-odds</summary>
 
 ```python
 import numpy as np
@@ -271,12 +271,12 @@ A correct, confident prediction ($p$ near 1) has low loss. A confident wrong pre
 
 </details>
 
-### Visualization 3 — BCE when $y=1$
+### Visualization 3: BCE when $y=1$
 
 Run the code and observe the increase in loss as the probability approaches zero.
 
 <details>
-<summary>Python code — Run and observe BCE for label 1</summary>
+<summary>Python code: Run and observe BCE for label 1</summary>
 
 ```python
 import numpy as np
@@ -326,12 +326,12 @@ Now the prediction should be close to zero. Predicting a high probability of cla
 
 </details>
 
-### Visualization 4 — BCE when $y=0$
+### Visualization 4: BCE when $y=0$
 
 Run the code and observe the increase in loss as the probability approaches one.
 
 <details>
-<summary>Python code — Run and observe BCE for label 0</summary>
+<summary>Python code: Run and observe BCE for label 0</summary>
 
 ```python
 import numpy as np
@@ -385,12 +385,12 @@ When `y = 1`, the factor `1-y` becomes zero and the loss reduces to `-ln(p)`. Wh
 
 </details>
 
-### Visualization 5 — Both BCE curves
+### Visualization 5: Both BCE curves
 
 Run the code. Compare the mirror-image loss curves and identify the common loss at $p=0.5$.
 
 <details>
-<summary>Python code — Run and compare BCE for both labels</summary>
+<summary>Python code: Run and compare BCE for both labels</summary>
 
 ```python
 import numpy as np
@@ -470,7 +470,7 @@ graph LR
 
 **Connection to Demo 2:** This activity restarts at weights $(0,0)$, whereas [Demo 2](demo2.md#why-the-activity-uses-different-starting-weights) starts at $(1,-2)$. For the shared input $(2,1)$, both weighted sums equal zero: `0*2 + 0*1 = 1*2 + (-2)*1 = 0`. Both therefore predict probability 0.5 and, for label 1, BCE approximately 0.693147. The gradients and parameter changes are identical for this observation, but the weights remain different and can give different predictions on other inputs.
 
-### Step 1 — Forward pass: logit, probability, loss
+### Step 1: Forward pass: logit, probability, loss
 
 **Question 7.** Calculate (a) the logit $z$, (b) the sigmoid probability $p$, and (c) the BCE loss. Identify which calculations depend on the target label. Does a forward pass update the weights?
 
@@ -501,7 +501,7 @@ $$
  L=-\ln(0.5)\approx0.693147
 $$
 
-### Step 2 — Backpropagation: the chain rule and partial derivatives
+### Step 2: Backpropagation: the chain rule and partial derivatives
 
 Backpropagation calculates how the loss changes when each weight changes. This is a two-parameter model, so the result has **two partial derivatives**.
 
@@ -600,7 +600,7 @@ $$
 
 **Interpretation:** Both gradient components are negative, so a small increase in either weight locally reduces the loss for this positive example. Backpropagation has provided the gradients; the parameters have not changed.
 
-### Step 3 — Gradient descent: update the weights
+### Step 3: Gradient descent: update the weights
 
 Gradient descent subtracts the learning rate multiplied by each gradient:
 
@@ -723,12 +723,12 @@ for step in range(10):
 
 The expression `np.logaddexp(0.0, z) - y*z` computes sigmoid BCE stably from the logit, without explicitly taking $\ln(0)$ near extreme predictions.
 
-### Visualization 6 — Probability and loss during training
+### Visualization 6: Probability and loss during training
 
 Run the supplied code. Observe how the probability approaches the positive label while the loss decreases.
 
 <details>
-<summary>Python code — Run and observe the training curves</summary>
+<summary>Python code: Run and observe the training curves</summary>
 
 ```python
 import numpy as np
@@ -786,7 +786,7 @@ The probability of the correct class rises while the BCE loss falls. With a sigm
 
 ---
 
-## 10. Extension A — Add a bias
+## 10. Extension A: Add a bias
 
 The core activity used two weights and no bias. A bias adds one more independently trainable parameter:
 
@@ -848,7 +848,7 @@ $$
 
 ---
 
-## 11. Extension B — Learning rates and a dataset with both labels
+## 11. Extension B: Learning rates and a dataset with both labels
 
 A learning rate scales the parameter update. A very small value may make progress slow; an excessively large value may cause oscillation or temporary increases in loss.
 
@@ -883,10 +883,10 @@ $$
 
 **Question 14.** Run the supplied program with four different learning rates. Which values make progress slowly, and which produce visible oscillations? What distinguishes the program from pure SGD?
 
-### Visualization 7 — Compare learning rates
+### Visualization 7: Compare learning rates
 
 <details>
-<summary>Python code — Run and interpret the learning-rate experiment</summary>
+<summary>Python code: Run and interpret the learning-rate experiment</summary>
 
 ```python
 import numpy as np
