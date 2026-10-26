@@ -636,7 +636,23 @@ $\displaystyle \frac{\partial L}{\partial b}= \frac{\partial L}{\partial e} \fra
 
 The gradient vector is now
 
-$\displaystyle \nabla L=\begin{bmatrix}\frac{\partial L}{\partial w_1}\\\frac{\partial L}{\partial w_2}\\\frac{\partial L}{\partial b}\end{bmatrix} =\boxed{\begin{bmatrix}4\\2\\2\end{bmatrix}}$
+
+$$
+\nabla L =
+\begin{bmatrix}
+\frac{\partial L}{\partial w_1} \\
+\frac{\partial L}{\partial w_2} \\
+\frac{\partial L}{\partial b}
+\end{bmatrix}
+=
+\boxed{
+\begin{bmatrix}
+4 \\
+2 \\
+2
+\end{bmatrix}
+}
+$$
 
 
 </details>
