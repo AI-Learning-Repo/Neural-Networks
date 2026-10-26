@@ -177,7 +177,8 @@ $\displaystyle =1\cdot1=\boxed{1}$
 
 **Both gradients together form a vector:**
 
-$\displaystyle \nabla L=\begin{bmatrix}\frac{\partial L}{\partial w_1}\\\frac{\partial L}{\partial w_2}\end{bmatrix} =\boxed{\begin{bmatrix}2\\1\end{bmatrix}}$
+<!-- $\displaystyle \nabla L=\begin{bmatrix}\frac{\partial L}{\partial w_1}\\\frac{\partial L}{\partial w_2}\end{bmatrix} =\boxed{\begin{bmatrix}2\\1\end{bmatrix}}$ -->
+`∇L = (∂L/∂w₁, ∂L/∂w₂)ᵀ = (2, 1)ᵀ`
 
 The positive components indicate that *slightly increasing* either weight at the current point would increase the loss.
 

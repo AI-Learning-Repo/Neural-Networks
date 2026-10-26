@@ -88,11 +88,6 @@ $$
 z=\ln\left(\frac{p}{1-p}\right)
 $$
 
-This expression describes what the score represents; it is **not another operation inserted between the weighted sum and sigmoid**. It is also different from BCE, which uses the logarithms $\ln(p)$ and $\ln(1-p)$ to calculate a loss.
-
-**Checkpoint:** In the diagram, which step converts a score into a probability, and which step compares that probability with the true label?
-
-
 
 
 ```mermaid
@@ -119,3 +114,10 @@ flowchart LR
     y["True label y"]:::input --> bce
     bce --> loss["Loss L"]:::loss
 ```
+
+This expression describes what the score represents; it is **not another operation inserted between the weighted sum and sigmoid**. It is also different from BCE, which uses the logarithms $\ln(p)$ and $\ln(1-p)$ to calculate a loss.
+
+
+**Checkpoint:** In the diagram, which step converts a score into a probability, and which step compares that probability with the true label?
+
+
