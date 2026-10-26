@@ -36,22 +36,25 @@
   - [From three parameters to billions: how are gradients calculated?](./material/theory2.md#2-from-three-parameters-to-billions-how-are-gradients-calculated)
   - [From gradient descent to SGD: how much data is used for each update?](./material/theory2.md#3-from-gradient-descent-to-sgd-how-much-data-is-used-for-each-update)
 
-<details>
-<summary>Links used in Session</summary>
-
-  - https://playground.tensorflow.org/
-  - https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec02.pdf
-  - https://www.kaggle.com/learn/intro-to-deep-learning
-  - Deep Learning from Scratch
-    - https://metropolia.finna.fi/Record/nelli15.4100000009347178
-    - https://github.com/SethHWeidman/DLFS_code
-</details>
-
 ### Monday Afternoon:
 
 - [Pair Programming 1](./material/pair-prog.md)
 - Pair Programming 2: [Calculus Review for Neural Networks](./material/calculus_review.md)
   
+
+---
+
+<details>
+<summary>Links used in Session</summary>
+
+- https://playground.tensorflow.org/
+- https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec02.pdf
+- https://www.kaggle.com/learn/intro-to-deep-learning
+- Deep Learning from Scratch
+  - https://metropolia.finna.fi/Record/nelli15.4100000009347178
+  - https://github.com/SethHWeidman/DLFS_code
+</details>
+
 ----
 
 <details>
