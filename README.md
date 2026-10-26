@@ -24,7 +24,6 @@
 
 ### Monday Morning:
 
-
 - How Neural Networks Learn: From Regression to Binary Classification
   - [Summary](./material/theory.md)
   - [Demo 1](./material/demo1.md)
@@ -39,6 +38,7 @@
 
   - https://playground.tensorflow.org/
   - https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec02.pdf
+  - https://www.kaggle.com/learn/intro-to-deep-learning
   - Deep Learning from Scratch
     - https://metropolia.finna.fi/Record/nelli15.4100000009347178
     - https://github.com/SethHWeidman/DLFS_code
