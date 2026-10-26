@@ -496,10 +496,11 @@ flowchart LR
     W1 --> Z
     W2 --> Z
     P --> L["BCE loss L"]:::loss
-    L -. "Backward: dL/dp" .-> P
-    P -. "Backward: dp/dz" .-> Z
-    Z -. "Backward: dz/dw₁" .-> W1
-    Z -. "Backward: dz/dw₂" .-> W2
+
+    L -.->|"Backward: ∂L/∂p"| P
+    P -.->|"Backward: ∂p/∂z"| Z
+    Z -.->|"Backward: ∂z/∂w₁"| W1
+    Z -.->|"Backward: ∂z/∂w₂"| W2
 ```
 
 **A. Differentiate the BCE loss with respect to the probability.**
