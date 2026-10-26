@@ -463,7 +463,7 @@ Now that we know the gradient ($\frac{dL}{dw} = 20$), how do we actually update 
 
 The derivative measures the slope. A positive slope ($\frac{dL}{dw} 0$) means increasing the weight increases the loss. Because our goal is to **minimize** loss, we must move in the opposite direction: we need to **decrease** the weight. Therefore, we always **subtract** the gradient.
 
-The gradient only tells us the *direction* and the *local slope* at this exact point—it does not tell us how far to go. If we subtracted the raw gradient directly ($8 - 20 = -12$), we would take a massive leap, drastically overshoot the minimum, and likely make the loss much worse.
+The gradient only tells us the *direction* and the *local slope* at this exact point. It does not tell us how far to go. If we subtracted the raw gradient directly ($8 - 20 = -12$), we would take a massive leap, drastically overshoot the minimum, and likely make the loss much worse.
 
 To take a cautious step, we scale the gradient by a small fraction called the **learning rate** ($\eta$, Greek letter *eta*, often something like $0.1$ or $0.01$):
 
