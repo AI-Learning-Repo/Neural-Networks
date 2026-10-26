@@ -48,9 +48,9 @@ graph LR
 
 ---
 
-# Part A — Ordinary derivatives: one independent variable
+# Part A: Ordinary derivatives: one independent variable
 
-## 2. Ordinary derivative, Example 1 — A simple square function
+## 2. Ordinary derivative, Example 1: A simple square function
 
 ### 2.1 Start with the function
 
@@ -105,7 +105,7 @@ $$
 SymPy treats $w$ as a mathematical symbol and differentiates the expression rather than estimating the result by trial and error.
 
 <details>
-<summary>Run the supplied Python code — Symbolic derivative and numerical value</summary>
+<summary>Run the supplied Python code: Symbolic derivative and numerical value</summary>
 
 ```python
 import sympy as sp
@@ -132,7 +132,7 @@ Expected results: function value **4**, derivative **2w**, and slope at $w=2$ eq
 The first plot shows the function, the point $(2,4)$, and the tangent line with slope $4$. The second plot shows the derivative function $f'(w)=2w$; its height at $w=2$ is $4$.
 
 <details>
-<summary>Run the supplied Python code — Plot A: function and tangent; Plot B: derivative</summary>
+<summary>Run the supplied Python code: Plot A: function and tangent; Plot B: derivative</summary>
 
 ```python
 import numpy as np
@@ -148,7 +148,7 @@ point_slope = 2*point
 
 tangent = point_value + point_slope*(w - point)
 
-# Plot A — original function and tangent line.
+# Plot A: original function and tangent line.
 plt.figure(figsize=(8, 4.5))
 plt.plot(w, function, label="f(w) = w squared")
 plt.plot(w, tangent, "--", label="Tangent at w = 2 (slope 4)")
@@ -161,7 +161,7 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 
-# Plot B — derivative as a function of w.
+# Plot B: derivative as a function of w.
 plt.figure(figsize=(8, 4.5))
 plt.plot(w, derivative, label="f'(w) = 2w")
 plt.axhline(0, linestyle=":", linewidth=1)
@@ -181,7 +181,7 @@ plt.show()
 
 ---
 
-## 3. Ordinary derivative, Example 2 — Squared-error loss and the chain rule
+## 3. Ordinary derivative, Example 2: Squared-error loss and the chain rule
 
 This example connects ordinary differentiation directly to the single-weight neural-network demonstration.
 
@@ -215,13 +215,13 @@ flowchart LR
     e --> L["Loss L = 0.5 × e²"]:::output
 ```
 
-**First stage — derivative of the loss with respect to error.**
+**First stage: derivative of the loss with respect to error.**
 
 $$
 \frac{dL}{de}=\frac{d}{de}\left(\frac12e^2\right)=e
 $$
 
-**Second stage — derivative of error with respect to weight.**
+**Second stage: derivative of error with respect to weight.**
 
 $$
 \frac{de}{dw}=\frac{d}{dw}(2w-6)=2
@@ -265,7 +265,7 @@ The updated prediction is $12$, and the updated loss is $18$. The exact minimum 
 ### 3.4 Calculate the same derivative in Python
 
 <details>
-<summary>Run the supplied Python code — Chain-rule loss derivative</summary>
+<summary>Run the supplied Python code: Chain-rule loss derivative</summary>
 
 ```python
 import sympy as sp
@@ -300,7 +300,7 @@ Expected results: initial loss **50**, derivative **4w − 12**, gradient **20**
 The loss is a bowl-shaped curve with its lowest point at $w=3$. The derivative plot crosses zero at that same weight. The slope at $w=8$ is positive; the first gradient-descent step moves left toward the minimum.
 
 <details>
-<summary>Run the supplied Python code — Plot A: loss and tangent; Plot B: derivative</summary>
+<summary>Run the supplied Python code: Plot A: loss and tangent; Plot B: derivative</summary>
 
 ```python
 import numpy as np
@@ -318,7 +318,7 @@ new_loss = 0.5*(2*new_w - 6)**2
 
 tangent = initial_loss + initial_gradient*(w - initial_w)
 
-# Plot A — loss curve, tangent at w=8, and first update.
+# Plot A: loss curve, tangent at w=8, and first update.
 plt.figure(figsize=(8, 4.5))
 plt.plot(w, loss, label="Half squared-error loss")
 plt.plot(w, tangent, "--", label="Tangent at w = 8")
@@ -334,7 +334,7 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 
-# Plot B — gradient value at every weight.
+# Plot B: gradient value at every weight.
 plt.figure(figsize=(8, 4.5))
 plt.plot(w, gradient, label="dL/dw = 4w - 12")
 plt.axhline(0, linestyle=":", linewidth=1)
@@ -355,7 +355,7 @@ plt.show()
 
 ---
 
-# Part B — Partial derivatives: two independent variables
+# Part B: Partial derivatives: two independent variables
 
 ## 4. What changes when a function has two variables?
 
@@ -390,7 +390,7 @@ The gradient is a pair of numbers at a chosen point. With the usual Euclidean no
 
 ---
 
-## 5. Partial derivatives, Example 1 — Two independent squared terms
+## 5. Partial derivatives, Example 1: Two independent squared terms
 
 ### 5.1 Start with the function
 
@@ -471,7 +471,7 @@ The function falls from $9$ to $f(0.8,1.2)=0.8^2+2(1.2)^2=\boxed{3.52}$. The two
 ### 5.5 Calculate both partial derivatives in Python
 
 <details>
-<summary>Run the supplied Python code — Two symbolic partial derivatives</summary>
+<summary>Run the supplied Python code: Two symbolic partial derivatives</summary>
 
 ```python
 import sympy as sp
@@ -506,7 +506,7 @@ Expected gradient: **(2, 8)**. Updated point: **(0.8, 1.2)**. Updated function v
 A function of two variables can be drawn as a 3D surface. Its partial derivatives are also functions of two variables, so each derivative can be visualized as a separate surface. The marker indicates the example point.
 
 <details>
-<summary>Run the supplied Python code — Three surfaces: f, partial with respect to w1, partial with respect to w2</summary>
+<summary>Run the supplied Python code: Three surfaces: f, partial with respect to w1, partial with respect to w2</summary>
 
 ```python
 import numpy as np
@@ -546,7 +546,7 @@ The **function surface** has a minimum at $(0,0)$. The derivative with respect t
 Each slice is now an ordinary one-variable curve, because the other variable is fixed. The tangent slope of the first slice is $2$; the tangent slope of the second slice is $8$.
 
 <details>
-<summary>Run the supplied Python code — Two slices and their tangent lines</summary>
+<summary>Run the supplied Python code: Two slices and their tangent lines</summary>
 
 ```python
 import numpy as np
@@ -593,7 +593,7 @@ plt.show()
 
 ---
 
-## 6. Partial derivatives, Example 2 — Two weights in a regression loss
+## 6. Partial derivatives, Example 2: Two weights in a regression loss
 
 This example reuses the same squared-error idea as Ordinary Example 2, but the prediction now depends on **two trainable weights**.
 
@@ -733,7 +733,7 @@ The loss decreases from **0.5** to **0.125**. The mathematical operation is the 
 ### 6.5 Calculate both partial derivatives in Python
 
 <details>
-<summary>Run the supplied Python code — Symbolic partial derivatives and a weight update</summary>
+<summary>Run the supplied Python code: Symbolic partial derivatives and a weight update</summary>
 
 ```python
 import sympy as sp
@@ -772,7 +772,7 @@ A contour plot views the loss surface from above. Lines of equal loss surround a
 The next Python example draws the 3D loss surface, the two derivative surfaces, and a separate contour view showing a gradient-descent step.
 
 <details>
-<summary>Run the supplied Python code — Loss surface, partial-derivative surfaces, and contour step</summary>
+<summary>Run the supplied Python code: Loss surface, partial-derivative surfaces, and contour step</summary>
 
 ```python
 import numpy as np
@@ -829,7 +829,7 @@ plt.show()
 The two slices show the precise meaning of each partial derivative. In the first, $w_2$ remains $1$ and $w_1$ changes. In the second, $w_1$ remains $3$ and $w_2$ changes. Both slices pass through the same starting point $(3,1)$ on the original surface.
 
 <details>
-<summary>Run the supplied Python code — Fixed-w2 and fixed-w1 slices</summary>
+<summary>Run the supplied Python code: Fixed-w2 and fixed-w1 slices</summary>
 
 ```python
 import numpy as np
