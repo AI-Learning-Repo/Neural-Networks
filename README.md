@@ -35,7 +35,6 @@
   - [From a neuron to an MLP and a deep neural network](./material/theory2.md#1-from-a-neuron-to-an-mlp-and-a-deep-neural-network)
   - [From three parameters to billions: how are gradients calculated?](./material/theory2.md#2-from-three-parameters-to-billions-how-are-gradients-calculated)
   - [From gradient descent to SGD: how much data is used for each update?](./material/theory2.md#3-from-gradient-descent-to-sgd-how-much-data-is-used-for-each-update)
-- Grades for Data Handling and Machine Learning course
 
 <details>
 <summary>Links used in Session</summary>
@@ -50,10 +49,8 @@
 
 ### Monday Afternoon:
 
-- Google Colab with VS Code???
-- Grade for Data Handling and Machine Learning course
-- Pair Programming 1
-- Pair Programming 2: Calculus Review for Neural Networks: Ordinary and Partial Derivatives 
+- [Pair Programming 1](./material/pair-prog.md)
+- Pair Programming 2: [Calculus Review for Neural Networks](./material/calculus_review.md)
   
 ----
 
