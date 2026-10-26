@@ -501,7 +501,7 @@ $\displaystyle \nabla L=\begin{bmatrix}\frac{\partial L}{\partial w_1}\\\frac{\p
 The gradient vector is now:
 
 $$
-\nabla L = \begin{bmatrix} \frac{\partial L}{\partial w_1} \\\\ \frac{\partial L}{\partial w_2} \\\\ \frac{\partial L}{\partial b} \end{bmatrix} = \boxed{\begin{bmatrix} 4 \\\\ 2 \\\\ 2 \end{bmatrix}}
+\nabla L = \begin{bmatrix} \frac{\partial L}{\partial w_1} \\ \frac{\partial L}{\partial w_2} \\ \frac{\partial L}{\partial b} \end{bmatrix} = \begin{bmatrix} 4 \\ 2 \\ 2 \end{bmatrix}
 $$
 
 </details>
