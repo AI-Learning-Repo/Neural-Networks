@@ -67,7 +67,7 @@ A linear output does not restrict predictions to the range 0–1. For a regressi
 3. What would a prediction of 25 MPG mean, and what would it *not* establish?
 
 <details>
-<summary><strong>Hint — regression output</strong></summary>
+<summary><strong>Hint: regression output</strong></summary>
 
 Consider whether the target is a class label or a numerical measurement. Recall the linear output used for cereal ratings and concrete strength in Week 1.
 
@@ -90,7 +90,7 @@ The exercise uses **four numerical inputs** and the categorical field `origin`.
 
 The extra fields `cylinders`, `acceleration`, and `name` are **not model inputs** in this exercise. In particular, `name` is free text and is not directly passed into the MLP. The addition of `origin` provides practice in encoding categorical features.
 
-**Supplied setup** — run this cell at the beginning of the notebook:
+**Supplied setup**: run this cell at the beginning of the notebook:
 
 ```python
 # Install packages first if the Colab environment needs them.
@@ -128,7 +128,7 @@ print("Keras backend:", keras.config.backend())
 ```
 
 <details>
-<summary><strong>Hint — loading and inspecting data</strong></summary>
+<summary><strong>Hint: loading and inspecting data</strong></summary>
 
 Recall `pd.read_csv(...)`, `.head()`, `.shape`, `.dtypes`, `.isna().sum()`, and `.dropna(subset=[...])` from Week 1. A missing target cannot be replaced with a guessed value for supervised training. Missing **input** values will be handled later.
 
@@ -158,7 +158,7 @@ Let `X` contain the input columns and `y` contain the `mpg` target. The target m
 ```
 
 <details>
-<summary><strong>Hint — split before fitting preprocessing</strong></summary>
+<summary><strong>Hint: split before fitting preprocessing</strong></summary>
 
 Recall the two calls to `train_test_split(...)` used in Week 1. The second call works on the training-plus-validation portion, not the original full DataFrame. The test set is reserved before imputation, scaling, and model selection.
 
@@ -191,7 +191,7 @@ A simple regression **baseline** predicts the **mean training MPG** for every ve
 ```
 
 <details>
-<summary><strong>Hint — baseline and correlation</strong></summary>
+<summary><strong>Hint: baseline and correlation</strong></summary>
 
 Use `.describe()` for numerical summaries, `.mean()` for the training-target mean, and `.corr(...)` to examine a numerical relationship. The baseline uses no learned input-to-output relationship; it is a constant prediction.
 
@@ -202,7 +202,7 @@ Use `.describe()` for numerical summaries, `.mean()` for the training-target mea
 Run the supplied code, observe the plots, and explain the result. Plotting syntax is **not** the assessed skill here.
 
 <details>
-<summary><strong>Show supplied Python plotting code — MPG distribution and weight relationship</strong></summary>
+<summary><strong>Show supplied Python plotting code: MPG distribution and weight relationship</strong></summary>
 
 ```python
 plt.figure(figsize=(7, 4))
@@ -236,7 +236,7 @@ The `origin` column contains text categories. Dense neural-network layers requir
 
 Encoding the data partitions independently may produce different feature columns. To keep input meaning and order consistent, the **training** encoded columns define the feature layout for validation, test, and later inference.
 
-**Supplied reference code — categorical encoding:**
+**Supplied reference code: categorical encoding:**
 
 ```python
 numeric_columns = ["weight", "horsepower", "displacement", "model_year"]
@@ -305,7 +305,7 @@ Here, $\mu_{\mathrm{train}}$ and $\sigma_{\mathrm{train}}$ denote the **training
 ```
 
 <details>
-<summary><strong>Hint — order of transformations</strong></summary>
+<summary><strong>Hint: order of transformations</strong></summary>
 
 For the imputer, use `fit_transform()` on the **training numerical columns**, then `transform()` for validation and test. Repeat the same training-only fitting pattern with the scaler, *after* imputation. A selection such as `frame[numeric_columns] = ...` can assign transformed values back to a DataFrame copy. Use `.to_numpy(dtype="float32")` to prepare Keras inputs.
 
@@ -363,7 +363,7 @@ $$
 ```
 
 <details>
-<summary><strong>Hint — reuse the Week 1 architecture pattern</strong></summary>
+<summary><strong>Hint: reuse the Week 1 architecture pattern</strong></summary>
 
 Use `Input(shape=(train_X.shape[1],))` to match the number of prepared inputs. A Dense layer without an explicit activation uses a linear output by default. For reproducible initialization, call `keras.utils.set_random_seed(42)` immediately before constructing the baseline model.
 
@@ -404,7 +404,7 @@ MSE has units of **MPG squared**, while MAE has units of **MPG**. Both are bette
 ```
 
 <details>
-<summary><strong>Hint — familiar Week 1 settings</strong></summary>
+<summary><strong>Hint: familiar Week 1 settings</strong></summary>
 
 Recall the `compile(optimizer=..., loss=..., metrics=...)` call from the Week 1 cereal and concrete regression work. Use `"adam"`, `"mean_squared_error"`, and `["mae"]` for this exercise. The optimizer is not the loss function.
 
@@ -431,7 +431,7 @@ An **epoch** is one pass through the training observations. A mini-batch is the 
 ```
 
 <details>
-<summary><strong>Hint — familiar fit workflow</strong></summary>
+<summary><strong>Hint: familiar fit workflow</strong></summary>
 
 The training arrays are the first two arguments to `fit()`. The named arguments include `epochs`, `batch_size`, and `validation_data`. With the compile settings from Section 8, the history keys include `loss`, `val_loss`, `mae`, and `val_mae`.
 
@@ -442,7 +442,7 @@ The training arrays are the first two arguments to `fit()`. The named arguments 
 Run the supplied plotting code. Observe the pattern; plotting syntax is not the assessed objective.
 
 <details>
-<summary><strong>Show supplied Python plotting code — training and validation MSE</strong></summary>
+<summary><strong>Show supplied Python plotting code: training and validation MSE</strong></summary>
 
 ```python
 train_mse = history.history["loss"]
@@ -465,7 +465,7 @@ plt.show()
 ### Run and interpret the MAE plot
 
 <details>
-<summary><strong>Show supplied Python plotting code — training and validation MAE</strong></summary>
+<summary><strong>Show supplied Python plotting code: training and validation MAE</strong></summary>
 
 ```python
 train_mae = history.history["mae"]
@@ -519,7 +519,7 @@ The baseline architecture and training settings are now fixed. Test results are 
 | Candidate | One change | | | |
 
 <details>
-<summary><strong>Hint — fair model comparison</strong></summary>
+<summary><strong>Hint: fair model comparison</strong></summary>
 
 Do not continue training the original baseline as the candidate. Call `keras.utils.set_random_seed(42)` immediately before constructing the fresh candidate. Build a new `Sequential` model, compile it, and call `fit()` on the same train/validation arrays. Compare the **last** `val_mae` entry from each `History` object; those values describe the model weights stored at the end of training. The minimum at an earlier epoch does not automatically restore earlier weights.
 
@@ -549,7 +549,7 @@ The model choice is now fixed. Evaluate **only the selected model** on test obse
 ```
 
 <details>
-<summary><strong>Hint — evaluating regression fairly</strong></summary>
+<summary><strong>Hint: evaluating regression fairly</strong></summary>
 
 `evaluate()` returns the metrics selected in `compile()`, including loss and MAE. A mean baseline can be represented by an array filled with `baseline_mpg`, with the same length as `test_y`. Compare absolute errors and calculate their average. Preserve the selected MLP even if its test result is disappointing; report that limitation.
 
@@ -577,7 +577,7 @@ A regression MLP produces a numerical estimate, not a class label. Every input u
 ```
 
 <details>
-<summary><strong>Hint — numerical outputs</strong></summary>
+<summary><strong>Hint: numerical outputs</strong></summary>
 
 For one output neuron, `predict()` returns a two-dimensional array with one column. `.ravel()` converts it to a one-dimensional sequence. Subtract actual MPG to get the signed error and use `np.abs(...)` for the absolute error.
 
@@ -607,7 +607,7 @@ The hypothetical vehicle below provides all five inputs expected by this MLP, in
 ```
 
 <details>
-<summary><strong>Hint — reuse the full preprocessing sequence</strong></summary>
+<summary><strong>Hint: reuse the full preprocessing sequence</strong></summary>
 
 `pd.DataFrame([ {...} ])` can represent one observation. Apply `pd.get_dummies(...)`, then `reindex(columns=X_train_encoded.columns, fill_value=0)` exactly as for validation and test inputs. Use `imputer.transform(...)` before `scaler.transform(...)` on the four numeric columns. Input order must match training.
 
