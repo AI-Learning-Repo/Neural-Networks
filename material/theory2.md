@@ -24,21 +24,36 @@ The central distinction is that **network architecture**, **gradient calculation
 
 ### 1.1 Starting with a familiar neuron
 
-A two-input linear neuron calculates a weighted sum:
+A neuron with two inputs first calculates a weighted sum and adds a bias:
 
 $$
 z=w_1x_1+w_2x_2+b
 $$
 
-For regression, the output can simply be this weighted sum. This uses the **identity (linear) activation**: the value passes through without changing. For binary classification, a sigmoid activation instead converts the weighted sum into a probability. A single sigmoid output neuron with no hidden layer is logistic regression, not an MLP with hidden layers.
+Here, $x_1$ and $x_2$ are input features, $w_1$ and $w_2$ are trainable weights, and $b$ is a trainable bias.
 
-Adding **hidden layers** allows the network to carry out several stages of computation before producing its output. Hidden layers commonly apply nonlinear activation functions, which allow the network to represent more complex relationships.
+The neuron's output depends on the task:
+
+- **Regression:** The prediction can be $\hat y=z$. This uses the **identity activation**, which passes the calculated value through unchanged.
+- **Binary classification:** A **sigmoid activation** converts $z$ into a probability between 0 and 1:
+
+$$
+p=\sigma(z)=\frac{1}{1+e^{-z}}
+$$
+
+A single sigmoid output neuron with no hidden layers is equivalent to **logistic regression**, not an MLP with hidden layers.
+
+This provides the starting point for understanding larger neural networks. Instead of producing an output immediately, the network can pass information through one or more **hidden layers**. Each hidden layer performs another stage of computation before the final prediction.
 
 ### 1.2 What is a multilayer perceptron (MLP)?
 
-A **multilayer perceptron (MLP)** is a type of *feedforward neural network*. It typically contains an input layer, one or more hidden layers of fully connected neurons, and an output layer. Information moves from the inputs, through the hidden layers, to the output.
+A **multilayer perceptron (MLP)** is a type of *feedforward neural network*. It typically consists of an input layer, one or more hidden layers of fully connected neurons, and an output layer.
 
-**Example — an MLP with one hidden layer:**
+In a fully connected layer, each neuron receives information from all neurons in the preceding layer. Each hidden neuron calculates a weighted sum, adds a bias, and typically applies a **nonlinear activation function**, such as ReLU or sigmoid.
+
+Nonlinear activations are important because stacking layers that perform only linear or affine transformations is mathematically equivalent to a single affine transformation. Nonlinearity allows the network to represent more complex relationships between inputs and outputs.
+
+**Example — a shallow MLP with one hidden layer:**
 
 ```mermaid
 graph LR
@@ -60,23 +75,40 @@ graph LR
         out(("ŷ")):::output
     end
 
+    bh["Constant 1"]:::input
+    bo["Constant 1"]:::input
+
     x1 --> h1
     x1 --> h2
     x2 --> h1
     x2 --> h2
+
+    bh -->|"b₁"| h1
+    bh -->|"b₂"| h2
+
     h1 --> out
     h2 --> out
+    bo -->|"b₃"| out
 ```
 
-Each connection has a trainable weight, and neurons commonly have trainable biases. The diagram omits their labels to keep the architecture easy to read.
+This network contains two input features, two hidden neurons, and one output neuron.
+
+Each connection between neurons has a trainable weight. The constant-1 nodes provide bias inputs, with trainable bias values shown on their outgoing connections. The other weight labels are omitted for readability.
+
+The network is an MLP because it uses fully connected layers in a feedforward arrangement. With only one hidden layer, it is commonly described as a **shallow MLP**.
 
 ### 1.3 When is an MLP also a DNN?
 
-A **deep neural network (DNN)** has multiple hidden or processing layers. The word *deep* describes the network's depth; *MLP* describes a particular type of network architecture.
+A **deep neural network (DNN)** is a neural network with multiple layers of learned computation. The word *deep* describes the network's depth rather than a particular connection pattern or architecture.
 
-An MLP may be relatively shallow or deep. A **deep MLP is also a DNN**, but not every DNN is an MLP. Other deep architectures include convolutional neural networks and Transformers.
+The distinction is therefore:
 
-**Example — a deeper MLP:**
+- **MLP describes the architecture:** a feedforward network built primarily from fully connected layers.
+- **DNN describes the depth:** a network with multiple layers of learned transformations.
+
+These terms are not mutually exclusive. An MLP can be shallow or deep, and a **deep MLP is also a DNN**. However, not every DNN is an MLP. Deep convolutional neural networks (CNNs) and Transformers are examples of architectures that do not consist solely of conventional MLP layers.
+
+**Example — a deeper MLP with two hidden layers:**
 
 ```mermaid
 graph LR
@@ -103,21 +135,64 @@ graph LR
         out(("ŷ")):::output
     end
 
+    b1["Constant 1"]:::input
+    b2["Constant 1"]:::input
+    b3["Constant 1"]:::input
+
     x1 --> h11
     x1 --> h12
     x2 --> h11
     x2 --> h12
+
+    b1 -->|"b₁"| h11
+    b1 -->|"b₂"| h12
+
     h11 --> h21
     h11 --> h22
     h12 --> h21
     h12 --> h22
+
+    b2 -->|"b₃"| h21
+    b2 -->|"b₄"| h22
+
     h21 --> out
     h22 --> out
+    b3 -->|"b₅"| out
 ```
 
-There is no universal minimum number of layers that defines *deep*. These diagrams show the difference in structure, not a fixed depth threshold.
+This network has the same two inputs and one output as the previous example, but it contains **two hidden layers instead of one**. Each hidden layer applies another learned transformation to the information received from the preceding layer.
 
-**Main idea:** A more complex architecture introduces more layers, operations, and trainable parameters. It does **not** replace the basic learning cycle.
+It is still an MLP because the layers remain fully connected. It is also deeper than the first MLP and may be classified as a DNN under conventions that consider multiple hidden layers deep.
+
+There is **no universally agreed minimum number of hidden layers** that defines a network as deep. The diagrams illustrate increasing depth, rather than a strict boundary between MLPs and DNNs.
+
+**Where MLPs and DNNs overlap**
+
+<!-- ![Conceptual comparison showing shallow MLPs, deep MLPs, and other deep neural networks](./img/mlp-vs-dnn.png) -->
+
+<img src="./img/mlp-vs-dnn.png" width="50%">
+
+
+<!-- <img src="./img/mlp-vs-dnn2.png" width="50%"> -->
+
+The overlap is the **deep MLP**: a network that has both the fully connected architecture of an MLP and sufficient depth to be considered a DNN.
+
+| Network | MLP? | DNN? | Explanation |
+|---|---|---|---|
+| Shallow MLP | Yes | Generally no | Fully connected network with one hidden layer |
+| Deep MLP | Yes | Yes | Fully connected network with multiple hidden layers |
+| Deep CNN | No | Yes | Uses convolutional layers and has substantial depth |
+| Deep Transformer | No | Yes | Uses attention-based processing and multiple layers |
+
+Increasing network depth introduces additional stages of computation. This can help the model learn more complex representations, but **more layers do not necessarily mean more trainable parameters or better performance**. Parameter count also depends on layer widths and connection patterns.
+
+Importantly, adding hidden layers does not change the fundamental learning cycle:
+
+**Forward pass → Loss calculation → Backpropagation → Gradient-descent update → Repeat and evaluate.**
+
+The forward pass becomes a sequence of computations through several layers. During backpropagation, gradients are calculated through those layers using the chain rule. An optimizer then uses the gradients to update the trainable parameters.
+
+**Main idea:** An MLP describes *how a network is structured*, while a DNN describes *how deep it is*. A deep MLP belongs to both categories. Increasing depth changes the amount and organization of computation, but not the basic process through which the network learns.
 
 ---
 
