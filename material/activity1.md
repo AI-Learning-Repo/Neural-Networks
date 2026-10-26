@@ -634,26 +634,7 @@ Since $\partial\hat y/\partial b=1$:
 
 $\displaystyle \frac{\partial L}{\partial b}= \frac{\partial L}{\partial e} \frac{\partial e}{\partial\hat y} \frac{\partial\hat y}{\partial b} =e(1)(1)=\boxed{2}$
 
-The gradient vector is now
-
-
-$$
-\nabla L =
-\begin{bmatrix}
-\frac{\partial L}{\partial w_1} \\
-\frac{\partial L}{\partial w_2} \\
-\frac{\partial L}{\partial b}
-\end{bmatrix}
-=
-\boxed{
-\begin{bmatrix}
-4 \\
-2 \\
-2
-\end{bmatrix}
-}
-$$
-
+The gradient vector is now `∇L = (4, 2, 2)ᵀ`.
 
 </details>
 
