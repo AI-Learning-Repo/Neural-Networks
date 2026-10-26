@@ -277,15 +277,26 @@ for step in range(8):
     w1 = w1 - learning_rate * dL_dw1
     w2 = w2 - learning_rate * dL_dw2
 ```
-
 ## 7. Explore the two-weight loss landscape with supplied Python code
 
-The two-weight loss is a surface $L(w_1,w_2)$. A contour plot looks down on this surface. Each contour joins weight pairs with the same loss.
+The two-weight loss is a surface $L(w_1,w_2)$. A contour plot shows this surface from above, but it does not show the loss height directly. A **3D surface plot** makes the geometry clearer because the vertical axis represents the loss value.
 
-The dashed line $2w_1+w_2=6$ is a **valley of zero-loss solutions**. Gradient descent moves from $(3,1)$ toward that line. **Try the supplied code below to see the contour plot; the task is to interpret the trajectory, not to implement plotting.**
+For the current example,
+
+$$
+L(w_1,w_2)=\frac{1}{2}(2w_1+w_2-6)^2
+$$
+
+The line
+
+$$
+2w_1+w_2=6
+$$
+
+is a **valley of zero-loss solutions**. Along this line, the prediction is exactly correct, so the loss is zero. Gradient descent moves from $(3,1)$ downhill on the loss surface toward this valley. **Run the supplied code below to see the 3D surface and trajectory; the task is to interpret the path, not to implement plotting.**
 
 <details>
-<summary>Show supplied Python code — Contour map and gradient descent trajectory</summary>
+<summary>Show supplied Python code — 3D loss surface and gradient descent trajectory</summary>
 
 ```python
 import numpy as np
@@ -295,40 +306,54 @@ x1, x2, y = 2.0, 1.0, 6.0
 eta = 0.1
 w1, w2 = 3.0, 1.0
 path = [(w1, w2)]
+loss_path = [0.5 * (w1 * x1 + w2 * x2 - y) ** 2]
 
 for _ in range(12):
-    error = w1*x1 + w2*x2 - y
+    error = w1 * x1 + w2 * x2 - y
     w1 -= eta * error * x1
     w2 -= eta * error * x2
     path.append((w1, w2))
+    loss_path.append(0.5 * (w1 * x1 + w2 * x2 - y) ** 2)
 
 w1_grid = np.linspace(1.4, 3.5, 300)
 w2_grid = np.linspace(-0.6, 3.6, 300)
 W1, W2 = np.meshgrid(w1_grid, w2_grid)
-L = 0.5 * (2*W1 + W2 - 6)**2
+L = 0.5 * (2 * W1 + W2 - 6) ** 2
 
-plt.figure(figsize=(8, 6))
-contours = plt.contour(W1, W2, L,
-    levels=[0.01, 0.05, 0.125, 0.5, 1, 2, 4, 8])
-plt.clabel(contours, inline=True, fontsize=8)
-plt.plot(w1_grid, 6 - 2*w1_grid, "--", label="All zero-loss solutions")
 path = np.array(path)
-plt.plot(path[:, 0], path[:, 1], "o-", label="Gradient descent")
-plt.annotate("Start (3, 1)", path[0], xytext=(8, 12), textcoords="offset points")
-plt.annotate("Approaching (2.6, 0.8)", path[-1],
-             xytext=(-125, -28), textcoords="offset points")
-plt.xlabel("Weight w1")
-plt.ylabel("Weight w2")
-plt.title("Two-weight loss contours and gradient descent")
-plt.xlim(1.4, 3.5)
-plt.ylim(-0.6, 3.6)
-plt.legend()
-plt.grid(alpha=0.2)
+loss_path = np.array(loss_path)
+zero_loss_w2 = 6 - 2 * w1_grid
+zero_loss_L = np.zeros_like(w1_grid)
+
+fig = plt.figure(figsize=(9, 7))
+ax = fig.add_subplot(111, projection="3d")
+
+surf = ax.plot_surface(W1, W2, L, alpha=0.8)
+ax.contour(W1, W2, L, zdir="z", offset=0, levels=8)
+
+ax.plot(w1_grid, zero_loss_w2, zero_loss_L, "--", linewidth=2,
+        label="All zero-loss solutions")
+ax.plot(path[:, 0], path[:, 1], loss_path, "o-", linewidth=2,
+        label="Gradient descent")
+
+ax.text(path[0, 0], path[0, 1], loss_path[0], "Start (3, 1)")
+ax.text(path[-1, 0], path[-1, 1], loss_path[-1], "Approaching zero-loss valley")
+
+ax.set_xlabel("Weight w1")
+ax.set_ylabel("Weight w2")
+ax.set_zlabel("Loss L")
+ax.set_title("Two-weight loss surface and gradient descent")
+ax.set_xlim(1.4, 3.5)
+ax.set_ylim(-0.6, 3.6)
+ax.set_zlim(0, np.max(L))
+ax.legend()
 plt.tight_layout()
 plt.show()
 ```
 
 </details>
+
+The dashed line lies on the floor of the plot because every point on that line gives zero loss. The gradient-descent path descends the surface and moves toward that valley. The successive updates reduce the height of the path, showing that the loss decreases as training proceeds.
 
 ## 8. Experiment: different learning rates
 
