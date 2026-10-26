@@ -24,12 +24,13 @@
 
 ### Monday Morning:
 
-- How Neural Networks Learn: From Regression to Binary Classification
-  - [Summary](./material/theory.md)
+- How Neural Networks Learn: Regression
   - [Demo 1](./material/demo1.md)
   - [Activity 1](./material/activity1.md)
+- How Neural Networks Learn: Binary Classification
   - [Demo 2](./material/demo2.md)  
   - [Activity 2](./material/activity2.md)
+- [Summary](./material/theory.md)
 - From Small Neural Networks to Large-Scale Training
   - [From a neuron to an MLP and a deep neural network](./material/theory2.md#1-from-a-neuron-to-an-mlp-and-a-deep-neural-network)
   - [From three parameters to billions: how are gradients calculated?](./material/theory2.md#2-from-three-parameters-to-billions-how-are-gradients-calculated)
