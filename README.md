@@ -31,7 +31,7 @@
   - [Activity 1](./material/activity1.md)
 - How Neural Networks Learn: Binary Classification
   - [Demo 2](./material/demo2.md)  
-  - [Activity 2](./material/activity2.md)
+  - [Homework: Activity 2](./material/activity2.md)
 - [Summary](./material/theory.md)
 - From Small Neural Networks to Large-Scale Training
   - [From a neuron to an MLP and a deep neural network](./material/theory2.md#1-from-a-neuron-to-an-mlp-and-a-deep-neural-network)
@@ -51,33 +51,51 @@
 - https://playground.tensorflow.org/
 - https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/mit15_773_s24_lec02.pdf
 - https://www.kaggle.com/learn/intro-to-deep-learning
-- Deep Learning from Scratch
-  - https://metropolia.finna.fi/Record/nelli15.4100000009347178
-  - https://github.com/SethHWeidman/DLFS_code
 </details>
 
 ----
 
 <details>
-<summary><b>Resources</b></summary>
+<summary><b>Deep Learning Resources</b></summary>
 
-- Deep Learning from Scratch
-  - https://metropolia.finna.fi/Record/nelli15.4100000009347178
-  - https://github.com/SethHWeidman/DLFS_code
-- Hands-On Machine Learning with Scikit-Learn and PyTorch, By Aurélien Géron
-  - https://metropolia.finna.fi/Record/nelli15.41704215400041
-  - https://colab.research.google.com/github/ageron/handson-ml3/
-  - https://github.com/ageron/handson-ml3
-- Deep Learning with Python, Third Edition, Matthew Watson, Francois Chollet
-  - https://metropolia.finna.fi/Record/nelli15.4100000012909313
-  - https://github.com/fchollet/deep-learning-with-python-notebooks
-- Dive into Deep Learning
-  - https://d2l.ai/index.html
-  - https://github.com/d2l-ai/d2l-en
-  - https://d2l.ai/d2l-en.pdf
-- Courses:
-  - [T81 558:Applications of Deep Neural Networks - TensorFlow](https://github.com/jeffheaton/t81_558_deep_learning)
-  - [Hands-On Deep Learning](https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/)
+
+### Courses
+
+* **Hands-On Deep Learning (15.773)** — *MIT Sloan / OpenCourseWare*
+  * Covers practical model building, CNNs, Transformers, and GenAI.
+  * [Course Portal](https://ocw.mit.edu/courses/15-773-hands-on-deep-learning-spring-2024/) · [YouTube Lectures](https://www.youtube.com/playlist?list=PLUl4u3cNGP60YyhMjYmXuVmX562QcClSp)
+
+* **Applications of Deep Neural Networks (T81-558)** — *Jeff Heaton (Washington University in St. Louis)*
+  * Practical, code-first introduction updated regularly with PyTorch and Keras examples.
+  * [GitHub Repository & Notebooks](https://github.com/jeffheaton/t81_558_deep_learning)
+
+* **Introduction to Deep Learning (STAT 157)** — *Alex Smola & Mu Li (UC Berkeley)*
+  * Practical and mathematical deep learning foundations tied directly to the *D2L* textbook.
+  * [Course Website](https://c.d2l.ai/berkeley-stat-157/) · [STAT 157 Video Playlist](https://www.youtube.com/playlist?list=PLZSO_6-bSqHQHBCoGaObUljoXAyyqhpFW) · [Smola Crash Course Playlist](https://www.youtube.com/playlist?list=PLZSO_6-bSqHQsDaBNtcFwMQuJw_djFnbd)
+
+
+### Recommended Textbooks & Code
+
+* **Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow (3rd Edition)**  
+  *Author: Aurélien Géron*
+  * [Metropolia Finna E-Book](https://metropolia.finna.fi/Record/nelli15.41704215400041) · [GitHub Code](https://github.com/ageron/handson-ml3) · [Interactive Google Colab](https://colab.research.google.com/github/ageron/handson-ml3/)
+
+* **Deep Learning with Python (3rd Edition — Keras 3)**  
+  *Authors: François Chollet & Matthew Watson*
+  * [Free Web Version](https://deeplearningwithpython.io/) · [GitHub Notebooks](https://github.com/fchollet/deep-learning-with-python-notebooks) · [Metropolia Finna Access](https://metropolia.finna.fi/Record/nelli15.4100000012909313)
+
+* **Dive into Deep Learning (D2L.ai)**  
+  *Authors: Aston Zhang, Zachary C. Lipton, Mu Li, Alexander J. Smola*
+  * An interactive, multi-framework book with implementations in PyTorch, JAX, and TensorFlow.
+  * [Interactive Online Book](https://d2l.ai/) · [Full PDF](https://d2l.ai/d2l-en.pdf) · [GitHub Repository](https://github.com/d2l-ai/d2l-en)
+
+* **Deep Learning from Scratch: Building with Python from First Principles**  
+  *Author: Seth Weidman*
+  * Excellent for understanding backpropagation and layer mathematics by building a framework purely with NumPy before moving to PyTorch.
+  * [Metropolia Finna E-Book](https://metropolia.finna.fi/Record/nelli15.4100000009347178) · [GitHub Code](https://github.com/SethHWeidman/DLFS_code)
+
+
+
 
 </details>
 
