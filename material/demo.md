@@ -1,7 +1,5 @@
 # Classroom Demonstrations: Images, Tensors, and Neural-Network Training
 
-**Visual demonstrations | Grayscale and color images, image-classification outputs, tensors, Keras models, mini-batches, and generalization**
-
 ## How to use these demonstrations
 
 These demonstrations explain how images become numerical arrays, how classifiers turn arrays into predictions, and how training changes network parameters. Each demonstration includes a short explanation, observations to make, and complete Python code in a separate expandable section. **Run the supplied code, inspect the figure or printed output, and explain what it shows. Writing plotting code from scratch is not required.**
