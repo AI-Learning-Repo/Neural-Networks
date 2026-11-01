@@ -22,7 +22,7 @@ By the end of the chapter, the following distinctions should be clear:
 
 **Python setup:** [Python setup for Week 3](1-python_setup.md). The supplied examples use NumPy, Matplotlib, and TensorFlow/Keras. Architecture diagrams additionally require IPython, pydot, and the Graphviz executable. Dataset downloads require internet access on first use.
 
-# Part I — From grayscale images to a trained classifier
+# Part I: From grayscale images to a trained classifier
 
 ## 1. Computer vision: different questions about an image
 
@@ -94,7 +94,7 @@ For example, an intensity of `128` becomes approximately `0.502`. Normalization 
 The code displays one **original MNIST** digit and an enlarged crop labeled with its exact pixel values. The crop is part of the image, not a different image or a simulated drawing. Run the supplied code, observe the plot, and explain how a matrix becomes a visible digit.
 
 <details>
-<summary>Python visualization — MNIST image and pixel intensities</summary>
+<summary>Python visualization: MNIST image and pixel intensities</summary>
 
 ```python
 import numpy as np
@@ -285,7 +285,7 @@ The key decision is **whether the target categories are mutually exclusive**, no
 The following figure computes the three-class example using NumPy. Run the supplied code and compare the probabilities produced by softmax with those produced by independent sigmoids.
 
 <details>
-<summary>Python visualization — Softmax versus independent sigmoids</summary>
+<summary>Python visualization: Softmax versus independent sigmoids</summary>
 
 ```python
 import numpy as np
@@ -507,7 +507,7 @@ The restoration step is included when `restore_best_weights=True` is configured.
 The next plot is a **synthetic illustration**, not the result of fitting a model. It shows one possible pattern: training loss decreases throughout, while validation loss first decreases and then rises. The vertical line marks the lowest displayed validation loss.
 
 <details>
-<summary>Python visualization — Illustrative training and validation loss</summary>
+<summary>Python visualization: Illustrative training and validation loss</summary>
 
 ```python
 import numpy as np
@@ -541,7 +541,7 @@ Dropout and early stopping address generalization in different ways. Early stopp
 
 ---
 
-# Part II — Color images, tensors, and the software used to train models
+# Part II: Color images, tensors, and the software used to train models
 
 ## 10. RGB images have three channels
 
@@ -580,7 +580,7 @@ This weighted expression is intended for typical gamma-encoded RGB values as an 
 The following code displays an original CIFAR-10 image, its three isolated color channels, and a grayscale approximation. Run the supplied code and compare the results. Isolating a channel is not the same operation as converting to grayscale.
 
 <details>
-<summary>Python visualization — CIFAR-10 RGB channels and grayscale</summary>
+<summary>Python visualization: CIFAR-10 RGB channels and grayscale</summary>
 
 ```python
 import numpy as np
@@ -747,12 +747,12 @@ The examples below implement the **same conceptual model**:
 
 All three implementations create an architecture with **109,386 trainable parameters**. Individual predictions can differ because independently initialized models begin with different parameter values. Their API choice does not inherently change the mathematical task.
 
-#### A. Sequential API — simplest linear stack
+#### A. Sequential API: simplest linear stack
 
 `Sequential` is appropriate when layers form a single straightforward path from one input to one output. Layers are written in the order in which data flows through the model. It is compact and readable, but cannot directly express arbitrary branching or shared-layer graphs.
 
 <details>
-<summary>Python example — Sequential API</summary>
+<summary>Python example: Sequential API</summary>
 
 ```python
 import tensorflow as tf
@@ -772,12 +772,12 @@ sequential_model.summary()
 
 </details>
 
-#### B. Functional API — an explicit graph of layers
+#### B. Functional API: an explicit graph of layers
 
 The Functional API connects symbolic input and output tensors. It can represent a simple chain like `Sequential`, but also supports architectures with multiple inputs, multiple outputs, branches, and shared layers.
 
 <details>
-<summary>Python example — Functional API</summary>
+<summary>Python example: Functional API</summary>
 
 ```python
 import tensorflow as tf
@@ -800,12 +800,12 @@ functional_model.summary()
 
 </details>
 
-#### C. Model subclassing — explicitly defined forward computation
+#### C. Model subclassing: explicitly defined forward computation
 
 With model subclassing, a Python class defines layers in its constructor and implements the **forward pass** in a `call()` method. This is the most flexible interface for unusual behavior or dynamic computation, but requires more code and often more care with debugging, serialization, and architecture inspection.
 
 <details>
-<summary>Python example — Model subclassing</summary>
+<summary>Python example: Model subclassing</summary>
 
 ```python
 import tensorflow as tf
@@ -953,8 +953,8 @@ Consider a model trained with `patience=2`, `min_delta=0`, and `mode="min"`.
 | 1 | 0.50 | Initial best |
 | 2 | 0.42 | Improvement |
 | 3 | 0.38 | Improvement |
-| 4 | 0.40 | No improvement — first waiting epoch |
-| 5 | 0.43 | No improvement — second waiting epoch |
+| 4 | 0.40 | No improvement: first waiting epoch |
+| 5 | 0.43 | No improvement: second waiting epoch |
 
 Training stops after epoch 5, provided no other stopping condition applies.
 
@@ -986,7 +986,7 @@ The validation set is used to monitor performance and determine when training sh
 The following complete example trains a dense neural network and displays training and validation loss.
 
 
-Run the supplied Python code — Early stopping and validation loss
+Run the supplied Python code: Early stopping and validation loss
 
 ```python
 import numpy as np
@@ -1117,7 +1117,7 @@ Early stopping is the primary callback considered here because it connects train
 `plot_model()` draws a graph of layers and tensor connections for supported models. It is **not** a visualization of every individual connection among 784 input features and hundreds of hidden units. For subclassed models, the internal `call()` structure may not be available as a static graph for this utility.
 
 <details>
-<summary>Python visualization — Keras architecture plot</summary>
+<summary>Python visualization: Keras architecture plot</summary>
 
 ```python
 import tensorflow as tf
@@ -1190,7 +1190,7 @@ After training a multiclass Keras model, predictions can be compared with the tr
 
 The following code assumes that `model`, `x_test`, and `y_test` are already available. The class names below correspond to original MNIST; replace them when using a different dataset.
 
-Run the supplied Python code — Classification metrics and confusion matrix
+Run the supplied Python code: Classification metrics and confusion matrix
 
 ```python
 import numpy as np

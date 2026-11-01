@@ -998,4 +998,97 @@ It can stop training after validation loss fails to improve for the configured p
 - **Generalization:** early stopping monitors validation loss but does not eliminate all errors or all overfitting.
 - **Limitations:** a dense network can process flattened pixels but does not explicitly exploit local spatial structure; that motivates later work on convolutional models.
 
-**Connection to Activity 3:** Fashion-MNIST homework revisits grayscale classification so that the same principles can be applied to new categories without introducing a different output or loss function.
+
+<details>
+<summary><b>Evaluating Classification Models Beyond Accuracy</b></summary>
+
+Accuracy reports the proportion of correctly classified examples.
+
+Although accuracy is useful, it does not explain **which classes the model predicts well and which classes it frequently confuses**.
+
+This distinction remains important for multiclass image classification, including MNIST, Fashion-MNIST, and CIFAR-10.
+
+**Recall: Classification metrics**
+
+| Metric | What it helps examine |
+|---|---|
+| Accuracy | Overall proportion of correct predictions |
+| Precision | How often predictions of a particular class are correct |
+| Recall | How many actual examples of a particular class the model identifies |
+| F1-score | Balance between precision and recall |
+| Confusion matrix | Which classes are confused with one another |
+
+For multiclass classification, precision, recall, and F1-score can be calculated separately for each class.
+
+A model may achieve high overall accuracy while performing noticeably worse on certain classes. This can occur even when the dataset is reasonably balanced.
+
+**Python: Classification report and confusion matrix**
+
+After training a multiclass Keras model, predictions can be compared with the true labels using scikit-learn.
+
+The following code assumes that `model`, `x_test`, and `y_test` are already available. The class names below correspond to original MNIST; replace them when using a different dataset.
+
+Run the supplied Python code: Classification metrics and confusion matrix
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.metrics import (
+    classification_report,
+    ConfusionMatrixDisplay
+)
+
+# MNIST class names
+class_names = [str(i) for i in range(10)]
+
+# Obtain class probabilities
+probabilities = model.predict(x_test, verbose=0)
+
+# Select the predicted class
+y_pred = np.argmax(probabilities, axis=1)
+
+# Ensure labels are a one-dimensional array
+y_true = np.asarray(y_test).reshape(-1)
+
+# Print classification metrics
+print(
+    classification_report(
+        y_true,
+        y_pred,
+        labels=list(range(10)),
+        target_names=class_names,
+        zero_division=0
+    )
+)
+
+# Display confusion matrix
+fig, ax = plt.subplots(figsize=(9, 8))
+
+ConfusionMatrixDisplay.from_predictions(
+    y_true,
+    y_pred,
+    labels=list(range(10)),
+    display_labels=class_names,
+    cmap="Blues",
+    ax=ax,
+    colorbar=False
+)
+
+ax.set_title("Confusion Matrix")
+plt.tight_layout()
+plt.show()
+```
+
+**Interpretation questions**
+
+1. Which class has the lowest recall?
+2. Which class has the lowest precision?
+3. Which two classes are most frequently confused?
+4. Does overall accuracy adequately describe the classifier's performance?
+5. If the dataset has unequal class frequencies, how might macro-average and weighted-average F1 scores differ?
+
+These questions reinforce previously studied evaluation metrics while connecting them to neural-network image classification.
+
+</details>
+

@@ -900,7 +900,7 @@ After training a multiclass Keras model, predictions can be compared with the tr
 
 The following code assumes that `model`, `x_test`, and `y_test` are already available. The class names below correspond to original MNIST; replace them when using a different dataset.
 
-Run the supplied Python code — Classification metrics and confusion matrix
+Run the supplied Python code: Classification metrics and confusion matrix
 
 ```python
 import numpy as np
