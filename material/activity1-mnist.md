@@ -14,7 +14,7 @@ For Google Colab:
 1. Open a notebook and select a Python runtime. A GPU is optional for this activity.
 2. Run the import and setup code below. If a package import fails, follow `1-python_setup.md` and install only the missing package in a separate cell.
 3. `keras.utils.plot_model()` additionally uses **pydot** and a working **Graphviz** installation. In Colab, install `pydot` with `%pip install pydot` if necessary; if Graphviz is missing, install the system package with `!apt-get -qq install graphviz`.
-4. If a package installation requires a runtime restart, restart and rerun the notebook from the beginning. The first dataset download requires internet access.
+4. If a package installation requires a runtime restart, restart and rerun the notebook from the beginning. 
 
 ```python
 import numpy as np
@@ -963,3 +963,11 @@ plt.show()
 These questions reinforce previously studied evaluation metrics while connecting them to neural-network image classification.
 
 </details>
+
+---
+
+## Links
+
+- https://deeplearningwithpython.io/chapters/chapter07_deep-dive-keras
+- https://deeplearningwithpython.io/chapters/chapter08_image-classification
+- https://deeplearningwithpython.io/chapters/

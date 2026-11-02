@@ -1310,3 +1310,6 @@ The central ideas remain the same whether the input is a grayscale handwritten d
 - [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html)
 - [Keras EarlyStopping documentation](https://keras.io/api/callbacks/early_stopping/)
 - [Scikit-learn classification metrics](https://scikit-learn.org/stable/modules/model_evaluation.html#classification-metrics)
+- https://deeplearningwithpython.io/chapters/chapter07_deep-dive-keras
+- https://deeplearningwithpython.io/chapters/chapter08_image-classification
+- https://deeplearningwithpython.io/chapters/

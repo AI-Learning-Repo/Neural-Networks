@@ -17,3 +17,4 @@ This homework prepares you for next week's session.
 
 - 📘 [Early Stopping](https://d2l.ai/chapter_multilayer-perceptrons/generalization-deep.html)
 - 📘 [Dropout](https://d2l.ai/chapter_multilayer-perceptrons/dropout.html)
+- 📘 [Deep Learning with Python (online book)](https://deeplearningwithpython.io/chapters/)

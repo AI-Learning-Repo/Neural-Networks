@@ -13,7 +13,7 @@ For Google Colab:
 1. Open a Python notebook. A GPU is **recommended** for the training sections but is not required for the earlier image and tensor explorations.
 2. Run the imports below. If an import reports `ModuleNotFoundError`, use the linked setup instructions and install only the missing package (for example, `%pip install numpy matplotlib tensorflow keras`). Restart the runtime if requested.
 3. The optional architecture plot uses **pydot** and **Graphviz**. In Colab, install `pydot` with `%pip install pydot` if missing. If the Graphviz system executable is missing, use `!apt-get -qq install graphviz` in a separate cell.
-4. CIFAR-10 downloads on first use, so internet access is needed initially. The training section fits **two models**; it can take longer on a CPU.
+4. CIFAR-10 downloads on first use. The training section fits **two models**; it can take longer on a CPU.
 
 ```python
 import numpy as np
@@ -349,6 +349,8 @@ flowchart LR
     e -->|"Next mini-batch"| b
 ```
 
+
+<!-- 
 A small numerical example makes the separation explicit. **This example uses one scalar weight, not the CIFAR-10 network.** With `prediction = weight × input`, input `3`, target `4`, and initial weight `2`, the prediction is `6` and the half-squared-error loss is `2`. TensorFlow can calculate the gradient; applying the update is a separate action.
 
 ```python
@@ -384,7 +386,17 @@ The initial prediction is `2 × 3 = 6`; the signed error is `6 − 4 = 2`; the i
 
 `GradientTape` supplies the gradient **6**. The weight changes only when the explicit `assign_sub` update is applied: `2 − 0.1 × 6 = 1.4`. The new prediction is `1.4 × 3 = 4.2`, and the new loss is `0.5 × 0.2² = 0.02`. Backpropagation/automatic differentiation supplies gradients; the optimizer or explicit update changes parameters.
 
-</details>
+</details> 
+
+**Question 25:** What is the difference between `tf.GradientTape()`, `model.compile()`, and the weight changes performed during `model.fit()`?
+
+<details>
+<summary>Show answer</summary>
+
+`tf.GradientTape()` can calculate gradients for watched operations. `model.compile()` configures the loss, optimizer, and metrics. During `model.fit()`, Keras performs forward passes, calculates losses and gradients, and invokes the optimizer to update trainable weights. Gradient computation and the update step are distinct.
+
+</details> 
+-->
 
 ---
 
@@ -970,16 +982,7 @@ Sparse categorical cross-entropy uses each class ID only to locate the correspon
 
 </details>
 
-**Question 24:** What is the difference between `tf.GradientTape()`, `model.compile()`, and the weight changes performed during `model.fit()`?
-
-<details>
-<summary>Show answer</summary>
-
-`tf.GradientTape()` can calculate gradients for watched operations. `model.compile()` configures the loss, optimizer, and metrics. During `model.fit()`, Keras performs forward passes, calculates losses and gradients, and invokes the optimizer to update trainable weights. Gradient computation and the update step are distinct.
-
-</details>
-
-**Question 25:** If validation loss rises while training loss falls, what decision can early stopping make? What can it not guarantee?
+**Question 24:** If validation loss rises while training loss falls, what decision can early stopping make? What can it not guarantee?
 
 <details>
 <summary>Show answer</summary>
@@ -987,6 +990,7 @@ Sparse categorical cross-entropy uses each class ID only to locate the correspon
 It can stop training after validation loss fails to improve for the configured patience interval and restore the parameters from the best observed validation epoch. It cannot guarantee an improvement on every possible future test set, nor solve all causes of errors or architectural limitations.
 
 </details>
+
 
 ## Final summary
 
@@ -1092,3 +1096,10 @@ These questions reinforce previously studied evaluation metrics while connecting
 
 </details>
 
+---
+
+## Links
+
+- https://deeplearningwithpython.io/chapters/chapter07_deep-dive-keras
+- https://deeplearningwithpython.io/chapters/chapter08_image-classification
+- https://deeplearningwithpython.io/chapters/
