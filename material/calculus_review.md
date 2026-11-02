@@ -237,18 +237,19 @@ $$
 
 At $x_1=1$, this path derivative is $6$, whereas the partial derivative holding $x_2=2$ fixed is $4$. The expressions answer different questions. A total derivative is not “wrong”; it requires a specified dependence or path. **For the next activities, other independent variables will be held fixed, so partial derivative notation is used.**
 
-### Historical note: notation changes over time
-
-Historical notation was not completely standardized. In Maxwell's 1865 treatment of electromagnetism, some derivatives of quantities depending on several variables were written using ordinary $d$ notation; modern presentations commonly use $\partial$ when taking a partial derivative. The symbol $\partial$ was used for partial differentiation by Legendre in 1786 and was later adopted more widely. The distinction today communicates what is held fixed; it does not mean that multivariable differentiation was unknown in Maxwell's time.
-
-Sources: [Maxwell's 1865 equations (transcription)](https://en.wikisource.org/wiki/A_Dynamical_Theory_of_the_Electromagnetic_Field/Part_III); [Mathematical Association of America: history of calculus notation](https://old.maa.org/press/periodicals/convergence/math-origins-the-language-of-change).
-
 <details>
 <summary>Show answer: Activity 2</summary>
 
 Holding x₂ fixed, the partial derivative with respect to x₁ is 2x₁ + x₂, which equals 4 at (1, 2). The partial derivative with respect to x₂ is x₁, which equals 1. Along the path x₂ = 2x₁, the ordinary derivative at x₁ = 1 is 6.
 
 </details>
+
+
+### Historical note: notation changes over time
+
+Historical notation was not completely standardized. In Maxwell's 1865 treatment of electromagnetism, some derivatives of quantities depending on several variables were written using ordinary $d$ notation; modern presentations commonly use $\partial$ when taking a partial derivative. The symbol $\partial$ was used for partial differentiation by Legendre in 1786 and was later adopted more widely. The distinction today communicates what is held fixed; it does not mean that multivariable differentiation was unknown in Maxwell's time.
+
+Sources: [Maxwell's 1865 equations (transcription)](https://en.wikisource.org/wiki/A_Dynamical_Theory_of_the_Electromagnetic_Field/Part_III); [Mathematical Association of America: history of calculus notation](https://old.maa.org/press/periodicals/convergence/math-origins-the-language-of-change).
 
 ---
 
@@ -263,6 +264,8 @@ f(x_1,x_2)=x_1^2+x_1x_2
 $$
 
 Fixing $x_2$ produces a curve cut through that surface. The slope of that curve at a chosen $x_1$ is $\partial f/\partial x_1$.
+
+
 
 ### Predict
 
@@ -376,6 +379,7 @@ $$
 L=(2-3)^2=1
 $$
 
+<!-- 
 ### Predict
 
 Holding $b=0$ and the training observation fixed, does changing $w_1$ affect the loss? Does changing $w_2$ affect it? Which two quantities should label the horizontal axes of a loss surface?
@@ -427,7 +431,8 @@ plt.show()
 
 Changing either weight generally changes the prediction and therefore the loss. For this exercise, the horizontal axes of the loss surface are w₁ and w₂, while x₁ = 2, x₂ = -1, y = 3, and b = 0 are fixed.
 
-</details>
+</details> 
+-->
 
 ---
 
