@@ -3,7 +3,7 @@
 
 ## How to use this guided activity
 
-This activity extends the earlier work on forward propagation, backpropagation, and gradient-based optimization to **ten-class image classification**. It uses the **original MNIST handwritten-digit dataset** (digits 0–9), not Fashion-MNIST.
+This activity extends the earlier work on forward propagation, backpropagation, and gradient-based optimization to **ten-class image classification**. It uses the **MNIST handwritten-digit dataset** (digits 0–9), not Fashion-MNIST.
 
 Read each question before opening its worked answer. Run the Python cells in the given order in one Google Colab notebook or a compatible local Jupyter notebook. When a plot is requested, open the separate collapsible **supplied Python code** section, run the code, and explain the resulting figure. **Writing plotting code from scratch is not assessed.** Training results can differ across machines and runs.
 
