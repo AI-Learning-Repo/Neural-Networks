@@ -14,7 +14,7 @@
 
 * **Engineers vs. Executives (Why we don't teach this like an IoT overview):**  
   When teaching applied ML to students in other domains (such as IoT), an intuitive, high-level conceptual approach is appropriate—much like the famous UC Berkeley course [*Physics for Future Presidents*](https://en.wikipedia.org/wiki/Physics_for_Future_Presidents), which teaches non-physicists how to understand technology at a policy level.  
-  *However, you are AI students.* You are not being trained to merely oversee or consume AI; you are being trained to be the **engineers and scientists** who design, build, debug, and advance it. That requires moving past surface-level intuition and mastering the underlying rigor.
+  *However, AI students.*  are not being trained to merely oversee or consume AI, but to be the **engineers and scientists** who design, build, debug, and advance it. That requires moving past surface-level intuition and mastering the underlying rigor.
 
 
 
