@@ -20,6 +20,7 @@
 
 ### Morning:
 
+- [A Note on the Rigor and Depth of this Course](./material/Note-Rigor-Depth-Course.md)
 - Topics:
   - [Stochastic Gradient Descent](./material/slides/epoch-batches.pdf)
   - [Overfitting and Regularization](./material/slides/Regularization.pdf)
