@@ -31,7 +31,8 @@
   - [How  categorical variables are encoded](./material/slides/encoding-categorical-data.pdf)
 - [Summary](./material/theory.md)
 - [Activity 1](./material/activity1-mnist.md)
-- [Homework: Activity 2](./material/activity2-cifar10.md): CIFAR-10: CIFAR-10 contains 60,000 color images. The initial dataset download may take several minutes.
+- [ Activity 2 (Homework)](./material/activity2-cifar10.md)
+  - Note that CIFAR-10 contains 60,000 color images. The initial dataset download may take several minutes.
 
 
 ### Afternoon:
@@ -42,7 +43,7 @@
 
 ---
 
-<details>
+<details open>
 <summary>Links used in Session</summary>
 
 - https://playground.tensorflow.org/
