@@ -1,6 +1,6 @@
 # Python setup for Week 3
 
-Google Colab is the primary environment for the image-classification materials. The supplied plotting code is for running, viewing, and interpreting; writing plotting code from scratch is not assessed. Hand calculations are optional practice. Pair-programming tasks still require completing the specified code.
+Google Colab is the primary environment for the image-classification materials. The supplied plotting code is for running, viewing, and interpreting; writing plotting code from scratch is not assessed. 
 
 ## Google Colab setup
 
@@ -58,7 +58,7 @@ if dot_path is None:
     print("Install Graphviz before running keras.utils.plot_model().")
 ```
 
-The examples use TensorFlow's Keras interface, `tf.keras`. MNIST, Fashion-MNIST, and CIFAR-10 download on first use, so internet access is required. Subsequent runs can reuse downloaded files in the same environment. A new Colab runtime may need to download them again.
+The examples use TensorFlow's Keras interface, `tf.keras`. MNIST, Fashion-MNIST, and CIFAR-10 download on first use. Subsequent runs can reuse downloaded files in the same environment. A new Colab runtime may need to download them again.
 
 ## Optional local Conda setup
 
