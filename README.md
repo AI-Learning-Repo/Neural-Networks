@@ -42,6 +42,7 @@
 <details open>
 <summary>Links used in Session</summary>
 
+- [Kernels Explained Visually](https://setosa.io/ev/image-kernels/)
 - [IBM: Introduction to convolutional neural networks](https://developer.ibm.com/articles/introduction-to-convolutional-neural-networks/)
 - [Higher-order visual pathways and the CVI brain](https://www.perkins.org/higher-order-visual-pathways-and-the-cvi-brain/)
 - [stanford: Convolutional Neural Networks (CNNs / ConvNets)](https://cs231n.github.io/convolutional-networks/)

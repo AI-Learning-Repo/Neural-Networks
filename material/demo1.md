@@ -8,15 +8,18 @@ Last week, a dense neural network classified images by transforming each image i
 
 Use Google Colab and run the Python blocks in order, including the expandable plotting blocks when a figure is needed. Later blocks reuse variables created earlier. Hand calculations are optional practice; run the supplied plotting code and interpret its output.
 
-This demo imports NumPy, Matplotlib, and TensorFlow/Keras. Follow the [shared Python setup](../../week3/material/1-python_setup.md) for general environment guidance. If an import is unavailable in Colab, run this **notebook cell**:
+This demo imports NumPy, Matplotlib, and TensorFlow/Keras.
+
+Follow the [shared Python setup](1-python_setup.md) for general environment guidance. If an import is unavailable in Colab, run this **notebook cell**:
 
 ```python
 %pip install numpy matplotlib tensorflow
 ```
 
-After installation, restart the Colab session/runtime and rerun the demo from the first import cell. In a local notebook, select the course environment's kernel instead. The `%pip` command is notebook syntax, not a terminal command.
+<!-- After installation, restart the Colab session/runtime and rerun the demo from the first import cell. In a local notebook, select the course environment's kernel instead. The `%pip` command is notebook syntax, not a terminal command. 
 
-Download the supplied [trained CNN](assets/fashion_mnist_cnn.keras) and upload it to the Colab working directory before Section 5. When running locally from this demo directory, the code also finds the model in `assets`. The first data-loading call downloads Fashion-MNIST if it is not already cached. The dataset has ten clothing classes; the [dataset's label table](https://github.com/zalandoresearch/fashion-mnist#labels) defines their meanings.
+Download the supplied [trained CNN](assets/fashion_mnist_cnn.keras) and upload it to the Colab working directory before Section 5. When running locally from this demo directory, the code also finds the model in `assets`. The first data-loading call downloads Fashion-MNIST if it is not already cached. The dataset has ten clothing classes; the [dataset's label table](https://github.com/zalandoresearch/fashion-mnist#labels) defines their meanings. 
+-->
 
 ## 1. What is missing from a fully connected network?
 
@@ -120,19 +123,18 @@ This suggests a different question: **instead of beginning with all pixels at on
 
 Consider the visual hierarchy in biological vision: local contrasts and boundaries contribute to increasingly complex representations. An object is not ordinarily described by treating all pixel positions as unrelated numbers.
 
-<!-- ![Illustrative hierarchy from local lines and curves to bicycle parts and a complete bicycle](img/2b2.png) -->
-
-<img src="./img/2b2.png" alt="Illustrative hierarchy from local lines and curves to bicycle parts and a complete bicycle" width="50%">
-
-
-This schematic illustrates combining simple patterns into larger structures; it is not a literal model of biological visual processing.
-
 ```mermaid
 flowchart LR
     a["Local visual information"] --> b["Combinations of patterns"]
     b --> c["Larger visual structures"]
     c --> d["Object representation"]
 ```
+
+This schematic illustrates combining simple patterns into larger structures; it is not a literal model of biological visual processing.
+
+<!-- ![Illustrative hierarchy from local lines and curves to bicycle parts and a complete bicycle](img/2b2.png) -->
+
+<img src="./img/2b2.png" alt="Illustrative hierarchy from local lines and curves to bicycle parts and a complete bicycle" width="50%">
 
 **Question.** What two ideas might be useful for a new image-classification architecture?
 
@@ -145,6 +147,134 @@ flowchart LR
 
 A way to implement the first idea is surprisingly simple: a tiny collection of numbers that examines one small region at a time. This is a **filter**, also called a **kernel**.
 
+
+## 3. What could a filter notice?
+
+
+```python
+# Setup - Load and Prepare an Image
+import numpy as np
+import matplotlib.pyplot as plt
+from PIL import Image
+import requests
+from io import BytesIO
+from scipy.signal import convolve2d
+
+# --- Image Loading ---
+try:
+    # Example image URL (Wikimedia Commons - Bicycle) - Check license if using elsewhere!
+    image_url = "https://raw.githubusercontent.com/AI-Learning-Repo/Neural-Networks/refs/heads/week4/material/img/Left_side_of_Flying_Pigeon.jpg" # Option 1
+
+    response = requests.get(image_url)
+    response.raise_for_status() # Raise an exception for bad status codes
+    img_pil = Image.open(BytesIO(response.content)).convert('RGB')
+
+    # Resize for faster processing (optional, maintains aspect ratio)
+    img_pil.thumbnail((256, 256)) # Max size 256x256
+
+    # Convert to NumPy arrays
+    img_rgb = np.array(img_pil).astype(np.float32) / 255.0 # Normalize to 0.0-1.0
+    img_gray = np.array(img_pil.convert('L')).astype(np.float32) / 255.0 # Grayscale version, normalized
+
+    print(f"Image loaded successfully.")
+    print(f"Original Color Image Shape (H, W, C): {img_rgb.shape}")
+    print(f"Grayscale Image Shape (H, W): {img_gray.shape}")
+
+    # Display loaded images
+    plt.figure(figsize=(8, 4))
+    plt.subplot(1, 2, 1)
+    plt.imshow(img_rgb)
+    plt.title("Original Color Image")
+    plt.axis('off')
+    plt.subplot(1, 2, 2)
+    plt.imshow(img_gray, cmap='gray')
+    plt.title("Grayscale Version")
+    plt.axis('off')
+    plt.tight_layout()
+    plt.show()
+
+except requests.exceptions.RequestException as e:
+    print(f"Error loading image from URL: {e}")
+    # Use placeholder arrays if image loading fails
+    img_rgb = np.random.rand(100, 100, 3)
+    img_gray = np.random.rand(100, 100)
+    print("Using random noise array as fallback.")
+except Exception as e:
+     print(f"An error occurred: {e}")
+     img_rgb = np.random.rand(100, 100, 3)
+     img_gray = np.random.rand(100, 100)
+     print("Using random noise array as fallback.")
+
+
+# --- Define Filters (We'll reuse these) ---
+# Vertical Edge Detection
+filter_vertical = np.array([
+    [ 1, 0, -1],
+    [ 2, 0, -2],
+    [ 1, 0, -1]
+], dtype=np.float32)
+
+# Horizontal Edge Detection
+filter_horizontal = np.array([
+    [ 1,  2,  1],
+    [ 0,  0,  0],
+    [-1, -2, -1]
+], dtype=np.float32)
+
+# Sharpen Filter
+filter_sharpen = np.array([
+    [ 0, -1,  0],
+    [-1,  5, -1],
+    [ 0, -1,  0]
+], dtype=np.float32)
+```
+
+## 4. How Features are Detected (Convolution with one filter on Real Image)
+
+> https://setosa.io/ev/image-kernels/
+
+```python
+# Check if image loading was successful
+if 'img_gray' not in globals():
+    print("Grayscale image not loaded. Please run the setup cell first.")
+else:
+    # Use the grayscale image and the vertical edge filter
+    input_image = img_gray
+    filter_kernel = filter_vertical
+
+    print("Input Image Shape:", input_image.shape)
+    print("Filter Kernel Shape:", filter_kernel.shape)
+
+    # Apply convolution (mode='valid' means no padding)
+    # Flip kernel for strict convolution definition
+    feature_map = convolve2d(input_image, np.flipud(np.fliplr(filter_kernel)), mode='valid')
+    output_shape = feature_map.shape
+    print(f"Feature Map Shape: {output_shape}")
+
+    # Display
+    plt.figure(figsize=(12, 4))
+    plt.subplot(1, 3, 1)
+    plt.imshow(input_image, cmap='gray')
+    plt.title(f'Input Grayscale ({input_image.shape[0]}x{input_image.shape[1]})')
+    plt.axis('off')
+
+    plt.subplot(1, 3, 2)
+    plt.imshow(filter_kernel, cmap='coolwarm')
+    plt.title(f'Filter Kernel ({filter_kernel.shape[0]}x{filter_kernel.shape[1]})')
+    plt.axis('off')
+
+    plt.subplot(1, 3, 3)
+    # Display absolute value or clip for better visualization of edges
+    plt.imshow(np.abs(feature_map), cmap='gray')
+    plt.title(f'Feature Map ({output_shape[0]}x{output_shape[1]})\n(Vertical Edges Enhanced)')
+    plt.axis('off')
+
+    plt.tight_layout()
+    plt.show()
+```
+
+
+<!-- 
 ## 3. What could a tiny filter notice?
 
 Imagine a 2 × 2 window moving over the image. Inside the window, the filter gives different importance to different pixels. It multiplies pixel values by its weights and adds the results. **The same filter is reused at every location.**
@@ -309,7 +439,9 @@ The filter weights stay the same, but the local image patches change across posi
 
 Notice another result: the 28 × 28 image produced 27 × 27 responses. **Why did the border shrink? Could padding prevent that?** Keep this question; padding and stride will be examined in Demo 2.
 
-So far the filters were designed by hand. This creates a new problem: **must a human design every useful filter?**
+So far the filters were designed by hand. This creates a new problem: **must a human design every useful filter?** 
+
+-->
 
 ## 5. Can a CNN discover its own filters?
 
