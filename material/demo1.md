@@ -130,12 +130,6 @@ flowchart LR
     c --> d["Object representation"]
 ```
 
-This schematic illustrates combining simple patterns into larger structures; it is not a literal model of biological visual processing.
-
-<!-- ![Illustrative hierarchy from local lines and curves to bicycle parts and a complete bicycle](img/2b2.png) -->
-
-<img src="./img/2b2.png" alt="Illustrative hierarchy from local lines and curves to bicycle parts and a complete bicycle" width="50%">
-
 **Question.** What two ideas might be useful for a new image-classification architecture?
 
 <details>
@@ -149,6 +143,19 @@ A way to implement the first idea is surprisingly simple: a tiny collection of n
 
 
 ## 3. What could a filter notice?
+
+This schematic illustrates combining simple patterns into larger structures; it is not a literal model of biological visual processing.
+
+<!-- ![Illustrative hierarchy from local lines and curves to bicycle parts and a complete bicycle](img/2b2.png) -->
+
+<img src="./img/2b2.png" alt="Illustrative hierarchy from local lines and curves to bicycle parts and a complete bicycle" width="50%">
+
+
+
+## 4. How Features are Detected (Convolution with one filter)
+
+> https://setosa.io/ev/image-kernels/
+
 
 
 ```python
@@ -229,9 +236,6 @@ filter_sharpen = np.array([
 ], dtype=np.float32)
 ```
 
-## 4. How Features are Detected (Convolution with one filter on Real Image)
-
-> https://setosa.io/ev/image-kernels/
 
 ```python
 # Check if image loading was successful
