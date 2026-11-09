@@ -317,6 +317,11 @@ A CNN has already been trained on Fashion-MNIST. Treat it as a **black box** for
 
 **Question.** The two filters above were chosen manually. Where could the weights inside a trained CNN come from?
 
+
+```sh
+!wget -O fashion_mnist_cnn.keras "https://YOUR_RAW_URL_HERE/fashion_mnist_cnn.keras"
+```
+
 ```python
 from pathlib import Path
 
