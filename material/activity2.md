@@ -1,11 +1,11 @@
-# Activity 2 — Controlling CNN Spatial Information and Reusing Features (MNIST)
+# Activity 2: Controlling CNN Spatial Information and Reusing Features (MNIST)
 
 
 ## How to use this guided activity
 
 Read each question before opening its **Hint** or **Show worked answer** section. Run the Python cells in order in one Google Colab notebook or a compatible Jupyter notebook. Later sections reuse data and variables defined earlier. For figures, run the **supplied visualization code** and interpret the result; writing plotting code from scratch is not assessed.
 
-**Start with a clean runtime.** Use a separate notebook for this activity. Before beginning, connect to a fresh Colab runtime or restart the session used for [Activity 1](../../part1/activity/activity1.md); for local Jupyter, restart the kernel. Then run this activity from its setup cell. This avoids reusing old variables or retaining earlier models and datasets in memory. A new notebook file alone does not clear a reused kernel. If a restart is needed midway through the activity, rerun the earlier cells, including source-model training, before continuing with feature reuse or fine-tuning.
+**Start with a clean runtime.** Use a separate notebook for this activity. Before beginning, connect to a fresh Colab runtime or restart the session used for Activity 1; for local Jupyter, restart the kernel. Then run this activity from its setup cell. This avoids reusing old variables or retaining earlier models and datasets in memory. A new notebook file alone does not clear a reused kernel. If a restart is needed midway through the activity, rerun the earlier cells, including source-model training, before continuing with feature reuse or fine-tuning.
 
 For environment preparation, use the separate [Python setup for CNN activities](1-python_setup.md). A CPU can run the examples; a GPU is optional. Training results and execution times vary by environment. No uploaded CNN model file or external image assets are needed.
 
@@ -56,21 +56,21 @@ print("Selected image batch:", image_batch.shape)
 **Question 1.** Why is the selected batch shape `(1, 28, 28, 1)` rather than `(28, 28)`? What do the first and last dimensions represent?
 
 <details>
-<summary>Hint — Question 1</summary>
+<summary>Hint: Question 1</summary>
 
 A Keras convolution receives a batch of images. MNIST uses one grayscale intensity channel per pixel.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 1</summary>
+<summary>Show worked answer: Question 1</summary>
 
 The first dimension is the **batch size** (one image). The next two are the 28 image rows and 28 columns. The last dimension is **one grayscale channel**. A two-dimensional 28 × 28 array omits both the batch axis and the channel axis needed by the convolution operation.
 
 </details>
 
 <details>
-<summary>Show supplied Python code — View the selected MNIST digit</summary>
+<summary>Show supplied Python code: View the selected MNIST digit</summary>
 
 ```python
 plt.figure(figsize=(3.5, 3.5))
@@ -102,14 +102,14 @@ flowchart TB
 **Question 2.** Why does the first convolution change 28 to 27? Why does the first pooling layer then change 27 to 13? Are those reductions caused by the same rule?
 
 <details>
-<summary>Hint — Question 2</summary>
+<summary>Hint: Question 2</summary>
 
 A valid convolution must fit its entire filter inside the input. Valid max pooling with stride 2 selects non-overlapping complete windows.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 2</summary>
+<summary>Show worked answer: Question 2</summary>
 
 The 2 × 2 valid convolution can begin at positions 0 through 26, producing **27** positions along either axis. The 2 × 2 pooling operation with stride 2 can begin at 0, 2, ..., 24, producing **13** complete windows per axis and omitting index 26. Convolution reduces size because its filter cannot extend beyond the original border; this pooling step reduces size by summarizing separate windows and omitting an incomplete final border.
 
@@ -134,21 +134,21 @@ print("Pooled output:\n", border_pooled)
 **Question 3.** Identify all four complete 2 × 2 pooling windows and their maxima. Is the value 25 used? Which other input positions are omitted?
 
 <details>
-<summary>Hint — Question 3</summary>
+<summary>Hint: Question 3</summary>
 
 The window starting rows are 0 and 2; the starting columns are 0 and 2. A valid window must be entirely inside the grid.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 3</summary>
+<summary>Show worked answer: Question 3</summary>
 
 The top-left window contains 1, 2, 6, 7 and outputs **7**. The top-right outputs **9** from 3, 4, 8, 9. The bottom-left outputs **17** from 11, 12, 16, 17. The bottom-right outputs **19** from 13, 14, 18, 19. The pooled result is `[[7, 9], [17, 19]]`. The entire final row (21–25) and final column (5, 10, 15, 20, 25) are outside complete windows. In particular, 25 is omitted.
 
 </details>
 
 <details>
-<summary>Show supplied Python code — Plot the omitted border</summary>
+<summary>Show supplied Python code: Plot the omitted border</summary>
 
 ```python
 fig, axes = plt.subplots(1, 2, figsize=(8, 4))
@@ -202,21 +202,21 @@ print("SAME, stride 1:", same_s1.shape)
 **Question 4.** Predict the shapes of both response maps. Does `SAME` change the four filter weights? Does preserving the spatial size mean that output pixels are copies of the input pixels?
 
 <details>
-<summary>Hint — Question 4</summary>
+<summary>Hint: Question 4</summary>
 
 The same 2 × 2 kernel is used in both calls. Padding changes which complete windows are available, not the kernel's values.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 4</summary>
+<summary>Show worked answer: Question 4</summary>
 
 `VALID` produces **27 × 27**, and `SAME` produces **28 × 28** for stride 1. The kernel weights remain exactly the same. The output consists of weighted sums; it does not copy input pixels. Some boundary responses depend on padding values as well as observed pixels.
 
 </details>
 
 <details>
-<summary>Show supplied Python code — Compare valid and same padding on one digit</summary>
+<summary>Show supplied Python code: Compare valid and same padding on one digit</summary>
 
 ```python
 limit = max(float(np.abs(valid_s1).max()),
@@ -243,14 +243,14 @@ For a **2 × 2** kernel with stride 1, preserving length 28 requires *one additi
 **Question 5.** How many zero rows and columns need to be added to preserve 28 × 28? Is one row added to every side? Predict the explicitly padded input shape.
 
 <details>
-<summary>Hint — Question 5</summary>
+<summary>Hint: Question 5</summary>
 
 To produce 28 outputs from a 2-pixel-wide window at stride 1, the padded input must have width 29, not 30.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 5</summary>
+<summary>Show worked answer: Question 5</summary>
 
 The padded input must be **29 × 29**: one extra row and one extra column in total. TensorFlow's choice is zero rows at the top, one at the bottom, zero columns at the left, and one at the right. The batch/channel shape becomes `(1, 29, 29, 1)`.
 
@@ -275,14 +275,14 @@ print("Explicit zero padding reproduces SAME: True")
 **Question 6.** What does the numerical assertion establish? Does it establish that all `SAME` convolutions use bottom-right padding?
 
 <details>
-<summary>Hint — Question 6</summary>
+<summary>Hint: Question 6</summary>
 
 The test compares the same input, weights, stride, and a particular placement of zeros. Try to distinguish this configuration from a universal rule.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 6</summary>
+<summary>Show worked answer: Question 6</summary>
 
 The assertion establishes that **for this 28 × 28 input, 2 × 2 kernel, and stride 1**, explicit bottom-and-right zero padding reproduces the `SAME` result. It does not imply that all `SAME` convolutions use that placement or any padding at all. The required amount depends on input size, kernel size, and stride.
 
@@ -310,14 +310,14 @@ print("Symmetric explicit padding gives same result.")
 **Question 7.** Why can a 3 × 3 kernel use symmetric padding when a 2 × 2 kernel cannot, at stride 1? Does this mean that a 2 × 2 kernel is inherently incorrect?
 
 <details>
-<summary>Hint — Question 7</summary>
+<summary>Hint: Question 7</summary>
 
 A centered 3 × 3 window extends one location to each side of its center. Compare the number of extra positions required for size preservation.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 7</summary>
+<summary>Show worked answer: Question 7</summary>
 
 Preserving size with a 3 × 3 kernel at stride 1 needs **two extra positions per axis**, which can be divided as one on each side. A 2 × 2 kernel needs only **one extra position per axis**, so its padding is necessarily asymmetric in integer-pixel coordinates. Even-sized kernels are not wrong; they simply involve different spatial alignment choices.
 
@@ -353,14 +353,14 @@ print("Stride 2 output:\n", sum_s2)
 **Question 8.** How many valid window starts are possible per axis at strides 1 and 2? What are their output shapes? Which starts does stride 2 skip?
 
 <details>
-<summary>Hint — Question 8</summary>
+<summary>Hint: Question 8</summary>
 
 For a 5-pixel input and a 2-pixel kernel, valid starting indices are 0–3. The stride selects a subset of these indices.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 8</summary>
+<summary>Show worked answer: Question 8</summary>
 
 With stride 1, the window can start at indices **0, 1, 2, 3**, giving a **4 × 4** map. With stride 2, valid starts are **0 and 2**, giving a **2 × 2** map. The starts at 1 and 3 are skipped along each dimension. Stride 2 computes fewer local sums; it does not average together the positions that it skips.
 
@@ -384,21 +384,21 @@ print("SAME, stride 2:", same_s2.shape)
 **Question 9.** Predict both stride-2 output shapes on the 28 × 28 image. Why does using stride 2 not double the number of kernel parameters?
 
 <details>
-<summary>Hint — Question 9</summary>
+<summary>Hint: Question 9</summary>
 
 A convolutional layer reuses its filter weights. Stride changes the coordinates where the weights are used, not how many independent weights exist.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 9</summary>
+<summary>Show worked answer: Question 9</summary>
 
 Both stride-2 operations produce **14 × 14** maps for this exact input and 2 × 2 kernel. The kernel still has its original four weights. Stride 2 reduces the number of spatial positions evaluated; it does not introduce new learnable weights.
 
 </details>
 
 <details>
-<summary>Show supplied Python code — Compare stride 1 and 2 responses</summary>
+<summary>Show supplied Python code: Compare stride 1 and 2 responses</summary>
 
 ```python
 limit = max(float(np.abs(valid_s1).max()),
@@ -447,14 +447,14 @@ $$
 **Question 10.** Use the formulas to calculate the output for (a) `n=28, k=2, s=1, VALID`, (b) `n=28, k=2, s=2, VALID`, and (c) `n=28, k=2, s=2, SAME`. How much total padding is needed in case (c)?
 
 <details>
-<summary>Hint — Question 10</summary>
+<summary>Hint: Question 10</summary>
 
 For `VALID`, subtract the kernel size before dividing by stride. For `SAME`, take the ceiling of input size divided by stride, then determine the required padding.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 10</summary>
+<summary>Show worked answer: Question 10</summary>
 
 (a) `floor((28 - 2)/1) + 1 = 27`. (b) `floor((28 - 2)/2) + 1 = 14`. (c) `ceil(28/2) = 14`. The required total padding in (c) is `max(0, (14 - 1)×2 + 2 - 28) = 0`. Therefore `SAME` and `VALID` have the same output shape and require no extra positions in this particular stride-2 case.
 
@@ -475,14 +475,14 @@ for mode in ("VALID", "SAME"):
 **Question 11.** If two configurations give the same output dimensions, must they give the same values? Why do `VALID` and `SAME` coincide above, but not necessarily on a 5 × 5 input?
 
 <details>
-<summary>Hint — Question 11</summary>
+<summary>Hint: Question 11</summary>
 
 Matching shapes and matching padding placement are different claims. Check whether the filter exactly tiles the input at the chosen stride.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 11</summary>
+<summary>Show worked answer: Question 11</summary>
 
 Equal output dimensions **do not generally guarantee equal values**. For 28 × 28 with a 2 × 2 kernel and stride 2, both modes require zero padding and visit the same starting positions, so their values coincide. For a 5 × 5 input, `VALID` produces 2 × 2 and `SAME` produces 3 × 3; `SAME` requires padded values for some boundary windows.
 
@@ -507,14 +507,14 @@ Consider this 4 × 4 feature map:
 **Question 12.** Calculate the result of 2 × 2 **max pooling** with stride 2 and valid padding. What happens to the strong response 9? Does the pooled output record its original coordinates?
 
 <details>
-<summary>Hint — Question 12</summary>
+<summary>Hint: Question 12</summary>
 
 Divide the grid into four non-overlapping 2 × 2 regions. Choose one maximum from each region.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 12</summary>
+<summary>Show worked answer: Question 12</summary>
 
 The pooled output is `[[9, 1], [0, 5]]`. The strong response **9** survives as the maximum of its window, but the output does not record which of the four original positions contained 9. The pooled representation is smaller and has lost some spatial detail.
 
@@ -523,14 +523,14 @@ The pooled output is `[[9, 1], [0, 5]]`. The strong response **9** survives as t
 **Question 13.** Calculate **average pooling** for the same four windows. Why do maximum and average pooling give different values even though the output shape is identical?
 
 <details>
-<summary>Hint — Question 13</summary>
+<summary>Hint: Question 13</summary>
 
 For the top-left window, calculate `(1 + 2 + 3 + 9) / 4` rather than selecting the largest value.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 13</summary>
+<summary>Show worked answer: Question 13</summary>
 
 The average-pooled output is `[[3.75, 0.25], [0, 3.5]]`. Both pooling methods use the same 2 × 2 windows, stride, and padding, so both give a 2 × 2 output. Max pooling keeps the strongest response per window; average pooling keeps the mean. Neither recovers all four original values.
 
@@ -559,7 +559,7 @@ print("Average pooling:\n", avg_pooled)
 ```
 
 <details>
-<summary>Show supplied Python code — Compare a map with its two pooled versions</summary>
+<summary>Show supplied Python code: Compare a map with its two pooled versions</summary>
 
 ```python
 fig, axes = plt.subplots(1, 3, figsize=(10, 3.5))
@@ -602,7 +602,7 @@ print("After average pooling:", digit_avg.shape)
 ```
 
 <details>
-<summary>Show supplied Python code — Plot real digit responses before and after pooling</summary>
+<summary>Show supplied Python code: Plot real digit responses before and after pooling</summary>
 
 ```python
 upper = max(float(digit_activations.max()), 1e-6)
@@ -624,14 +624,14 @@ plt.show()
 **Question 14.** Which information is retained by max pooling and average pooling? Does pooling combine different channels or independently summarize windows within each channel?
 
 <details>
-<summary>Hint — Question 14</summary>
+<summary>Hint: Question 14</summary>
 
 Think about how the same spatial window is processed and what happens when an input has 32 feature maps rather than one.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 14</summary>
+<summary>Show worked answer: Question 14</summary>
 
 Max pooling keeps a window's largest value; average pooling keeps its mean. Both discard information about the individual values and their detailed positions. Ordinary `MaxPooling2D` and `AveragePooling2D` apply the summary **separately to each incoming channel**; they do not combine 32 channels into a new channel. In this experiment the spatial size changes 27 × 27 to 13 × 13, while the number of channels stays unchanged.
 
@@ -661,21 +661,21 @@ for col, inp in zip((0, 1, 2), shift_inputs):
 **Question 15.** Does shifting from column 0 to 1 change the pooled result? Does shifting from column 1 to 2 change it? Both shifts are one pixel: why are the results different?
 
 <details>
-<summary>Hint — Question 15</summary>
+<summary>Hint: Question 15</summary>
 
 Track whether the strong response remains within its original 2 × 2 pooling window or crosses into a neighboring window.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 15</summary>
+<summary>Show worked answer: Question 15</summary>
 
 Columns 0 and 1 are in the same pooling window, so the pooled outputs are **identical**. Column 2 belongs to the next window, so the strong response moves to another output location and the pooled map **changes**. Max pooling can offer limited tolerance to movements *within* a pooling window, but not universal translation invariance.
 
 </details>
 
 <details>
-<summary>Show supplied Python code — Visualize shifts within and across windows</summary>
+<summary>Show supplied Python code: Visualize shifts within and across windows</summary>
 
 ```python
 fig, axes = plt.subplots(3, 2, figsize=(7, 9))
@@ -696,14 +696,14 @@ plt.show()
 **Question 16.** Is a complete CNN guaranteed to ignore all shifts, rotations, or distortions just because it contains max pooling? Explain why the previous experiment does not establish such a guarantee.
 
 <details>
-<summary>Hint — Question 16</summary>
+<summary>Hint: Question 16</summary>
 
 The previous experiment altered only the position of one isolated feature relative to fixed pooling-window boundaries.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 16</summary>
+<summary>Show worked answer: Question 16</summary>
 
 No. Window boundaries matter, and a feature can move from one window to another with a one-pixel displacement. Other filters, pooling stages, and later layers can also respond differently after a transformation. The experiment shows **limited local shift tolerance** under one defined condition, not general invariance to arbitrary transformations.
 
@@ -748,21 +748,21 @@ for pad, stride in configurations:
 | `SAME` | 2 | ? | ? |
 
 <details>
-<summary>Hint — Question 17</summary>
+<summary>Hint: Question 17</summary>
 
 Use the output-size formulas from Question 10 for each convolution. For the pooling result, count complete pairs along the convolutional output side.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 17</summary>
+<summary>Show worked answer: Question 17</summary>
 
 `VALID`, stride 1: **27 × 27** after convolution, **13 × 13** after pooling. `SAME`, stride 1: **28 × 28**, then **14 × 14**. `VALID`, stride 2: **14 × 14**, then **7 × 7**. `SAME`, stride 2: **14 × 14**, then **7 × 7**. The last two are also numerically identical for this particular input, filter, and stride because `SAME` adds no padding here.
 
 </details>
 
 <details>
-<summary>Show supplied Python code — Four filter configurations on the same digit</summary>
+<summary>Show supplied Python code: Four filter configurations on the same digit</summary>
 
 ```python
 scale = max(*(float(np.abs(item[2]).max()) for item in spatial_results), 1e-6)
@@ -791,14 +791,14 @@ The original CNN in Demo 1 ended its spatial processing with **6 × 6 × 32** fe
 **Question 18.** How many weights and biases does this dense layer contain? If a redesigned convolutional pipeline produced 7 × 7 × 32 features instead, what would the new flattened length be? Could the original dense weight matrix be used unchanged?
 
 <details>
-<summary>Hint — Question 18</summary>
+<summary>Hint: Question 18</summary>
 
 Multiply input length by number of dense neurons, then add one bias per neuron. Compare `6 × 6 × 32` with `7 × 7 × 32`.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 18</summary>
+<summary>Show worked answer: Question 18</summary>
 
 The original dense layer has `1152 × 256 + 256 = 295,168` parameters. A 7 × 7 × 32 tensor would flatten into **1,568** values. The original dense weight matrix has 1,152 input rows, so it cannot directly accept a 1,568-element input. The classifier would require architectural modification and appropriate training. Even if reshaping preserved a compatible length, changed activations could still change predictions.
 
@@ -821,14 +821,14 @@ Consider two small feature maps (two channels at the same spatial size):
 **Question 19.** Calculate the mean of each channel. How many numbers will remain after GAP? Does the result identify the location of the value 4 in either channel?
 
 <details>
-<summary>Hint — Question 19</summary>
+<summary>Hint: Question 19</summary>
 
 Each channel has four values. Add those four values and divide by four; do this separately for the two channels.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 19</summary>
+<summary>Show worked answer: Question 19</summary>
 
 Channel A has mean `(1 + 2 + 3 + 4)/4 = 2.5`. Channel B has mean `(0 + 0 + 0 + 4)/4 = 1.0`. GAP returns the two-element vector **[2.5, 1.0]**. The vector no longer records where particular values occurred, and it cannot reconstruct the original grids.
 
@@ -867,14 +867,14 @@ The diagram compares **two alternative classifier designs**, not two branches us
 **Question 20.** Calculate the number of trainable parameters in `Dense(256)` after (a) Flatten on 6 × 6 × 32 and (b) GAP on the same 32 channels. Which layer has fewer parameters? Which representation retains more spatial detail?
 
 <details>
-<summary>Hint — Question 20</summary>
+<summary>Hint: Question 20</summary>
 
 The parameter rule for a dense layer with `m` inputs and `n` neurons is `m × n + n`. GAP returns 32 values from 32 input feature maps.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 20</summary>
+<summary>Show worked answer: Question 20</summary>
 
 Flatten gives `1152 × 256 + 256 = 295,168` parameters. GAP gives `32 × 256 + 256 = 8,448` parameters. **GAP greatly reduces the classifier's parameter count**, but discards the spatial arrangement of activations within each channel. The lower parameter count does not guarantee better accuracy or sufficient representation for every task.
 
@@ -915,14 +915,14 @@ gap_model.summary()
 **Question 21.** Verify the full model parameter counts. What remains identical between the two architectures? Does this comparison demonstrate that the GAP model is more accurate?
 
 <details>
-<summary>Hint — Question 21</summary>
+<summary>Hint: Question 21</summary>
 
 The convolutional layers and ten-class output head are unchanged. Sum 160, 4,128, the appropriate Dense(256) count, and 2,570.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 21</summary>
+<summary>Show worked answer: Question 21</summary>
 
 The Flatten CNN has **302,026** trainable parameters: `160 + 4,128 + 295,168 + 2,570`. The GAP CNN has **15,306**: `160 + 4,128 + 8,448 + 2,570`. Convolution and final ten-class head dimensions are unchanged. The difference comes from the input length to Dense(256). The code does **not** train either model, so it cannot establish which would generalize better.
 
@@ -931,14 +931,14 @@ The Flatten CNN has **302,026** trainable parameters: `160 + 4,128 + 295,168 + 2
 **Question 22.** Why can GAP make the classifier less dependent on spatial size? Does replacing Flatten with GAP mean that *every* CNN automatically accepts arbitrary input dimensions or becomes translation invariant?
 
 <details>
-<summary>Hint — Question 22</summary>
+<summary>Hint: Question 22</summary>
 
 GAP averages each available spatial grid to one value per channel. But input layers, convolutions, pooling, and preprocessing can still impose constraints.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 22</summary>
+<summary>Show worked answer: Question 22</summary>
 
 For a feature tensor of height H and width W with 32 channels, GAP returns **32 values**, as long as the preceding model can produce the feature maps. This removes the dense head's requirement for a fixed H × W × 32 flattened input. It does not remove all architecture or preprocessing constraints, guarantee translation invariance, or preserve all spatial detail. Models must be designed and evaluated for the intended input sizes.
 
@@ -972,14 +972,14 @@ flowchart TB
 **Question 23.** Are the source task and target task identical? Why can a filter learned for digits 0–4 nevertheless be useful for digits 5–9? Is improved target accuracy guaranteed?
 
 <details>
-<summary>Hint — Question 23</summary>
+<summary>Hint: Question 23</summary>
 
 The labels are disjoint, but both sets of images contain strokes, edges, curves, and local grayscale patterns.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 23</summary>
+<summary>Show worked answer: Question 23</summary>
 
 They are **different five-class classification tasks**. Some learned representations of local strokes, curves, and contrast could also help recognize different digits. However, a representation trained for digits 0–4 may be incomplete or overly specialized for digits 5–9. Transfer learning is not guaranteed to outperform a randomly initialized model, and its usefulness must be checked using held-out data.
 
@@ -1017,14 +1017,14 @@ print("Target test:", x_target_test.shape, np.unique(y_target_test))
 **Question 24.** For the target task, what output index represents the original digit **7**? Why is subtracting 5 from target labels necessary? When presenting a target prediction to a reader, what must be added back?
 
 <details>
-<summary>Hint — Question 24</summary>
+<summary>Hint: Question 24</summary>
 
 The target head outputs five probabilities at indices 0, 1, 2, 3, and 4. These represent original digits 5, 6, 7, 8, and 9 in order.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 24</summary>
+<summary>Show worked answer: Question 24</summary>
 
 Original digit **7** corresponds to target output index **2** (`7 - 5`). Sparse categorical cross-entropy requires labels that index the head's five output positions; leaving labels 5–9 would be incompatible with a five-output head. To report a prediction as an original digit, add **5** to the predicted target index.
 
@@ -1071,21 +1071,21 @@ source_history = source_model.fit(
 **Question 25.** What has been learned at the end of source training? Which part of the network should be kept when the target classes change? Why should the original source head not simply be relabeled as digits 5–9?
 
 <details>
-<summary>Hint — Question 25</summary>
+<summary>Hint: Question 25</summary>
 
 Consider the different purposes of the feature extractor and the final classifier head. The source head learned how to map representations to *source* class identities.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 25</summary>
+<summary>Show worked answer: Question 25</summary>
 
 The convolutions in `backbone` have learned trainable weights for the source task, while the source Dense head has learned to distinguish digits 0–4. The **backbone** is the reusable component. Relabeling the five source outputs would not teach the existing head to recognize digits 5–9; a new target head must learn that mapping. The source model was actually trained, so its backbone contains learned source-task parameters rather than only an architectural illustration.
 
 </details>
 
 <details>
-<summary>Show supplied Python code — Plot source training and validation accuracy</summary>
+<summary>Show supplied Python code: Plot source training and validation accuracy</summary>
 
 ```python
 fig, ax = plt.subplots(figsize=(7, 4))
@@ -1107,14 +1107,14 @@ plt.show()
 **Question 26.** Does a high source-task validation accuracy prove that the backbone will be equally effective for the target digits? What does the source validation curve measure, and what does it not measure?
 
 <details>
-<summary>Hint — Question 26</summary>
+<summary>Hint: Question 26</summary>
 
 The source validation labels contain only digits 0–4. No target-task classifier has yet been trained.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 26</summary>
+<summary>Show worked answer: Question 26</summary>
 
 No. The source validation curve measures performance on held-out **digits 0–4**. It says nothing directly about how well a new classifier will recognize digits 5–9. The target task needs its own training and validation. Learned source features may transfer well, poorly, or not at all.
 
@@ -1168,14 +1168,14 @@ target_model.summary()
 **Question 27.** Why are some model parameters now non-trainable? Calculate the backbone's parameter count and the new head's parameter count. Which parameters can the optimizer update?
 
 <details>
-<summary>Hint — Question 27</summary>
+<summary>Hint: Question 27</summary>
 
 The backbone has Conv2D layers with 16 filters (3 × 3 × 1) and 32 filters (3 × 3 × 16). The target head receives 32 GAP features, then has Dense(64) and Dense(5). Include one bias per output unit.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 27</summary>
+<summary>Show worked answer: Question 27</summary>
 
 The backbone contains **4,800** pretrained parameters: `(3×3×1+1)×16 = 160` and `(3×3×16+1)×32 = 4,640`. Pooling and GAP have no trainable parameters. The new target head contains **2,437** trainable parameters: `32×64+64 = 2,112` and `64×5+5 = 325`. The full target model therefore contains **7,237** parameters: 4,800 frozen and 2,437 trainable. Its optimizer updates only the new head while the backbone is frozen.
 
@@ -1184,14 +1184,14 @@ The backbone contains **4,800** pretrained parameters: `(3×3×1+1)×16 = 160` a
 **Question 28.** If `backbone.trainable = False`, does the backbone stop processing target images? What is the difference between selecting trainable weights and running a layer in inference mode?
 
 <details>
-<summary>Hint — Question 28</summary>
+<summary>Hint: Question 28</summary>
 
 The backbone must still produce input features for the new classifier. Some layers, such as BatchNormalization and Dropout, have behavior that depends on whether a call is made in training or inference mode.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 28</summary>
+<summary>Show worked answer: Question 28</summary>
 
 The frozen backbone **still computes features** for each target image. Setting `trainable=False` prevents its trainable weights from being updated by the target optimizer. Calling it with `training=False` specifies inference-time behavior for layers whose computations or internal state depend on that mode. These are related but distinct controls. The present simple backbone has no BatchNormalization or Dropout layers. When using pretrained architectures with BatchNormalization, inference mode is particularly important for handling moving statistics consistently.
 
@@ -1224,21 +1224,21 @@ print("Frozen-backbone validation accuracy:", round(float(frozen_val_acc), 4))
 **Question 29.** During the three target-training epochs, which layers learn new task-specific parameters? What does the reported validation accuracy measure? Does it establish a transfer-learning advantage over training from scratch?
 
 <details>
-<summary>Hint — Question 29</summary>
+<summary>Hint: Question 29</summary>
 
 Look at `target_model.trainable_weights`. Recall that a performance advantage requires a comparison with another model evaluated on the same target-task data.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 29</summary>
+<summary>Show worked answer: Question 29</summary>
 
 Only the two new dense target-head layers update their parameters. Validation accuracy measures how often the target model correctly classifies held-out **digits 5–9**. This result shows whether the frozen learned representation can support a new classifier, but it does **not** by itself establish an advantage over learning a CNN from scratch. A separately initialized target model provides the needed comparison.
 
 </details>
 
 <details>
-<summary>Show supplied Python code — Plot target training with the frozen backbone</summary>
+<summary>Show supplied Python code: Plot target training with the frozen backbone</summary>
 
 ```python
 fig, axes = plt.subplots(1, 2, figsize=(11, 4))
@@ -1280,14 +1280,14 @@ The diagram names the *trainability settings during fine-tuning*, not a new arch
 **Question 30.** Why might updating the second convolution help with digits 5–9? Why might it also make the model worse? Why use a smaller learning rate than during head training?
 
 <details>
-<summary>Hint — Question 30</summary>
+<summary>Hint: Question 30</summary>
 
 The second convolution can represent combinations of earlier strokes and edges. Think about useful pretrained information, target-specific adjustment, and the danger of changing learned parameters too much.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 30</summary>
+<summary>Show worked answer: Question 30</summary>
 
 The second convolution may have learned combinations specialized for digits 0–4. Allowing its weights to update can adapt those combinations to digits 5–9. However, fine-tuning may overfit a small target dataset or damage useful pretrained features. A small learning rate makes each gradient update less abrupt. Fine-tuning is a strategy to test, not a guarantee of higher validation accuracy.
 
@@ -1336,14 +1336,14 @@ print("Validation accuracy after fine-tuning:",
 **Question 31.** Which convolutional layer is trainable now? How many parameters are trainable? Does the call `backbone(inputs, training=False)` in the earlier model definition prevent Conv2D weights from receiving gradients?
 
 <details>
-<summary>Hint — Question 31</summary>
+<summary>Hint: Question 31</summary>
 
 The second convolution has 4,640 weights and biases. Add those to the 2,437 trainable target-head parameters. Distinguish `trainable` flags from the forward-call `training` argument.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 31</summary>
+<summary>Show worked answer: Question 31</summary>
 
 The **second Conv2D** is now trainable, while the first Conv2D remains frozen. The total trainable count is **7,077**: 4,640 from the last convolution plus 2,437 from the target head. Calling `backbone(..., training=False)` does not prevent gradients from reaching a Conv2D whose `trainable` flag is true; it controls training/inference behavior for mode-dependent operations. This example contains no BatchNormalization or Dropout layers.
 
@@ -1352,14 +1352,14 @@ The **second Conv2D** is now trainable, while the first Conv2D remains frozen. T
 **Question 32.** Compare the validation accuracy before and after fine-tuning. If accuracy decreases, should the lesson conclude that pretrained filters are never useful? If accuracy increases, has transfer learning already been shown to beat training from scratch?
 
 <details>
-<summary>Hint — Question 32</summary>
+<summary>Hint: Question 32</summary>
 
 The two validation results compare a frozen-backbone strategy with a partly fine-tuned strategy. Neither is yet a randomly initialized target baseline.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 32</summary>
+<summary>Show worked answer: Question 32</summary>
 
 The direction and size of the change depend on the actual run. Worse fine-tuning accuracy could reflect overfitting, a poor learning rate, limited data, or random variation; it does not disprove transfer learning generally. Better accuracy supports adapting this representation in this experiment, but does **not** prove an advantage over training from scratch. That requires an independently initialized baseline using the target dataset.
 
@@ -1411,14 +1411,14 @@ for name, score in validation_accuracy.items():
 **Question 33.** Which approach gives the highest target validation accuracy in the observed run? Can three short training runs establish that one approach always wins? What would need to be controlled in a more rigorous comparison?
 
 <details>
-<summary>Hint — Question 33</summary>
+<summary>Hint: Question 33</summary>
 
 Consider initialization, training duration, optimizer settings, number of trainable weights, data selection, and variability across random seeds.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 33</summary>
+<summary>Show worked answer: Question 33</summary>
 
 The best approach depends on the **printed validation results**. A single short experiment cannot establish a universal ranking. A more rigorous comparison would use a consistent target-data split, clearly defined compute or training budgets, comparable model capacity where possible, repeated random seeds, and the same selection metric. Pretrained features can help, be neutral, or hurt. The value of transfer depends on the source and target tasks and the training protocol.
 
@@ -1457,21 +1457,21 @@ print("First 10 true original digits:", true_original_digits[:10])
 **Question 34.** Why was the target validation subset used to select the strategy? Why should the test subset be evaluated only after selection? Why add 5 when displaying the predicted digit?
 
 <details>
-<summary>Hint — Question 34</summary>
+<summary>Hint: Question 34</summary>
 
 The validation subset is for comparing and selecting models; the test subset is a separate final check. The target head's five outputs use indices 0–4 for original digits 5–9.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 34</summary>
+<summary>Show worked answer: Question 34</summary>
 
 Validation results are appropriate for comparing candidate training strategies. Using test scores to choose the strategy would make the test data part of model selection and weaken the independence of the final evaluation. Adding **5** converts a target output index (0–4) back into the original digit class (5–9) for interpretation.
 
 </details>
 
 <details>
-<summary>Show supplied Python code — Target-task confusion matrix</summary>
+<summary>Show supplied Python code: Target-task confusion matrix</summary>
 
 ```python
 cm = tf.math.confusion_matrix(
@@ -1500,14 +1500,14 @@ plt.show()
 **Question 35.** Which pair of target digits was most frequently confused in the observed confusion matrix? Why does overall test accuracy not provide the same information?
 
 <details>
-<summary>Hint — Question 35</summary>
+<summary>Hint: Question 35</summary>
 
 Inspect the off-diagonal counts. Accuracy combines all correct predictions into one proportion.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 35</summary>
+<summary>Show worked answer: Question 35</summary>
 
 The exact pair depends on the observed matrix. The largest **off-diagonal** cell identifies the most frequent *directed* confusion between a true digit and a predicted digit. Overall accuracy reports the fraction of all correctly classified examples but does not reveal which digit pairs the model mistakes most often. For very small error counts, interpretation should remain cautious.
 
@@ -1520,14 +1520,14 @@ The exact pair depends on the observed matrix. The largest **off-diagonal** cell
 **Question 36.** Which operation changes the available boundary positions: padding, stride, or pooling? Which changes the spatial distance between filter evaluations? Which summarizes feature-map values already computed?
 
 <details>
-<summary>Hint — Question 36</summary>
+<summary>Hint: Question 36</summary>
 
 Match each operation to its main purpose: add border positions, move the filter farther at each step, or summarize a window.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 36</summary>
+<summary>Show worked answer: Question 36</summary>
 
 **Padding** extends the boundary positions available to a convolution. **Stride** changes the spatial step between filter evaluations. **Pooling** summarizes feature-map values within windows. These operations can interact, but they do not mean the same thing.
 
@@ -1536,14 +1536,14 @@ Match each operation to its main purpose: add border positions, move the filter 
 **Question 37.** Is Global Average Pooling a substitute for every kind of max pooling? Is freezing a network the same as eliminating its forward computation? Does a pretrained network always generalize to a different task?
 
 <details>
-<summary>Hint — Question 37</summary>
+<summary>Hint: Question 37</summary>
 
 GAP aggregates each entire spatial channel; local max pooling summarizes smaller windows. Frozen layers still produce outputs. Transfer performance must be measured.
 
 </details>
 
 <details>
-<summary>Show worked answer — Question 37</summary>
+<summary>Show worked answer: Question 37</summary>
 
 No. GAP returns one mean per complete feature map, while local max pooling returns a smaller *spatial grid* of local maxima. Freezing prevents certain parameter updates but preserves forward computation. Pretrained networks may transfer useful features, yet transfer performance depends on the domains, labels, preprocessing, training schedule, and target data.
 
