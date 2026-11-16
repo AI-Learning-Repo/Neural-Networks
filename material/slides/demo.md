@@ -63,7 +63,8 @@ This operation can be explored interactively here:
 
 Consider a grayscale image of a bicycle.
 
-![A grayscale bicycle and the responses of vertical-edge and horizontal-edge kernels](../img/Left_side_of_Flying_Pigeon.jpg)
+<!-- ![A grayscale bicycle and the responses of vertical-edge and horizontal-edge kernels](../img/Left_side_of_Flying_Pigeon.jpg) -->
+<img src="../img/Left_side_of_Flying_Pigeon.jpg" width="50%">
 
 Different filters emphasize different patterns. One responds strongly to vertical edges; another responds strongly to horizontal edges.
 
@@ -89,9 +90,140 @@ K_h = \begin{bmatrix}
 \end{bmatrix}
 $$
 
+<details>
+<summary>Python code</summary>
+
+Cell 1
+
+```python
+# Setup - Load and Prepare an Image
+import numpy as np
+import matplotlib.pyplot as plt
+from PIL import Image
+import requests
+from io import BytesIO
+from scipy.signal import convolve2d
+
+# --- Image Loading ---
+try:
+    # Example image URL (Wikimedia Commons - Bicycle) - Check license if using elsewhere!
+    image_url = "https://raw.githubusercontent.com/AI-Learning-Repo/Neural-Networks/refs/heads/week4/material/img/Left_side_of_Flying_Pigeon.jpg" # Option 1
+
+    response = requests.get(image_url)
+    response.raise_for_status() # Raise an exception for bad status codes
+    img_pil = Image.open(BytesIO(response.content)).convert('RGB')
+
+    # Resize for faster processing (optional, maintains aspect ratio)
+    img_pil.thumbnail((256, 256)) # Max size 256x256
+
+    # Convert to NumPy arrays
+    img_rgb = np.array(img_pil).astype(np.float32) / 255.0 # Normalize to 0.0-1.0
+    img_gray = np.array(img_pil.convert('L')).astype(np.float32) / 255.0 # Grayscale version, normalized
+
+    print(f"Image loaded successfully.")
+    print(f"Original Color Image Shape (H, W, C): {img_rgb.shape}")
+    print(f"Grayscale Image Shape (H, W): {img_gray.shape}")
+
+    # Display loaded images
+    plt.figure(figsize=(8, 4))
+    plt.subplot(1, 2, 1)
+    plt.imshow(img_rgb)
+    plt.title("Original Color Image")
+    plt.axis('off')
+    plt.subplot(1, 2, 2)
+    plt.imshow(img_gray, cmap='gray')
+    plt.title("Grayscale Version")
+    plt.axis('off')
+    plt.tight_layout()
+    plt.show()
+
+except requests.exceptions.RequestException as e:
+    print(f"Error loading image from URL: {e}")
+    # Use placeholder arrays if image loading fails
+    img_rgb = np.random.rand(100, 100, 3)
+    img_gray = np.random.rand(100, 100)
+    print("Using random noise array as fallback.")
+except Exception as e:
+     print(f"An error occurred: {e}")
+     img_rgb = np.random.rand(100, 100, 3)
+     img_gray = np.random.rand(100, 100)
+     print("Using random noise array as fallback.")
+
+
+# --- Define Filters (We'll reuse these) ---
+# Vertical Edge Detection
+filter_vertical = np.array([
+    [ 1, 0, -1],
+    [ 2, 0, -2],
+    [ 1, 0, -1]
+], dtype=np.float32)
+
+# Horizontal Edge Detection
+filter_horizontal = np.array([
+    [ 1,  2,  1],
+    [ 0,  0,  0],
+    [-1, -2, -1]
+], dtype=np.float32)
+
+# Sharpen Filter
+filter_sharpen = np.array([
+    [ 0, -1,  0],
+    [-1,  5, -1],
+    [ 0, -1,  0]
+], dtype=np.float32)
+```
+
+Cell 2
+
+```python
+# Check if image loading was successful
+if 'img_gray' not in globals():
+    print("Grayscale image not loaded. Please run the setup cell first.")
+else:
+    # Use the grayscale image and the vertical edge filter
+    input_image = img_gray
+    filter_kernel = filter_vertical
+
+    print("Input Image Shape:", input_image.shape)
+    print("Filter Kernel Shape:", filter_kernel.shape)
+
+    # Apply convolution (mode='valid' means no padding)
+    # Flip kernel for strict convolution definition
+    feature_map = convolve2d(input_image, np.flipud(np.fliplr(filter_kernel)), mode='valid')
+    output_shape = feature_map.shape
+    print(f"Feature Map Shape: {output_shape}")
+
+    # Display
+    plt.figure(figsize=(12, 4))
+    plt.subplot(1, 3, 1)
+    plt.imshow(input_image, cmap='gray')
+    plt.title(f'Input Grayscale ({input_image.shape[0]}x{input_image.shape[1]})')
+    plt.axis('off')
+
+    plt.subplot(1, 3, 2)
+    plt.imshow(filter_kernel, cmap='coolwarm')
+    plt.title(f'Filter Kernel ({filter_kernel.shape[0]}x{filter_kernel.shape[1]})')
+    plt.axis('off')
+
+    plt.subplot(1, 3, 3)
+    # Display absolute value or clip for better visualization of edges
+    plt.imshow(np.abs(feature_map), cmap='gray')
+    plt.title(f'Feature Map ({output_shape[0]}x{output_shape[1]})\n(Vertical Edges Enhanced)')
+    plt.axis('off')
+
+    plt.tight_layout()
+    plt.show()
+```
+</details>
+
+<img src="../img/bicycle-gs.png" width="50%">
+
+
 Other common kernels—including blur, sharpen, and identity filters—are shown here:
 
 - [Types of Convolution Kernels (GeeksforGeeks)](https://www.geeksforgeeks.org/deep-learning/types-of-convolution-kernels/)
+
+
 
 So far, **the kernel values have been chosen manually**.
 
