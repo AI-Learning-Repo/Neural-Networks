@@ -37,10 +37,6 @@
   - Exam on Thursday 10/12/2026
 - [Pair Programming](./material/pair-prog.md)
 
-<!-- 
-cookBook
--->
-
 ---
 
 <details open>
