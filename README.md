@@ -20,28 +20,25 @@
 ### Morning:
 
 - Part 1: CNN foundations
-  - [Demo](./material/slides/demo.md), [Demo 2](./material/slides/demo-b.md), [Visualization](./material/slides/visualizations.md)
+  - [Demo 1](./material/slides/demo.md), [Demo 2](./material/slides/demo-b.md), [Visualization](./material/slides/visualizations.md)
   - [Summary](./material/theory1.md)
   - [Activity 1](./material/activity1.md)
 - Part 2: CNN spatial operations and transfer learning
-  - [Summary](./material/theory2.md), [Old Demo](./material/old/)
+  - [Summary](./material/theory2.md), [Demo 3 & 4 (Old)](./material/old/)
   - [Activity  2 (**Homework**)](./material/activity2.md)
 
 ----
 
-> [!NOTE]  
-> -  Week 7 (30/11/2026) in campus (MMA226)
-> - Exam on Thursday 10/12/2026
-
----
 
 ### Afternoon:
 
+- Note:
+  - Week 7 (30/11/2026) in campus (MMA226)
+  - Exam on Thursday 10/12/2026
 - [Pair Programming](./material/pair-prog.md)
 
-<!-- pairs, Gr 2,  cookBook
-  - [](./material/slides)
-  - [](./material/slides)
+<!-- 
+cookBook
 -->
 
 ---
