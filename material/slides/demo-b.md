@@ -2,9 +2,43 @@
 
 > This demo is adapted from the [Dive into Deep Learning tutorial](https://d2l.ai/chapter_convolutional-neural-networks/conv-layer.html?utm_source=chatgpt.com), which provides implementations in PyTorch and TensorFlow; the example has been modified to use the Keras API.
 
+
 ---
 
 ## Manual Filter
+
+This cell creates the black-and-white image 
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1. Create image: 0 = black, 1 = white
+X = np.ones((6, 8), dtype=np.float32)
+X[:, 2:6] = 0
+
+# 2. Print original image
+print("Image:\n", X)
+
+# 3. Plot original image
+plt.figure(figsize=(8, 5))
+plt.imshow(X, cmap="gray", vmin=0, vmax=1)
+
+plt.title("Image (0 = Black, 1 = White)")
+
+# Display pixel values
+for i in range(X.shape[0]):
+    for j in range(X.shape[1]):
+        value = int(X[i, j])
+        color = "white" if value == 0 else "black"
+        plt.text(j, i, str(value),
+                 ha="center", va="center", color=color)
+
+plt.xticks(range(8))
+plt.yticks(range(6))
+plt.grid(color="gray", linewidth=0.5)
+plt.show()
+```
 
 This cell creates the black-and-white image and applies the manually defined kernel `[1, -1]` using Keras.
 
