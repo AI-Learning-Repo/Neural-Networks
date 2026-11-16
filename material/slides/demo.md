@@ -246,8 +246,7 @@ Different filters can learn different useful patterns. By stacking convolutional
 The example uses **Fashion-MNIST**, which contains 28 × 28 grayscale images of clothing items across **10 categories**.
 
 - [Keras Fashion-MNIST dataset documentation](https://keras.io/api/datasets/fashion_mnist/)
-
-The [Fashion-MNIST CNN notebook](cnn.ipynb) can be opened in [Google Colab](https://colab.research.google.com/) using **File → Upload notebook**. The same model is used throughout this investigation.
+- The [Fashion-MNIST CNN notebook](cnn.ipynb)
 
 Training the CNN produces **test accuracy**—the proportion of test predictions that are correct. In the saved experiment, the model achieved **90.58% test accuracy**. An F1 score was not calculated in that run; macro and weighted F1 can be added later to explore performance across classes.
 
@@ -362,7 +361,11 @@ Returning to the Fashion-MNIST image, the input shape is **28 × 28 × 1**.
 
 Each of the **32 filters** processes the same input image, but each filter has different learned weights.
 
-![A 28 × 28 grayscale Fashion-MNIST image passes through 32 learned 2 × 2 filters to produce 32 feature maps of size 27 × 27](images/fashion_mnist_32_feature_maps.png)
+<!-- ![A 28 × 28 grayscale Fashion-MNIST image passes through 32 learned 2 × 2 filters to produce 32 feature maps of size 27 × 27](../img/1-8.svg) -->
+
+**A 28 × 28 grayscale Fashion-MNIST image passes through 32 learned 2 × 2 filters to produce 32 feature maps of size 27 × 27**
+
+<img src="../img/1-8.svg" width="50%">
 
 Why **27 × 27** rather than **28 × 28**?
 
@@ -445,7 +448,11 @@ What do those results look like?
 
 Consider this grayscale image represented by an 8 × 8 matrix of pixel values.
 
-![An 8 × 8 image matrix, a 3 × 3 convolution kernel, and one calculated feature-map value](images/python1.jpg)
+<!-- ![An 8 × 8 image matrix, a 3 × 3 convolution kernel, and one calculated feature-map value](images/python1.jpg) -->
+
+An 8 × 8 image matrix, a 3 × 3 convolution kernel, and one calculated feature-map value
+
+<img src="../img/2-12.png" width="50%">
 
 On the left is the image. In the middle is a 3 × 3 kernel. On the right is the result when the kernel overlaps one small region of the image.
 
@@ -498,7 +505,95 @@ It indicates how strongly this particular filter responds to this region. A posi
 
 Note that 48 is not a probability or a class prediction—it is simply a filter response.
 
+<details>
+<summary>Python Code</summary>
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Original 8x8 image matrix
+image = np.array([
+    [60, 58, 60, 60, 60, 60, 60, 52],
+    [68, 60, 60, 68, 68, 52, 76, 76],
+    [76, 44, 60, 60, 68, 52, 60, 52],
+    [68, 68, 76, 76, 68, 52, 60, 44],
+    [92, 84, 84, 84, 76, 44, 60, 44],
+    [76, 68, 84, 76, 76, 52, 60, 52],
+    [68, 60, 60, 76, 84, 52, 84, 60],
+    [60, 60, 68, 68, 68, 52, 76, 68]
+])
+
+# 3x3 kernel
+kernel = np.array([
+    [-1, -2, -1],
+    [ 0,  0,  0],
+    [ 1,  2,  1]
+])
+
+# Select the 3x3 region (rows 2-4, columns 2-4)
+patch = image[1:4, 1:4]
+
+# Element-wise multiplication
+product = patch * kernel
+
+# Sum of products
+result = np.sum(product)
+
+print("Selected 3x3 region:\n", patch)
+print("\nKernel:\n", kernel)
+print("\nElement-wise product:\n", product)
+print("\nFinal result:", result)
+
+# Create a visualization
+fig, axes = plt.subplots(
+    1, 4, figsize=(16, 5),
+    gridspec_kw={"width_ratios": [2, 1, 1.3, 0.5]}
+)
+
+def draw_table(ax, data, title, highlight=False):
+    ax.axis("off")
+    ax.set_title(title, fontsize=13, pad=15)
+
+    table = ax.table(
+        cellText=data,
+        loc="center",
+        cellLoc="center"
+    )
+    table.auto_set_font_size(False)
+    table.set_fontsize(11)
+    table.scale(1, 1.7)
+
+    for (r, c), cell in table.get_celld().items():
+        cell.set_edgecolor("#999999")
+        cell.set_linewidth(0.7)
+
+        # Highlight selected 3x3 patch
+        if highlight and 1 <= r <= 3 and 1 <= c <= 3:
+            cell.set_facecolor("#B8DDF5")
+
+    return table
+
+draw_table(axes[0], image, "Original Image (8x8)", True)
+draw_table(axes[1], kernel, "3x3 Kernel")
+draw_table(axes[2], product, "Element-wise Product")
+
+axes[3].axis("off")
+axes[3].set_title("Result", fontsize=13, pad=15)
+axes[3].text(
+    0.5, 0.5, str(result),
+    ha="center", va="center",
+    fontsize=32, fontweight="bold"
+)
+
+plt.tight_layout()
+plt.savefig("convolution_demo.png", dpi=200, bbox_inches="tight")
+plt.show()
+```
+</details>
+
 Next, the kernel moves across the rest of the image.
+
 
 ## 13. Repeating the calculation across the image
 
@@ -541,9 +636,11 @@ Moving one position to the right and repeating gives −14.
 Completing the first row yields:
 
 $$
-\begin{bmatrix}-12&-14&8&8&-8&-8\end{bmatrix}
+\begin{bmatrix}
+-12&-14&8&8&-8&-8\end{bmatrix}
 $$
 
+<!-- 
 Here is the complete result.
 
 <details>
@@ -560,12 +657,9 @@ $$
 \end{bmatrix}
 $$
 
+</details> 
+-->
 
-
-
-The highlighted region in the original image produces the value 48 in the second row, second column of this feature map.
-
-</details>
 
 An 8 × 8 image produces a 6 × 6 feature map.
 
@@ -754,6 +848,10 @@ $$
 
 where $N$ is the input height (or width), $P$ is the number of padding pixels added to **each side** of that dimension, $K$ is the kernel size, and $S$ is the stride. Apply the formula separately to height and width. This assumes dilation 1 and equal padding on both sides; with asymmetric padding, add the padding on the two sides separately. For the $8 \times 8$ image, $3 \times 3$ kernel, $P=0$, and $S=2$, the formula gives $\lfloor (8 - 3)/2 \rfloor + 1 = 3$.
 
+- Note:
+  - **Floor function** $\lfloor x \rfloor$: Rounds a number **down** to the nearest integer.
+  - **Ceiling function** $\lceil x \rceil$: Rounds a number **up** to the nearest integer.
+
 This creates two design choices: spatial dimensions can be preserved when detailed layout matters, or deliberately reduced when a more compact representation is preferred.
 
 How does a network reduce dimensions deliberately? That leads to another operation.
@@ -783,8 +881,8 @@ For the top-left region:
 
 $$
 \begin{bmatrix}
-1&3
-\\0&5
+1&3\\
+0&5
 \end{bmatrix}
 $$
 
@@ -794,23 +892,25 @@ It is 5.
 
 Replace that entire region with the single value 5, then repeat for the remaining regions:
 
+
 $$
 \underbrace{
 \begin{bmatrix}
-1&3&2&4\\
-0&5&1&2\\
-7&1&6&0\\
-2&4&8&3
+1 & 3 & 2 & 4 \\
+0 & 5 & 1 & 2 \\
+7 & 1 & 6 & 0 \\
+2 & 4 & 8 & 3
 \end{bmatrix}
 }_{4\times4}
 \quad\longrightarrow\quad
 \underbrace{
 \begin{bmatrix}
-5&4
-\\7&8\
-end{bmatrix}
+5 & 4 \\
+7 & 8
+\end{bmatrix}
 }_{2\times2}
 $$
+
 
 The 4 × 4 feature map has been reduced to 2 × 2.
 
@@ -1136,7 +1236,10 @@ For example, in a standard 8-bit RGB image, a pixel with values `(255, 0, 0)` is
 
 The three color channels can be visualized side by side.
 
-![One RGB photograph decomposed into its red, green, and blue intensity channels](images/rgb_channels.png)
+<!-- ![One RGB photograph decomposed into its red, green, and blue intensity channels](images/rgb_channels.png) -->
+
+One RGB photograph decomposed into its red, green, and blue intensity channels
+<img src="../img/3-21.svg" width="50%">
 
 Consider an RGB image of size 28 × 28 pixels.
 
@@ -1180,31 +1283,32 @@ Because it needs one 2 × 2 set of weights for red, another for green, and anoth
 
 Look at the structure of a single filter:
 
-| Red-channel weights | Green-channel weights | Blue-channel weights |
-|:---:|:---:|:---:|
-| 
-$$\begin{bmatrix}
-1&0\\
-0&1
-\end{bmatrix}
-$$ 
-| 
-$$
-\begin{bmatrix}
-0&1\\
-1&0
-\end{bmatrix}
-$$ 
-| 
-$$
-\begin{bmatrix}
--1&0\\
-0&1
-\end{bmatrix}
-$$ 
-|
 
-![One RGB convolution filter has separate 2 × 2 weights for each of the three input channels, combined to produce one response](images/rgb_one_filter.png)
+$$
+\begin{array}{c|c|c}
+\text{Red-channel weights} &
+\text{Green-channel weights} &
+\text{Blue-channel weights} \\
+\hline
+\begin{bmatrix}
+1 & 0 \\
+0 & 1
+\end{bmatrix}
+&
+\begin{bmatrix}
+0 & 1 \\
+1 & 0
+\end{bmatrix}
+&
+\begin{bmatrix}
+-1 & 0 \\
+0 & 1
+\end{bmatrix}
+\end{array}
+$$
+
+
+<!-- ![One RGB convolution filter has separate 2 × 2 weights for each of the three input channels, combined to produce one response](images/rgb_one_filter.png) -->
 
 Here is a critical detail:
 
@@ -1285,7 +1389,7 @@ One filter might learn to respond to a particular combination of colors and spat
 
 All 32 filters process the same RGB input with different learned weights, and each produces one feature map.
 
-![An RGB input of shape 28 × 28 × 3 passes through 32 filters of size 2 × 2 × 3 and produces 32 feature maps of shape 27 × 27](images/rgb_32_feature_maps.png)
+<!-- ![An RGB input of shape 28 × 28 × 3 passes through 32 filters of size 2 × 2 × 3 and produces 32 feature maps of shape 27 × 27](images/rgb_32_feature_maps.png) -->
 
 The input had 3 channels; the output has 32 channels.
 
