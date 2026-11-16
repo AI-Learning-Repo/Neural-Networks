@@ -40,6 +40,8 @@ Still, it suggests a useful idea:
 
 <img src="../img/2b2.png" width="50%">
 
+> [Demo: Edge Detection: Manual Filter vs. Learned Filter](./demo-b.md)
+
 ## 3. Feature extraction with traditional kernels
 
 In traditional image processing, features are extracted using a **kernel**, or **filter**.
