@@ -1,6 +1,6 @@
 # CNN Lecture, Part 1: From Pixels to Learned Features
 
-The goal is to build intuition gradually. This lecture starts with a problem, introduces convolution as a possible solution, and investigates what happens inside a CNN.
+The goal is to build intuition gradually. We start with a problem, introduce convolution as a possible solution, and investigate what happens inside a CNN.
 
 ## 1. Why are CNNs needed?
 
@@ -18,11 +18,12 @@ Connecting these values to just **100 neurons** in a single dense layer requires
 
 And that is only one layer.
 
+> More [here](../cnn_benefits.md)
+
 Clearly, a better approach is needed.
 
 **Key question:** Can a network learn useful information from an image without connecting every pixel to every neuron?
 
-> More [here](../cnn_benefits.md)
 
 ## 2. Inspiration from biology
 
@@ -40,7 +41,11 @@ Still, it suggests a useful idea:
 
 <img src="../img/2b2.png" width="50%">
 
+
+
+> [!TIP]  
 > [Demo: Edge Detection: Manual Filter vs. Learned Filter](./demo-b.md)
+
 
 ## 3. Feature extraction with traditional kernels
 
@@ -58,7 +63,7 @@ This operation can be explored interactively here:
 
 Consider a grayscale image of a bicycle.
 
-![A grayscale bicycle and the responses of vertical-edge and horizontal-edge kernels](images/bicycle_edge_comparison.png)
+![A grayscale bicycle and the responses of vertical-edge and horizontal-edge kernels](../img/Left_side_of_Flying_Pigeon.jpg)
 
 Different filters emphasize different patterns. One responds strongly to vertical edges; another responds strongly to horizontal edges.
 
