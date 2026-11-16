@@ -1560,7 +1560,11 @@ Together, a complete CNN flows through four main stages:
 
 **4. Output** → Predicted class probabilities.
 
-![A complete CNN pipeline: RGB input, convolution, ReLU, pooling, flattening, fully connected classification, and output probabilities](images/cnn_complete_pipeline.png)
+<!-- ![A complete CNN pipeline: RGB input, convolution, ReLU, pooling, flattening, fully connected classification, and output probabilities](images/cnn_complete_pipeline.png) -->
+
+A complete CNN pipeline: RGB input, convolution, ReLU, pooling, flattening, fully connected classification, and output probabilities
+
+<img src="../img/pipeline.png" width="50%">
 
 This matches the general structure used in the Fashion-MNIST classifier and illustrated in the IBM introduction:
 
