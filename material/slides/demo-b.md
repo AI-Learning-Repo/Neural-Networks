@@ -508,7 +508,7 @@ This example shows how to use **TensorFlow/Keras** to learn the same edge-detect
 - The manual filter is `K = [[1, -1]]`.
 - The Keras model starts with a filter containing zeros and learns to reproduce the manual filter's output.
 
-The central idea is:
+<!-- The central idea is:
 
 ```mermaid
 flowchart LR
@@ -522,7 +522,7 @@ flowchart LR
     P --> L
     L --> U["Update trainable filter weights<br/>using gradient descent"]
     U -.->|Next training step| T
-```
+``` -->
 
 1. Import the libraries and set the seed
 
