@@ -276,15 +276,15 @@ The model is graded on predicting the answer character **`4`** and the **final n
 
 For the first `2` in `2+2?`:
 
-\[
+$$
 [1.0,\ 0.0,\ 0.2] + [0.1,\ 0.2,\ 0.0] = [1.1,\ 0.2,\ 0.2]
-\]
+$$
 
 For the second `2`, the **token vector is the same**, but the position vector is different:
 
-\[
+$$
 [1.0,\ 0.0,\ 0.2] + [0.4,\ {-}0.1,\ 0.3] = [1.4,\ {-}0.1,\ 0.5]
-\]
+$$
 
 **Cell B2a — Run the 3D teaching example**
 
@@ -378,10 +378,10 @@ Although both characters are `2`, they occur at different positions. Tiny-2.1 ad
 
 Using the 3D vectors from B2:
 
-\[
+$$
 [1.1,\ 0.2,\ 0.2]\cdot[1.4,\ {-}0.1,\ 0.5]
 =1.1(1.4)+0.2(-0.1)+0.2(0.5)=1.62.
-\]
+$$
 
 A larger score means this pair is given more emphasis **before** softmax.
 
