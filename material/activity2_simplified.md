@@ -130,7 +130,7 @@ RMSNorm helps keep vector magnitudes more stable.
 The formula is:
 
 $$
-\operatorname{RMSNorm}(x)=
+\mathrm{RMSNorm}(x) =
 \frac{x}{\sqrt{\frac{1}{D}\sum_i x_i^2 + \epsilon}}
 \odot g
 $$
