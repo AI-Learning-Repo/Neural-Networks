@@ -19,13 +19,15 @@
 ### Morning:
 
 - Part 1: 
-  - [Summary](./material/theory1.md)
-  - [Activity 1 simplified](./material/activity1_simplified.md)
+  - [Theory (simplified)](./material/theory1.md)
+  - [Theory](./material/theory1.md)
+  - [Activity 1 (simplified)](./material/activity1_simplified.md)
   - [Activity 1](./material/activity1.md)
 - Part 2: 
-  - [Summary](./material/theory2.md)
-  - [Activity 2 simplified](./material/activity2_simplified.md)  
-  - [Activity 2 (**Homework**)](./material/activity2.md)
+  - [Theory (simplified)](./material/theory2.md)
+  - [Theory](./material/theory2.md)
+  - [Activity 2 (simplified)](./material/activity2_simplified.md)  
+  - [Activity 2](./material/activity2.md)
 
 ----
 

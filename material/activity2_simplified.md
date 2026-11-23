@@ -129,17 +129,17 @@ RMSNorm helps keep vector magnitudes more stable.
 
 The formula is:
 
-\[
+$$
 \operatorname{RMSNorm}(x)=
 \frac{x}{\sqrt{\frac{1}{D}\sum_i x_i^2 + \epsilon}}
 \odot g
-\]
+$$
 
 Here:
-- \(x\) is the input vector
-- \(D\) is the number of dimensions
-- \(\epsilon\) is a small constant
-- \(g\) is a learned gain vector
+- $x$ is the input vector
+- $D$ is the number of dimensions
+- $\epsilon$ is a small constant
+- $g$ is a learned gain vector
 
 ### B1.1 A small example
 
@@ -207,9 +207,9 @@ The gain vector allows the model to re-scale each feature after normalization. R
 
 A residual connection adds the original input back to the update produced by a sublayer.
 
-\[
+$$
 \text{output} = \text{input} + \text{update}
-\]
+$$
 
 ### B2.1 A very simple example
 
@@ -259,9 +259,9 @@ Because both the attention sublayer and the MLP produce updates. Each update is 
 
 After attention, each token representation is processed by a small neural network:
 
-\[
+$$
 \text{MLP}(h)=W_2\,\mathrm{ReLU}(W_1h)
-\]
+$$
 
 The important idea is:
 
