@@ -82,7 +82,7 @@ for question, answer in answers.items():
     print()
 ```
 
-**Expected observation:** In the supplied preparation notebook, the model answered that France's capital is Paris and the largest planet is Jupiter. Examine your own output; it is the model's prediction, not a guaranteed fact.
+**Expected observation:** The model is expected to answer that France's capital is Paris and the largest planet is Jupiter. Examine your own output; it is the model's prediction, not a guaranteed fact.
 
 **Cell A4 — Change one question**
 
