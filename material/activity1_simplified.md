@@ -1,15 +1,11 @@
 # Activity 1 — Simplified: Run Tiny-2.1 and Discover Attention
 
-**Beginner-friendly Google Colab worksheet**  
+
+This activity has **two parts**. Complete Part A first, then continue to Part B **in the same Google Colab session**. The exercises in Part B reuse the model and imports from Part A; you do **not** need to download or load the model again.
+
 **Part A:** Run the model and explore its answers.  
 **Part B:** Explore characters, vectors, and attention through small examples.
 
-> [!IMPORTANT]
-> **Work in one Colab notebook, from top to bottom.** Part B uses the model loaded in Part A. You do not need to download or load it twice.
->
-> **How to work:** **Run → Observe → Change one thing → Explain.** All Python code is supplied. You are not expected to write long functions from scratch.
->
-> To run a code cell in Google Colab, click the **▶** button or press **Shift + Enter**. If you see an error, first check that you ran the earlier cells in order.
 
 **Learning goals**
 

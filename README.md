@@ -16,17 +16,19 @@
 
 ----
 
-### Morning:
 
-- Part 1: 
-  - [Theory (simplified)](./material/theory1.md)
+### Morning
+
+- **Part 1: From Text to Multi-Head Attention**
+  - [Theory (simplified)](./material/theory1_simplified.md)
   - [Theory](./material/theory1.md)
   - [Activity 1 (simplified)](./material/activity1_simplified.md)
   - [Activity 1](./material/activity1.md)
-- Part 2: 
-  - [Theory (simplified)](./material/theory2.md)
+
+- **Part 2: Completing the Transformer**
+  - [Theory (simplified)](./material/theory2_simplified.md)
   - [Theory](./material/theory2.md)
-  - [Activity 2 (simplified)](./material/activity2_simplified.md)  
+  - [Activity 2 (simplified)](./material/activity2_simplified.md)
   - [Activity 2](./material/activity2.md)
 
 ----
