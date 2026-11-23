@@ -117,7 +117,7 @@ Because they are the same character. Tokenization identifies the character, not 
 For printable ASCII characters, Tiny-2.1 uses the simple rule:
 
 $$
-\operatorname{ID}(c) = \operatorname{ASCII}(c) - 30
+\mathrm{ID}(c) = \mathrm{ASCII}(c) - 30
 $$
 
 Newline is handled separately as ID `1`, and padding is ID `0`. For example, `ASCII('2') = 50`, so its ID is $50 - 30 = 20$.
@@ -232,7 +232,7 @@ They use the same token embedding but different position embeddings, so the sums
 For the token at position $t$:
 
 $$
-X_t = E[\operatorname{ID}_t] + P[t]
+X_t = E[\mathrm{ID}_t] + P[t]
 $$
 
 `E` and `P` are learned during training; they are not handwritten rules.
@@ -295,7 +295,7 @@ They tell us how strongly the first position blends information from the two vec
 With input matrix $X$, the simple, unprojected teaching version is:
 
 $$
-\operatorname{Context}(X) = \operatorname{softmax}(XX^T)X
+\mathrm{Context}(X) = \mathrm{softmax}(XX^T)X
 $$
 
 - $XX^T$ calculates all pairwise dot-product scores.
@@ -412,8 +412,7 @@ Before softmax, the model replaces disallowed scores by $-\infty$. Since $e^{-\i
 The full operation is:
 
 $$
-\operatorname{Attention}(Q,K,V)
-= \operatorname{softmax}\!\left(\frac{QK^T}{\sqrt{d_k}}+M\right)V
+\mathrm{Attention}(Q,K,V) = \mathrm{softmax}\!\left(\frac{QK^T}{\sqrt{d_k}}+M\right)V
 $$
 
 where $M_{ij}=0$ for allowed positions $j \le i$, and $M_{ij}=-\infty$ for future positions $j>i$. We explain $d_k$ next.

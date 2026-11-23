@@ -135,8 +135,7 @@ Both the original values and the RMS grow by a factor of ten. Dividing the value
 <summary>More detail — RMSNorm formula</summary>
 
 $$
-\operatorname{RMSNorm}(x)
-=\frac{x}{\sqrt{\frac{1}{D}\sum_{i=1}^{D}x_i^2+\epsilon}}\odot g
+\mathrm{RMSNorm}(x) =\frac{x}{\sqrt{\frac{1}{D}\sum_{i=1}^{D}x_i^2+\epsilon}}\odot g
 $$
 
 - $D$ is the number of features; in Tiny-2.1, $D=96$.
@@ -197,13 +196,13 @@ The output equals the input. The residual connection allows an identity shortcut
 The first addition follows attention:
 
 $$
-x_{\mathrm{mid}}=x+\operatorname{MHA}(\operatorname{RMSNorm}_{n1}(x))
+x_{\mathrm{mid}}=x+\mathrm{MHA}(\mathrm{RMSNorm}_{n1}(x))
 $$
 
 The second addition follows the MLP:
 
 $$
-x_{\mathrm{out}}=x_{\mathrm{mid}}+\operatorname{MLP}(\operatorname{RMSNorm}_{n2}(x_{\mathrm{mid}}))
+x_{\mathrm{out}}=x_{\mathrm{mid}}+\mathrm{MLP}(\mathrm{RMSNorm}_{n2}(x_{\mathrm{mid}}))
 $$
 
 `MHA` means **multi-head attention**. Notice that the second shortcut carries $x_{\mathrm{mid}}$, not the original $x$.
@@ -247,7 +246,7 @@ $$
 ReLU turns negative values into zero:
 
 $$
-\operatorname{ReLU}(z)=[2,\;0,\;0.5,\;0]
+\mathrm{ReLU}(z)=[2,\;0,\;0.5,\;0]
 $$
 
 A second linear layer can combine those numbers to produce an output such as $[0.8,-0.4]$ in the small 2D example used by Visualization 8a.
@@ -271,7 +270,7 @@ The block's main representation has width 96. Returning to 96 lets the MLP outpu
 <summary>More detail — MLP equation and code names</summary>
 
 $$
-\operatorname{MLP}(h)=\operatorname{ReLU}(hW_1^T)W_2^T
+\mathrm{MLP}(h)=\mathrm{ReLU}(hW_1^T)W_2^T
 $$
 
 `f1` stores $W_1$ with shape `(256, 96)`. `f2` stores $W_2$ with shape `(96, 256)`. These are learned linear weight matrices. The MLP operates on **each position independently**; it does not perform attention across positions.
@@ -436,7 +435,7 @@ No. It reuses the embedding weights as a collection of candidate vectors and com
 For a last-position vector $h$ and embedding matrix $E$:
 
 $$
-\operatorname{logits}=hE^T
+\mathrm{logits}=hE^T
 $$
 
 The shape calculation is:
